@@ -1,0 +1,76 @@
+.booking-form-wrapper {
+    color: white;
+}
+
+.info-message {
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: #d4af37;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.info-message a {
+    color: #d4af37;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.info-message a:hover {
+    color: #ffd700;
+}
+
+.booking-form label {
+    display: block;
+    margin-top: 10px;
+    color: #f5deb3;
+    /* Gold */
+}
+
+.booking-form input,
+.booking-form textarea,
+.booking-form select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    background: #222;
+    border: 1px solid #555;
+    color: white;
+    /* Ensures text is white */
+    border-radius: 4px;
+}
+
+/* FIX: Ensure dropdown options have a dark background so white text is visible */
+.booking-form select option {
+    background-color: #222;
+    color: white;
+}
+
+.warning-text {
+    color: #ff9800;
+    display: block;
+    margin-top: 5px;
+}
+
+.input-warning {
+    border-color: #ff9800 !important;
+}
+
+.fade-in-input {
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

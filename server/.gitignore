@@ -1,0 +1,9 @@
+# ------------------------------------
+# SERVER SPECIFIC EXCLUSIONS
+# ------------------------------------
+
+# Dependencies (Already ignored by the root, but harmless to repeat)
+/node_modules
+
+# Environment files (Ensure .env is NOT tracked in the server folder)
+.env
