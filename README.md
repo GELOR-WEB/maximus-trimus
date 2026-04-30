@@ -32,7 +32,7 @@ The application is split into two isolated subdirectories:
 | Folder          | Description                                                                      | Default Port |
 | :-------------- | :------------------------------------------------------------------------------- | :----------- |
 | **`frontend/`** | The entire React/Vite client application code.                                   | `5173`       |
-| **`server/`**   | The entire Node.js/Express API, controllers, models, and database configuration. | `5000`       |
+| **`server/`**   | The entire Node.js/Express API, controllers, models, and database configuration. | `3000`       |
 
 ---
 
