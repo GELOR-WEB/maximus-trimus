@@ -1,16 +1,15 @@
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
-    // If already connected, don't try to connect again
     if (mongoose.connection.readyState >= 1) return;
 
     try {
-        const conn = await mongoose.connect(process.env.MONGODB_URI);
-        console.log(`MongoDB Connected: ${conn.connection.host}`);
-    } catch (error) {
-        console.error(`Error: ${error.message}`);
-        // Exit process with failure
-        process.exit(1);
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log("MongoDB Connected...");
+    } catch (err) {
+        console.error("Connection error:", err.message);
+        // Throwing the error helps Vercel logs show you exactly why it failed
+        throw err;
     }
 };
 
