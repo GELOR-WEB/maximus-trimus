@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const connectDB = require('./config/db');
-const mongoose = require("mongoose");
+
 const cors = require("cors");
 
 const app = express();
@@ -26,14 +26,7 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/settings", settingsRoutes);
 
-// Database Connection
-let isConnected = false;
-const connectDB = async () => {
-  if (isConnected) return;
-  await mongoose.connect(process.env.MONGO_URI);
-  isConnected = true;
-};
-connectDB().catch(console.error);
+
 
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 3000;
