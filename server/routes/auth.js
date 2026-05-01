@@ -2,11 +2,30 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const rateLimit = require('express-rate-limit');
 const User = require('../models/User');
 const { authenticateToken } = require('../middleware/authMiddleware');
 
+// Rate limiter for login: max 10 attempts per 15 minutes per IP
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10,
+    message: { message: 'Too many login attempts. Please try again after 15 minutes.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// Rate limiter for registration: max 5 accounts per hour per IP
+const registerLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 5,
+    message: { message: 'Too many accounts created. Please try again after an hour.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
 // Client Registration Route
-router.post('/register', async (req, res) => {
+router.post('/register', registerLimiter, async (req, res) => {
     const { email, password, fullName, phone } = req.body;
 
     try {
@@ -57,7 +76,7 @@ router.post('/register', async (req, res) => {
 });
 
 // Login Route (works for both admin and client)
-router.post('/login', async (req, res) => {
+router.post('/login', loginLimiter, async (req, res) => {
     const { username, password, email } = req.body;
 
     try {
