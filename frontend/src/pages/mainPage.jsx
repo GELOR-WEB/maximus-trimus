@@ -79,13 +79,20 @@ const MainPage = () => {
       .catch(err => console.log(err));
   }, []);
 
-  // Auto-refresh page every 5 minutes (300000ms)
+  // Silently poll for settings updates every 30 seconds (no page reload)
   useEffect(() => {
-    const refreshTimer = setInterval(() => {
-      window.location.reload();
-    }, 5 * 60 * 1000);
+    const pollSettings = setInterval(() => {
+      axios.get(`${API_URL}/api/settings`)
+        .then(res => {
+          setIsShopOpen(res.data.isShopOpen);
+          if (res.data.greetingMessage !== undefined) {
+            setGreetingMessage(res.data.greetingMessage);
+          }
+        })
+        .catch(() => {}); // Silently ignore errors during polling
+    }, 30 * 1000); // every 30 seconds
 
-    return () => clearInterval(refreshTimer);
+    return () => clearInterval(pollSettings);
   }, []);
 
   const [isVisible, setIsVisible] = useState(true);
