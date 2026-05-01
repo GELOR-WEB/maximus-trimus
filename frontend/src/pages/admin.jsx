@@ -86,6 +86,13 @@ const Admin = () => {
 
   useEffect(() => {
     fetchAllData();
+
+    // Poll for new bookings & settings every 15 seconds
+    const pollInterval = setInterval(() => {
+      fetchAllData();
+    }, 15 * 1000);
+
+    return () => clearInterval(pollInterval);
   }, []);
 
   // 5. Handlers
