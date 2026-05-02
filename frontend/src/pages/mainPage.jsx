@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
@@ -67,6 +67,60 @@ const MainPage = () => {
   };
   const [isShopOpen, setIsShopOpen] = useState(true);
   const [greetingMessage, setGreetingMessage] = useState('how do you want your hair done?');
+
+  // Reviews state
+  const [reviews, setReviews] = useState([]);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewHover, setReviewHover] = useState(0);
+  const [reviewComment, setReviewComment] = useState('');
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewMessage, setReviewMessage] = useState({ text: '', type: '' });
+
+  // Fetch reviews
+  useEffect(() => {
+    axios.get(`${API_URL}/api/reviews`)
+      .then(res => {
+        if (Array.isArray(res.data)) setReviews(res.data);
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (reviewRating === 0) {
+      setReviewMessage({ text: 'Please select a star rating.', type: 'error' });
+      return;
+    }
+    if (!reviewComment.trim()) {
+      setReviewMessage({ text: 'Please write a comment.', type: 'error' });
+      return;
+    }
+    setReviewSubmitting(true);
+    setReviewMessage({ text: '', type: '' });
+    try {
+      const token = localStorage.getItem('token');
+      const res = await axios.post(`${API_URL}/api/reviews`, {
+        rating: reviewRating,
+        comment: reviewComment.trim()
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setReviews(prev => [res.data, ...prev]);
+      setReviewMessage({ text: 'Thank you for your review!', type: 'success' });
+      setReviewRating(0);
+      setReviewComment('');
+      setTimeout(() => {
+        setIsReviewModalOpen(false);
+        setReviewMessage({ text: '', type: '' });
+      }, 1500);
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Failed to submit review.';
+      setReviewMessage({ text: msg, type: 'error' });
+    } finally {
+      setReviewSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     axios.get(`${API_URL}/api/settings`)
@@ -214,6 +268,14 @@ const MainPage = () => {
                   onClick={(e) => scrollToSection(e, "the-barber")}
                 >
                   The Barber
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#reviews"
+                  onClick={(e) => scrollToSection(e, "reviews")}
+                >
+                  Reviews
                 </a>
               </li>
             </ul>
@@ -631,7 +693,107 @@ const MainPage = () => {
             </div>
           </div>
         </section>
+
+        {/* ⭐ REVIEWS SECTION */}
+        <section id="reviews" className="reviews-section">
+          <div className="reviews-content">
+            <h2 className="reviews-title">What Our Clients Say</h2>
+            <p className="reviews-subtitle">Real experiences from real clients</p>
+
+            {reviews.length > 0 ? (
+              <div className="reviews-carousel">
+                <div className="reviews-track">
+                  {[...reviews, ...reviews].map((review, index) => (
+                    <div className="review-card" key={`review-${index}`}>
+                      <div className="review-card-header">
+                        <div className="review-avatar">
+                          {review.fullName ? review.fullName.charAt(0).toUpperCase() : '?'}
+                        </div>
+                        <div className="review-meta">
+                          <span className="review-name">{review.fullName}</span>
+                          <span className="review-date">
+                            {new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="review-stars">
+                        {[1, 2, 3, 4, 5].map(star => (
+                          <span key={star} className={star <= review.rating ? 'star filled' : 'star'}>★</span>
+                        ))}
+                      </div>
+                      <p className="review-comment">"{review.comment}"</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <p className="reviews-empty">No reviews yet. Be the first to share your experience!</p>
+            )}
+
+            {isAuthenticated && (
+              <button
+                className="btn-leave-review"
+                onClick={() => setIsReviewModalOpen(true)}
+              >
+                ✍ Leave a Review
+              </button>
+            )}
+          </div>
+        </section>
       </div >
+
+      {/* REVIEW MODAL */}
+      {isReviewModalOpen && (
+        <div className="review-modal-backdrop" onClick={() => { setIsReviewModalOpen(false); setReviewMessage({ text: '', type: '' }); }}>
+          <div className="review-modal-container" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-btn" onClick={() => { setIsReviewModalOpen(false); setReviewMessage({ text: '', type: '' }); }}>
+              &times;
+            </button>
+            <h2>Leave a Review</h2>
+            <p className="review-modal-sub">Share your experience at Maximus Trimus</p>
+
+            <form onSubmit={handleSubmitReview} className="review-form">
+              <div className="star-rating-input">
+                {[1, 2, 3, 4, 5].map(star => (
+                  <span
+                    key={star}
+                    className={`star-select ${star <= (reviewHover || reviewRating) ? 'active' : ''}`}
+                    onClick={() => setReviewRating(star)}
+                    onMouseEnter={() => setReviewHover(star)}
+                    onMouseLeave={() => setReviewHover(0)}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              <textarea
+                className="review-textarea"
+                placeholder="Write your review here..."
+                value={reviewComment}
+                onChange={(e) => setReviewComment(e.target.value)}
+                maxLength={500}
+                rows={4}
+              />
+              <span className="review-char-count">{reviewComment.length}/500</span>
+
+              {reviewMessage.text && (
+                <div className={`form-message ${reviewMessage.type}`}>
+                  {reviewMessage.text}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="submit-button"
+                disabled={reviewSubmitting}
+              >
+                {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
       {selectedImage && (
         <ImageModal imageUrl={selectedImage} onClose={closeModal} />
       )}
