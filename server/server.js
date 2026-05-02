@@ -11,15 +11,19 @@ connectDB();
 
 const allowedOrigins = [
   "http://localhost:5173",
+  "https://maximus-trimus.vercel.app",
   process.env.FRONTEND_URL,
 ].filter(Boolean);
+
+// Remove duplicates
+const uniqueOrigins = [...new Set(allowedOrigins)];
 
 app.use(
   cors({
     origin: function (origin, callback) {
       // Allow requests with no origin (e.g. mobile apps, curl, Postman)
       if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
+      if (uniqueOrigins.includes(origin)) {
         return callback(null, true);
       }
       return callback(new Error("Not allowed by CORS"));
