@@ -83,7 +83,7 @@ const MainPage = () => {
       .then(res => {
         if (Array.isArray(res.data)) setReviews(res.data);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const handleSubmitReview = async (e) => {
@@ -143,7 +143,7 @@ const MainPage = () => {
             setGreetingMessage(res.data.greetingMessage);
           }
         })
-        .catch(() => {}); // Silently ignore errors during polling
+        .catch(() => { }); // Silently ignore errors during polling
     }, 30 * 1000); // every 30 seconds
 
     return () => clearInterval(pollSettings);
@@ -697,7 +697,7 @@ const MainPage = () => {
         {/* ⭐ REVIEWS SECTION */}
         <section id="reviews" className="reviews-section">
           <div className="reviews-content">
-            <h2 className="reviews-title">What Our Clients Say</h2>
+            <h2 className="reviews-title">What My Clients Say</h2>
             <p className="reviews-subtitle">Real experiences from real clients</p>
 
             {reviews.length > 0 ? (
