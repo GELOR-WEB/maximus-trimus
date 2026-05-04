@@ -41,6 +41,8 @@ const MainPage = () => {
   }, []);
 
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isAuthPromptOpen, setIsAuthPromptOpen] = useState(false);
+
   // Function to handle the click and set the selected image
   const handleImageClick = (e, imageUrl) => {
     // Prevents the click from bubbling up and causing issues
@@ -70,7 +72,11 @@ const MainPage = () => {
 
   // Define click handler for book now button
   const handleBookNowClick = () => {
-    setIsBookingModalOpen(true);
+    if (!isAuthenticated) {
+      setIsAuthPromptOpen(true);
+    } else {
+      setIsBookingModalOpen(true);
+    }
   };
 
   // Function to close the booking modal
@@ -210,6 +216,40 @@ const MainPage = () => {
 
   return (
     <>
+      {/* 0. AUTH PROMPT MODAL */}
+      {isAuthPromptOpen && (
+        <div className="booking-modal-backdrop" onClick={() => setIsAuthPromptOpen(false)}>
+          <div className="booking-modal-container auth-prompt-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-btn" onClick={() => setIsAuthPromptOpen(false)}>×</button>
+            <div className="booking-content">
+              <h2>Have an account?</h2>
+              <div className="auth-prompt-buttons">
+                <button
+                  className="btn-prompt login"
+                  onClick={() => navigate("/login")}
+                >
+                  Yes, Login
+                </button>
+                <button
+                  className="btn-prompt register"
+                  onClick={() => navigate("/register")}
+                >
+                  No, I'm New Here
+                </button>
+                <button
+                  className="btn-prompt guest"
+                  onClick={() => {
+                    setIsAuthPromptOpen(false);
+                  }}
+                >
+                  Continue as Guest
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 1. BOOKING MODAL RENDERING LOGIC */}
       {isBookingModalOpen && (
         // Render the modal backdrop and container

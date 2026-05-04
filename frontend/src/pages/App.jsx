@@ -22,11 +22,7 @@ function App() {
             {/* CLIENT-FACING ROUTES */}
             <Route
               path="/"
-              element={
-                <ProtectedRoute>
-                  <MainPage />
-                </ProtectedRoute>
-              }
+              element={<MainPage />}
             />
             <Route path="/login" element={<ClientLogin />} />
             <Route path="/register" element={<Register />} />
