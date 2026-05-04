@@ -323,6 +323,11 @@ const MainPage = () => {
                 width: "100%",
               }}
             >
+              {isAuthenticated && (
+                <div className="mobile-home-greeting">
+                  Hello, <span>{firstName}</span> {greetingMessage}
+                </div>
+              )}
               <div className="flip-container">
                 <div className={`flipper ${isFlipped ? "flipped" : ""}`}>
                   <div className="front">
