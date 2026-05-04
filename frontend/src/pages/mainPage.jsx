@@ -20,6 +20,18 @@ const MainPage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.classList.add("menu-open");
+    } else {
+      document.body.classList.remove("menu-open");
+    }
+  }, [isMenuOpen]);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -240,16 +252,16 @@ const MainPage = () => {
             >
               <img src="/images/weblogo.png" alt="Maximus Trimus Logo" />
             </div>
-            <ul className="nav-links">
+            <ul className={`nav-links ${isMenuOpen ? "nav-links--open" : ""}`}>
               <li>
-                <a href="#home" onClick={(e) => scrollToSection(e, "home")}>
+                <a href="#home" onClick={(e) => { scrollToSection(e, "home"); closeMenu(); }}>
                   Home
                 </a>
               </li>
               <li>
                 <a
                   href="#contact"
-                  onClick={(e) => scrollToSection(e, "contact")}
+                  onClick={(e) => { scrollToSection(e, "contact"); closeMenu(); }}
                 >
                   Contact
                 </a>
@@ -257,7 +269,7 @@ const MainPage = () => {
               <li>
                 <a
                   href="#gallery"
-                  onClick={(e) => scrollToSection(e, "gallery")}
+                  onClick={(e) => { scrollToSection(e, "gallery"); closeMenu(); }}
                 >
                   Gallery
                 </a>
@@ -265,7 +277,7 @@ const MainPage = () => {
               <li>
                 <a
                   href="#the-barber"
-                  onClick={(e) => scrollToSection(e, "the-barber")}
+                  onClick={(e) => { scrollToSection(e, "the-barber"); closeMenu(); }}
                 >
                   The Barber
                 </a>
@@ -273,12 +285,22 @@ const MainPage = () => {
               <li>
                 <a
                   href="#reviews"
-                  onClick={(e) => scrollToSection(e, "reviews")}
+                  onClick={(e) => { scrollToSection(e, "reviews"); closeMenu(); }}
                 >
                   Reviews
                 </a>
               </li>
             </ul>
+
+            <button
+              className={`hamburger ${isMenuOpen ? "is-active" : ""}`}
+              onClick={toggleMenu}
+              aria-label="Toggle navigation"
+            >
+              <span className="bar"></span>
+              <span className="bar"></span>
+              <span className="bar"></span>
+            </button>
 
             {/* Personalized Greeting - Top Right */}
             {isAuthenticated && (

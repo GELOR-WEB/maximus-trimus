@@ -360,12 +360,23 @@
   display: flex;
   gap: 20px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
-.hours-inputs input {
+.hours-inputs input[type="number"] {
   background: #222;
   border: 1px solid #444;
   color: white;
   padding: 5px;
   width: 60px;
+}
+
+.hours-inputs input[type="text"] {
+  background: #222;
+  border: 1px solid #444;
+  color: white;
+  padding: 8px 12px;
+  flex: 1;
+  min-width: 350px;
+  border-radius: 4px;
 }

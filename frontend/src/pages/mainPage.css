@@ -27,6 +27,10 @@ body {
   margin: 0;
 }
 
+body.menu-open {
+  overflow: hidden;
+}
+
 section {
   scroll-snap-align: start;
   height: 100vh;
@@ -284,6 +288,40 @@ section {
 
 .nav-links li a:hover {
   color: #f5deb3;
+}
+
+/* Hamburger Menu Base Styles */
+.hamburger {
+  display: none;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 10px;
+  z-index: 1001;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hamburger .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+/* Hamburger Animation */
+.hamburger.is-active .bar:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.hamburger.is-active .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.is-active .bar:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
 }
 
 .contact-section {
@@ -1192,10 +1230,10 @@ iframe {
   }
 
   .navbar {
-    flex-direction: column;
-    height: auto;
-    padding: 4px 0 3px;
-    gap: 1px;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 20px;
     align-items: center;
   }
 
@@ -1204,57 +1242,83 @@ iframe {
   }
 
   .logo {
-    order: 1;
+    order: 3;
     height: auto;
-    transform: none;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
   }
 
   .logo img {
-    height: 22px;
+    height: 35px;
     padding-top: 0;
   }
 
   .logo-flip {
-    width: clamp(250px, 60vw, 500px);
+    width: clamp(200px, 50vw, 400px);
     height: auto;
-    margin-left: 13%;
+    margin-left: 0;
     filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
   }
 
   .book-now-btn {
     margin-right: 0%;
-    transform: translateY(30%)
+    transform: translateY(30%);
+    font-size: 1.2rem;
+    padding: 0.5rem 1.5rem;
+  }
+
+  .hamburger {
+    display: flex;
+    order: 1;
   }
 
   .nav-links {
-    order: 2;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 2px 10px;
-    margin: 0;
-    padding: 0 8px;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    background: rgba(20, 20, 20, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    transform: none;
+    align-items: center;
+    gap: 2rem;
+    transition: right 0.4s cubic-bezier(0.77, 0.2, 0.05, 1);
+    z-index: 1000;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-links--open {
+    right: 0;
+  }
+
+  .nav-links li {
+    width: 100%;
+    text-align: center;
   }
 
   .nav-links li a {
-    font-size: 0.65rem;
-    letter-spacing: 0.3px;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    display: block;
+    padding: 15px 0;
   }
 
   .nav-greeting {
-    margin: 0 auto;
-    width: 90%;
-    text-align: center;
-    font-size: 0.65rem;
-    order: 3;
-    transform: none;
-    line-height: 1.2;
-    padding: 0 8px;
-    box-sizing: border-box;
+    display: none; /* Hide greeting in navbar on mobile to save space, or move it inside nav-links */
+  }
+
+  /* Optional: Show greeting inside mobile menu */
+  .nav-links::after {
+    content: attr(data-greeting);
+    color: #d4af37;
+    margin-top: 2rem;
+    font-style: italic;
   }
 
   .flip-container {
