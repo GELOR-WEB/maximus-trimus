@@ -9,7 +9,7 @@ const { authenticateToken } = require('../middleware/authMiddleware');
 // Rate limiter for login: max 10 attempts per 15 minutes per IP
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 10,
+    max: 30,
     message: { message: 'Too many login attempts. Please try again after 15 minutes.' },
     standardHeaders: true,
     legacyHeaders: false,
