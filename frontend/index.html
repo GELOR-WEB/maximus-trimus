@@ -1,13 +1,26 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/images/weblogo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Maximus Trimus</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function (OneSignal) {
+      await OneSignal.init({
+        appId: "211e4632-c27d-49eb-9df4-3955aaff6ad1",
+        allowLocalhostAsSecureOrigin: true, // Add this line for localhost!
+      });
+    });
+  </script>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/images/weblogo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maximus Trimus</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>
