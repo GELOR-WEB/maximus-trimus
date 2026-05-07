@@ -182,21 +182,68 @@ router.put('/profile', authenticateToken, async (req, res) => {
     }
 });
 
-// Test Notification Route (Admin only)
+// Test Notification Route (Admin only) — returns full diagnostic info
 const { notifyNewBooking } = require('../utils/notifications');
+const { sendToAll } = require('../utils/notifications');
+
 router.post('/test-notification', authenticateToken, async (req, res) => {
     try {
         if (req.user.role !== 'admin') {
             return res.status(403).json({ message: 'Only admins can send test notifications' });
         }
 
-        await notifyNewBooking({
+        // Check env vars
+        const hasAppId = !!process.env.ONESIGNAL_APP_ID;
+        const hasApiKey = !!process.env.ONESIGNAL_REST_API_KEY;
+
+        if (!hasAppId || !hasApiKey) {
+            return res.json({
+                success: false,
+                message: 'OneSignal env vars missing on server!',
+                hasAppId,
+                hasApiKey
+            });
+        }
+
+        // Send test notification via admin tag filter
+        const result = await notifyNewBooking({
             customerName: "TEST CLIENT",
             time: "NOW",
-            service: "TEST NOTIFICATION"
+            service: "TEST — ADMIN TAG FILTER"
         });
 
-        res.json({ message: 'Test notification sent! Check your device.' });
+        res.json({
+            success: !!result,
+            message: result 
+                ? `Notification sent! Recipients: ${result.recipients || 0}` 
+                : 'OneSignal API call failed — check Vercel logs.',
+            onesignal_response: result,
+            env_check: { hasAppId, hasApiKey }
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Test Broadcast — sends to ALL subscribed users (bypasses tag filter)
+router.post('/test-broadcast', authenticateToken, async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ message: 'Only admins can send test notifications' });
+        }
+
+        const result = await sendToAll(
+            '🔔 Test Notification',
+            'If you see this, push notifications are working!'
+        );
+
+        res.json({
+            success: !!result,
+            message: result 
+                ? `Broadcast sent! Recipients: ${result.recipients || 0}`
+                : 'OneSignal API call failed — check Vercel logs.',
+            onesignal_response: result
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

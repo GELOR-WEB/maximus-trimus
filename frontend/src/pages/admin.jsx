@@ -228,32 +228,35 @@ const Admin = () => {
         onActionSuccess={handleBookingAction}
       />
 
-      {/* 🔔 NOTIFICATION CONTROL PANEL */}
+      {/* 🔔 NOTIFICATION DIAGNOSTIC PANEL */}
       <div className="hours-control-panel notification-debug">
-        <h3>Notification Control (Mobile Debug)</h3>
+        <h3>🔔 Notification Diagnostics</h3>
         <p style={{ color: '#aaa', fontSize: '0.85rem', margin: '0 0 15px' }}>
-          Use this to ensure your current browser/phone is correctly receiving notifications.
+          Test and debug push notification delivery to your devices.
         </p>
 
-        <div className="notification-status-grid">
-          <div className="status-item">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {/* Browser Permission Status */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '6px' }}>
             <span>Browser Permission:</span>
             <span style={{ fontWeight: 'bold', color: (window.Notification?.permission === 'granted') ? '#4caf50' : '#ff4d4d' }}>
               {window.Notification?.permission?.toUpperCase() || 'UNSUPPORTED'}
             </span>
           </div>
 
-          <div className="notification-actions">
+          {/* Action Buttons */}
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <button
               className="btn-toggle"
               onClick={() => {
                 if (window.OneSignalDeferred) {
                   window.OneSignalDeferred.push(async function (OneSignal) {
                     await OneSignal.Notifications.requestPermission();
+                    window.location.reload();
                   });
                 }
               }}
-              style={{ backgroundColor: '#444' }}
+              style={{ backgroundColor: '#444', flex: 1 }}
             >
               Request Permission
             </button>
@@ -262,27 +265,71 @@ const Admin = () => {
               className="btn-save-hours"
               onClick={async () => {
                 try {
-                  await axios.post(`${API_URL}/api/auth/test-notification`, {}, getAuthHeaders());
-                  alert("Test notification triggered! If you don't receive it in 10 seconds, check your Brave Shields or Site Settings.");
+                  const res = await axios.post(`${API_URL}/api/auth/test-notification`, {}, getAuthHeaders());
+                  alert(JSON.stringify(res.data, null, 2));
                 } catch (err) {
-                  alert("Failed to trigger test: " + (err.response?.data?.message || err.message));
+                  alert("Failed: " + JSON.stringify(err.response?.data || err.message));
                 }
               }}
-              style={{ marginLeft: '10px' }}
+              style={{ flex: 1 }}
             >
-              Send Test Notification
+              Test (Admin Tag)
+            </button>
+
+            <button
+              className="btn-save-hours"
+              onClick={async () => {
+                try {
+                  const res = await axios.post(`${API_URL}/api/auth/test-broadcast`, {}, getAuthHeaders());
+                  alert(JSON.stringify(res.data, null, 2));
+                } catch (err) {
+                  alert("Failed: " + JSON.stringify(err.response?.data || err.message));
+                }
+              }}
+              style={{ flex: 1, backgroundColor: '#2a6e2a' }}
+            >
+              Test (Broadcast ALL)
             </button>
           </div>
-        </div>
 
-        <div className="debug-tips" style={{ marginTop: '15px', padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', fontSize: '0.8rem' }}>
-          <strong>Mobile Brave Tips:</strong>
-          <ul style={{ margin: '5px 0', paddingLeft: '20px', color: '#888' }}>
-            <li>Disable <strong>Brave Shields</strong> for this site if notifications are blocked.</li>
-            <li>Go to Brave <strong>Settings → Site Settings → Notifications</strong> and ensure it is allowed.</li>
-            <li>On Android, ensure <strong>Background Data</strong> is enabled for Brave.</li>
-            <li>On iOS, you may need to <strong>"Add to Home Screen"</strong> and open the app from there.</li>
-          </ul>
+          {/* OneSignal Subscription Check */}
+          <button
+            className="btn-toggle"
+            onClick={async () => {
+              if (window.OneSignalDeferred) {
+                window.OneSignalDeferred.push(async function (OneSignal) {
+                  const permission = OneSignal.Notifications.permission;
+                  const userId = OneSignal.User?.onesignalId || 'not set';
+                  const externalId = OneSignal.User?.externalId || 'not set';
+                  const tags = await OneSignal.User.getTags();
+                  alert(
+                    `OneSignal Status:\n` +
+                    `─────────────────\n` +
+                    `Permission: ${permission}\n` +
+                    `OneSignal ID: ${userId}\n` +
+                    `External ID (MongoDB): ${externalId}\n` +
+                    `Tags: ${JSON.stringify(tags)}\n\n` +
+                    `If External ID is "not set" or Tags is empty, log out and log back in.`
+                  );
+                });
+              } else {
+                alert('OneSignal SDK not loaded on this page.');
+              }
+            }}
+            style={{ backgroundColor: '#333', borderColor: '#555' }}
+          >
+            Check OneSignal Status
+          </button>
+
+          <div style={{ marginTop: '5px', padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', fontSize: '0.8rem' }}>
+            <strong>Troubleshooting:</strong>
+            <ul style={{ margin: '5px 0', paddingLeft: '20px', color: '#888' }}>
+              <li><strong>Recipients: 0</strong> = Your browser is not registered. Click "Request Permission" then log out/in.</li>
+              <li><strong>Test (Admin Tag)</strong> fails but <strong>Test (Broadcast)</strong> works = The admin tag is missing. Log out and log back in.</li>
+              <li><strong>Both tests show Recipients: 0</strong> = OneSignal can't find any subscribed device. Check that you allowed notifications in your browser.</li>
+              <li><strong>env vars missing</strong> = Add ONESIGNAL_APP_ID and ONESIGNAL_REST_API_KEY to Vercel environment variables.</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

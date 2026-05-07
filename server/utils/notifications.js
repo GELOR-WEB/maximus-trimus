@@ -191,4 +191,5 @@ module.exports = {
     notifyBookingUpdate,
     notifyGreetingChange,
     notifyBarberStatus,
+    sendToAll,
 };
