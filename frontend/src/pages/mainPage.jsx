@@ -71,9 +71,12 @@ const MainPage = () => {
   };
 
   // Define click handler for book now button
-  // Always open booking modal - guests can book without logging in
   const handleBookNowClick = () => {
-    setIsBookingModalOpen(true);
+    if (!isAuthenticated) {
+      setIsAuthPromptOpen(true);
+    } else {
+      setIsBookingModalOpen(true);
+    }
   };
 
   // Function to close the booking modal
@@ -219,24 +222,25 @@ const MainPage = () => {
           <div className="booking-modal-container auth-prompt-modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" onClick={() => setIsAuthPromptOpen(false)}>×</button>
             <div className="booking-content">
-              <h2>Have an account?</h2>
+              <h2>Do you have an account?</h2>
               <div className="auth-prompt-buttons">
                 <button
                   className="btn-prompt login"
                   onClick={() => navigate("/login")}
                 >
-                  Yes, Login
+                  Yes
                 </button>
                 <button
                   className="btn-prompt register"
                   onClick={() => navigate("/register")}
                 >
-                  No, I'm New Here
+                  No
                 </button>
                 <button
                   className="btn-prompt guest"
                   onClick={() => {
                     setIsAuthPromptOpen(false);
+                    setIsBookingModalOpen(true);
                   }}
                 >
                   Continue as Guest
