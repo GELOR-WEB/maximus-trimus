@@ -301,15 +301,19 @@ const Admin = () => {
                   const permission = OneSignal.Notifications.permission;
                   const userId = OneSignal.User?.onesignalId || 'not set';
                   const externalId = OneSignal.User?.externalId || 'not set';
+                  const optedIn = OneSignal.User.PushSubscription.optedIn;
+                  const pushToken = OneSignal.User.PushSubscription.token || 'none';
                   const tags = await OneSignal.User.getTags();
                   alert(
                     `OneSignal Status:\n` +
                     `─────────────────\n` +
                     `Permission: ${permission}\n` +
+                    `Opted In: ${optedIn}\n` +
+                    `Push Token: ${pushToken ? pushToken.substring(0, 30) + '...' : 'NONE'}\n` +
                     `OneSignal ID: ${userId}\n` +
                     `External ID (MongoDB): ${externalId}\n` +
                     `Tags: ${JSON.stringify(tags)}\n\n` +
-                    `If External ID is "not set" or Tags is empty, log out and log back in.`
+                    `If "Opted In" is false, log out and log back in to fix.`
                   );
                 });
               } else {

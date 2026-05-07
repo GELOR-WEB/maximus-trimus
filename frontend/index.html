@@ -8,8 +8,21 @@
     OneSignalDeferred.push(async function (OneSignal) {
       await OneSignal.init({
         appId: "211e4632-c27d-49eb-9df4-3955aaff6ad1",
-        allowLocalhostAsSecureOrigin: true, // Add this line for localhost!
+        allowLocalhostAsSecureOrigin: true,
+        serviceWorkerPath: "/OneSignalSDKWorker.js",
+        serviceWorkerParam: { scope: "/" },
       });
+
+      // In v16, permission alone is not enough — must explicitly opt in
+      // This creates the actual push subscription token
+      if (OneSignal.Notifications.permission === true) {
+        const isOptedIn = OneSignal.User.PushSubscription.optedIn;
+        if (!isOptedIn) {
+          console.log("OneSignal: Permission granted but not opted in. Opting in...");
+          await OneSignal.User.PushSubscription.optIn();
+          console.log("OneSignal: Opted in successfully!");
+        }
+      }
     });
   </script>
   <meta charset="UTF-8" />

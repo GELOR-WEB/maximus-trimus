@@ -49,14 +49,23 @@ export const AuthProvider = ({ children }) => {
                         window.OneSignalDeferred.push(async function (OneSignal) {
                             try {
                                 await OneSignal.login(String(res.data.id));
+
                                 // Tag admin users for targeted admin notifications
                                 if (res.data.role === 'admin') {
                                     await OneSignal.User.addTag('role', 'admin');
-                                    // Specifically for admins: ensure they are prompted for permission
-                                    if (OneSignal.Notifications.permission !== true) {
-                                        console.log('Admin detected, requesting notification permission...');
-                                        await OneSignal.Notifications.requestPermission();
-                                    }
+                                }
+
+                                // Request permission if not yet granted
+                                if (OneSignal.Notifications.permission !== true) {
+                                    console.log('Requesting notification permission...');
+                                    await OneSignal.Notifications.requestPermission();
+                                }
+
+                                // CRITICAL: In v16, must explicitly opt in to create push token
+                                if (!OneSignal.User.PushSubscription.optedIn) {
+                                    console.log('Opting in to push subscription...');
+                                    await OneSignal.User.PushSubscription.optIn();
+                                    console.log('Push subscription opted in!');
                                 }
                             } catch (e) {
                                 console.log('OneSignal login failed:', e);
@@ -163,6 +172,10 @@ export const AuthProvider = ({ children }) => {
                 window.OneSignalDeferred.push(async function (OneSignal) {
                     try {
                         await OneSignal.login(String(res.data.user.id));
+                        // Ensure push subscription is active
+                        if (!OneSignal.User.PushSubscription.optedIn) {
+                            await OneSignal.User.PushSubscription.optIn();
+                        }
                     } catch (e) {
                         console.log('OneSignal login failed:', e);
                     }

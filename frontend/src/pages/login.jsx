@@ -40,6 +40,14 @@ const Login = () => {
           try {
             await OneSignal.login(String(res.data.user.id));
             await OneSignal.User.addTag('role', 'admin');
+            // Request permission if needed
+            if (OneSignal.Notifications.permission !== true) {
+              await OneSignal.Notifications.requestPermission();
+            }
+            // CRITICAL: opt in to create push token
+            if (!OneSignal.User.PushSubscription.optedIn) {
+              await OneSignal.User.PushSubscription.optIn();
+            }
           } catch (e) {
             console.log('OneSignal admin login failed:', e);
           }
