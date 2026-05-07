@@ -182,4 +182,24 @@ router.put('/profile', authenticateToken, async (req, res) => {
     }
 });
 
+// Test Notification Route (Admin only)
+const { notifyNewBooking } = require('../utils/notifications');
+router.post('/test-notification', authenticateToken, async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ message: 'Only admins can send test notifications' });
+        }
+
+        await notifyNewBooking({
+            customerName: "TEST CLIENT",
+            time: "NOW",
+            service: "TEST NOTIFICATION"
+        });
+
+        res.json({ message: 'Test notification sent! Check your device.' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = router;

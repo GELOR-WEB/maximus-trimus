@@ -227,6 +227,64 @@ const Admin = () => {
         bookings={bookings}
         onActionSuccess={handleBookingAction}
       />
+
+      {/* 🔔 NOTIFICATION CONTROL PANEL */}
+      <div className="hours-control-panel notification-debug">
+        <h3>Notification Control (Mobile Debug)</h3>
+        <p style={{ color: '#aaa', fontSize: '0.85rem', margin: '0 0 15px' }}>
+          Use this to ensure your current browser/phone is correctly receiving notifications.
+        </p>
+
+        <div className="notification-status-grid">
+          <div className="status-item">
+            <span>Browser Permission:</span>
+            <span style={{ fontWeight: 'bold', color: (window.Notification?.permission === 'granted') ? '#4caf50' : '#ff4d4d' }}>
+              {window.Notification?.permission?.toUpperCase() || 'UNSUPPORTED'}
+            </span>
+          </div>
+
+          <div className="notification-actions">
+            <button
+              className="btn-toggle"
+              onClick={() => {
+                if (window.OneSignalDeferred) {
+                  window.OneSignalDeferred.push(async function (OneSignal) {
+                    await OneSignal.Notifications.requestPermission();
+                  });
+                }
+              }}
+              style={{ backgroundColor: '#444' }}
+            >
+              Request Permission
+            </button>
+
+            <button
+              className="btn-save-hours"
+              onClick={async () => {
+                try {
+                  await axios.post(`${API_URL}/api/auth/test-notification`, {}, getAuthHeaders());
+                  alert("Test notification triggered! If you don't receive it in 10 seconds, check your Brave Shields or Site Settings.");
+                } catch (err) {
+                  alert("Failed to trigger test: " + (err.response?.data?.message || err.message));
+                }
+              }}
+              style={{ marginLeft: '10px' }}
+            >
+              Send Test Notification
+            </button>
+          </div>
+        </div>
+
+        <div className="debug-tips" style={{ marginTop: '15px', padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', fontSize: '0.8rem' }}>
+          <strong>Mobile Brave Tips:</strong>
+          <ul style={{ margin: '5px 0', paddingLeft: '20px', color: '#888' }}>
+            <li>Disable <strong>Brave Shields</strong> for this site if notifications are blocked.</li>
+            <li>Go to Brave <strong>Settings → Site Settings → Notifications</strong> and ensure it is allowed.</li>
+            <li>On Android, ensure <strong>Background Data</strong> is enabled for Brave.</li>
+            <li>On iOS, you may need to <strong>"Add to Home Screen"</strong> and open the app from there.</li>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 };

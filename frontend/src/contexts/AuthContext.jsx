@@ -52,6 +52,11 @@ export const AuthProvider = ({ children }) => {
                                 // Tag admin users for targeted admin notifications
                                 if (res.data.role === 'admin') {
                                     await OneSignal.User.addTag('role', 'admin');
+                                    // Specifically for admins: ensure they are prompted for permission
+                                    if (OneSignal.Notifications.permission !== true) {
+                                        console.log('Admin detected, requesting notification permission...');
+                                        await OneSignal.Notifications.requestPermission();
+                                    }
                                 }
                             } catch (e) {
                                 console.log('OneSignal login failed:', e);
