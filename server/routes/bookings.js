@@ -5,6 +5,7 @@ const Settings = require("../models/Settings");
 const jwt = require('jsonwebtoken');
 const { authenticateToken, isAdmin } = require('../middleware/authMiddleware');
 const User = require('../models/User');
+const { sendBookingNotification } = require('../utils/notifications');
 
 // 0. GET MY BOOKINGS (Protected - Client Specific)
 router.get("/my-bookings", authenticateToken, async (req, res) => {
@@ -128,6 +129,14 @@ router.post("/", optionalAuth, async (req, res) => {
     const newBooking = new Booking(bookingData);
 
     await newBooking.save();
+
+    // Trigger push notification to admin (fire-and-forget)
+    sendBookingNotification({
+      customerName: clientName,
+      time: time,
+      service: serviceType
+    }).catch(err => console.error("Notification failed:", err));
+
     res.status(201).json({ message: "Booking successful!", booking: newBooking });
 
   } catch (err) {
