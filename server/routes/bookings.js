@@ -5,7 +5,7 @@ const Settings = require("../models/Settings");
 const jwt = require('jsonwebtoken');
 const { authenticateToken, isAdmin } = require('../middleware/authMiddleware');
 const User = require('../models/User');
-const { sendBookingNotification } = require('../utils/notifications');
+const { notifyNewBooking, notifyBookingUpdate } = require('../utils/notifications');
 
 // 0. GET MY BOOKINGS (Protected - Client Specific)
 router.get("/my-bookings", authenticateToken, async (req, res) => {
@@ -131,7 +131,7 @@ router.post("/", optionalAuth, async (req, res) => {
     await newBooking.save();
 
     // Trigger push notification to admin (fire-and-forget)
-    sendBookingNotification({
+    notifyNewBooking({
       customerName: clientName,
       time: time,
       service: serviceType
@@ -243,6 +243,13 @@ router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
 router.put("/:id", authenticateToken, isAdmin, async (req, res) => {
   try {
     const { status, date, time } = req.body;
+
+    // Fetch the original booking BEFORE updating (needed for notification context)
+    const originalBooking = await Booking.findById(req.params.id);
+    if (!originalBooking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
     const updateFields = {};
     if (status) updateFields.status = status;
     if (date) updateFields.date = date;
@@ -253,6 +260,19 @@ router.put("/:id", authenticateToken, isAdmin, async (req, res) => {
       updateFields,
       { new: true }
     );
+
+    // Notify the client about their booking update (fire-and-forget)
+    const isRescheduled = (date && date !== originalBooking.date) || (time && time !== originalBooking.time);
+    if (isRescheduled) {
+      // Rescheduled — send reschedule notification
+      notifyBookingUpdate(originalBooking, 'Rescheduled', date || originalBooking.date, time || originalBooking.time)
+        .catch(err => console.error("Reschedule notification failed:", err));
+    } else if (status && status !== originalBooking.status) {
+      // Status change (Confirmed / Cancelled)
+      notifyBookingUpdate(originalBooking, status)
+        .catch(err => console.error("Status notification failed:", err));
+    }
+
     res.json(updatedBooking);
   } catch (err) {
     res.status(500).json({ message: err.message });

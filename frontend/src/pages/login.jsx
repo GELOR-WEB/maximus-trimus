@@ -34,7 +34,19 @@ const Login = () => {
       // 2. If successful, save the token to LocalStorage (The "Key")
       localStorage.setItem("token", res.data.token);
 
-      // 3. Redirect to the Dashboard
+      // 3. Link this browser to the admin user in OneSignal
+      if (window.OneSignalDeferred) {
+        window.OneSignalDeferred.push(async function (OneSignal) {
+          try {
+            await OneSignal.login(String(res.data.user.id));
+            await OneSignal.User.addTag('role', 'admin');
+          } catch (e) {
+            console.log('OneSignal admin login failed:', e);
+          }
+        });
+      }
+
+      // 4. Redirect to the Dashboard
       navigate("/admin/dashboard");
     } catch (err) {
       // 4. Handle errors (Wrong password, etc.)

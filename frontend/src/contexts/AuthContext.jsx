@@ -43,6 +43,21 @@ export const AuthProvider = ({ children }) => {
                     });
                     setUser(res.data);
                     setIsAuthenticated(true);
+
+                    // Link this browser's push subscription to the user
+                    if (window.OneSignalDeferred) {
+                        window.OneSignalDeferred.push(async function (OneSignal) {
+                            try {
+                                await OneSignal.login(String(res.data.id));
+                                // Tag admin users for targeted admin notifications
+                                if (res.data.role === 'admin') {
+                                    await OneSignal.User.addTag('role', 'admin');
+                                }
+                            } catch (e) {
+                                console.log('OneSignal login failed:', e);
+                            }
+                        });
+                    }
                 } catch (err) {
                     console.error('Token verification failed:', err);
                     localStorage.removeItem('token');
@@ -138,6 +153,17 @@ export const AuthProvider = ({ children }) => {
             setUser(res.data.user);
             setIsAuthenticated(true);
 
+            // Link this browser's push subscription to the user
+            if (window.OneSignalDeferred) {
+                window.OneSignalDeferred.push(async function (OneSignal) {
+                    try {
+                        await OneSignal.login(String(res.data.user.id));
+                    } catch (e) {
+                        console.log('OneSignal login failed:', e);
+                    }
+                });
+            }
+
             return { success: true };
         } catch (err) {
             return {
@@ -152,6 +178,17 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('user');
         setUser(null);
         setIsAuthenticated(false);
+
+        // Unlink push subscription from the user
+        if (window.OneSignalDeferred) {
+            window.OneSignalDeferred.push(async function (OneSignal) {
+                try {
+                    await OneSignal.logout();
+                } catch (e) {
+                    console.log('OneSignal logout failed:', e);
+                }
+            });
+        }
     };
 
     const updateProfile = async (fullName, email, phone) => {
