@@ -20,6 +20,7 @@ function App() {
         <main className="container">
           <Routes>
             {/* CLIENT-FACING ROUTES */}
+            {/* Main page is always accessible as guest mode */}
             <Route
               path="/"
               element={<MainPage />}
@@ -41,14 +42,14 @@ function App() {
             <Route
               path="/admin/dashboard"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute redirectTo="/admin/login">
                   <Admin />
                 </ProtectedRoute>
               }
             />
 
-            {/* Fallback route */}
-            <Route path="*" element={<h1>404: Page Not Found</h1>} />
+            {/* Fallback: redirect unknown routes to the main page (guest mode) */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
       </div>

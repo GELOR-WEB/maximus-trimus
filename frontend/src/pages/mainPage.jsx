@@ -71,12 +71,9 @@ const MainPage = () => {
   };
 
   // Define click handler for book now button
+  // Always open booking modal - guests can book without logging in
   const handleBookNowClick = () => {
-    if (!isAuthenticated) {
-      setIsAuthPromptOpen(true);
-    } else {
-      setIsBookingModalOpen(true);
-    }
+    setIsBookingModalOpen(true);
   };
 
   // Function to close the booking modal
@@ -286,9 +283,9 @@ const MainPage = () => {
           >
             <div
               className="logo"
-              onClick={() => navigate(isAuthenticated ? "/profile" : "/login")}
+              onClick={() => navigate(isAuthenticated ? "/profile" : "/")}
               style={{ cursor: "pointer" }}
-              title={isAuthenticated ? `Go to Profile (${user?.fullName})` : "Login / Register"}
+              title={isAuthenticated ? `Go to Profile (${user?.fullName})` : "Home"}
             >
               <img src="/images/weblogo.png" alt="Maximus Trimus Logo" />
             </div>
