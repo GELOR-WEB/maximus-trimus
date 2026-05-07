@@ -494,15 +494,29 @@ iframe {
   width: 90%;
   border: 5px;
   display: flex;
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: hidden;
   position: relative;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+}
+
+.carousel:active {
+  cursor: grabbing;
 }
 
 .carousel::-webkit-scrollbar {
   display: none;
+}
+
+/* Pause animation when user hovers or touches the carousel */
+.carousel:hover .group,
+.carousel:active .group,
+.carousel.is-dragging .group {
+  animation-play-state: paused;
 }
 
 .group {
@@ -978,14 +992,28 @@ iframe {
   padding: 60px 20px;
 }
 
-/* Reviews Carousel — infinite auto-scroll */
+/* Reviews Carousel — infinite auto-scroll + manual scroll */
 .reviews-carousel {
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   position: relative;
   padding: 20px 0;
   mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+}
+
+.reviews-carousel:active {
+  cursor: grabbing;
+}
+
+.reviews-carousel::-webkit-scrollbar {
+  display: none;
 }
 
 .reviews-track {
@@ -996,7 +1024,10 @@ iframe {
   padding: 10px 0;
 }
 
-.reviews-carousel:hover .reviews-track {
+/* Pause animation when user hovers, clicks, or drags */
+.reviews-carousel:hover .reviews-track,
+.reviews-carousel:active .reviews-track,
+.reviews-carousel.is-dragging .reviews-track {
   animation-play-state: paused;
 }
 

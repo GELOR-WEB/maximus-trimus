@@ -244,16 +244,18 @@ router.get("/", authenticateToken, isAdmin, async (req, res) => {
 // 4. DASHBOARD STATISTICS (Admin only - Protected)
 router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
   try {
-    const bookings = await Booking.find({ status: 'Confirmed' });
+    const completedBookings = await Booking.find({ status: 'Completed' });
+    const confirmedBookings = await Booking.find({ status: 'Confirmed' });
+    const allActiveBookings = [...completedBookings, ...confirmedBookings];
 
     // A. Basic Counts
-    const totalCutsAllTime = bookings.length;
+    const totalCutsAllTime = allActiveBookings.length;
     const currentYear = new Date().getFullYear();
-    const totalCutsThisYear = bookings.filter(b => b.date.startsWith(currentYear)).length;
+    const totalCutsThisYear = allActiveBookings.filter(b => b.date.startsWith(currentYear)).length;
 
     // B. Busiest/Quiet Month
     const monthCounts = {};
-    bookings.forEach(b => {
+    allActiveBookings.forEach(b => {
       const month = new Date(b.date).toLocaleString('default', { month: 'long' });
       monthCounts[month] = (monthCounts[month] || 0) + 1;
     });
@@ -270,11 +272,10 @@ router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
       }
     }
 
-    // C. Client Habits (Frequency) - Grouped by Client Names
-    // Group by Contact (Email or Phone) to track recurring clients
+    // C. Client Habits (Frequency)
     const clientVisits = {};
-    bookings.forEach(b => {
-      const contact = b.contact; // Assumes contact is consistent
+    allActiveBookings.forEach(b => {
+      const contact = b.contact;
       const firstName = b.clientName ? b.clientName.split(' ')[0] : 'Unknown';
       if (!clientVisits[contact]) {
         clientVisits[contact] = { firstName, dates: [] };
@@ -282,19 +283,16 @@ router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
       clientVisits[contact].dates.push(new Date(b.date));
     });
 
-    const frequentClients = []; // ≤14 days
-    const regularClients = [];  // 15-60 days
-    const rareClients = [];     // >60 days or one-time
+    const frequentClients = [];
+    const regularClients = [];
+    const rareClients = [];
 
     Object.values(clientVisits).forEach(client => {
       if (client.dates.length < 2) {
         rareClients.push(client.firstName);
         return;
       }
-      // Sort dates
       client.dates.sort((a, b) => a - b);
-
-      // Calculate average difference in days
       let totalDiff = 0;
       for (let i = 1; i < client.dates.length; i++) {
         const diffTime = Math.abs(client.dates[i] - client.dates[i - 1]);
@@ -308,6 +306,46 @@ router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
       else rareClients.push(client.firstName);
     });
 
+    // D. Earnings Data (from Completed bookings with amountPaid)
+    const paidBookings = completedBookings.filter(b => b.amountPaid && b.amountPaid > 0);
+    const totalEarnings = paidBookings.reduce((sum, b) => sum + b.amountPaid, 0);
+
+    // Current month earnings
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentMonthEarnings = paidBookings
+      .filter(b => {
+        const d = new Date(b.date);
+        return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+      })
+      .reduce((sum, b) => sum + b.amountPaid, 0);
+
+    // Monthly earnings breakdown
+    const monthlyEarnings = {};
+    paidBookings.forEach(b => {
+      const d = new Date(b.date);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const monthName = d.toLocaleString('default', { month: 'long', year: 'numeric' });
+      if (!monthlyEarnings[key]) {
+        monthlyEarnings[key] = { name: monthName, total: 0 };
+      }
+      monthlyEarnings[key].total += b.amountPaid;
+    });
+
+    let mostProfitableMonth = 'N/A';
+    let leastProfitableMonth = 'N/A';
+    let maxEarnings = -1;
+    let minEarnings = Infinity;
+
+    Object.values(monthlyEarnings).forEach(m => {
+      if (m.total > maxEarnings) { maxEarnings = m.total; mostProfitableMonth = m.name; }
+      if (m.total < minEarnings) { minEarnings = m.total; leastProfitableMonth = m.name; }
+    });
+
+    // Payment method breakdown
+    const cashTotal = paidBookings.filter(b => b.paymentMethod === 'cash').reduce((s, b) => s + b.amountPaid, 0);
+    const emoneyTotal = paidBookings.filter(b => b.paymentMethod === 'e-money').reduce((s, b) => s + b.amountPaid, 0);
+
     res.json({
       totalCutsAllTime,
       totalCutsThisYear,
@@ -317,6 +355,16 @@ router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
         frequent: frequentClients,
         regular: regularClients,
         rare: rareClients
+      },
+      earnings: {
+        totalEarnings,
+        currentMonthEarnings,
+        mostProfitableMonth,
+        mostProfitableAmount: maxEarnings > 0 ? maxEarnings : 0,
+        leastProfitableMonth,
+        leastProfitableAmount: minEarnings < Infinity ? minEarnings : 0,
+        cashTotal,
+        emoneyTotal
       }
     });
 
@@ -326,10 +374,10 @@ router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
   }
 });
 
-// 5. UPDATE BOOKING (Status or Reschedule - Admin only)
+// 5. UPDATE BOOKING (Status, Reschedule, or Complete - Admin only)
 router.put("/:id", authenticateToken, isAdmin, async (req, res) => {
   try {
-    const { status, date, time } = req.body;
+    const { status, date, time, amountPaid, paymentMethod } = req.body;
 
     // Fetch the original booking BEFORE updating (needed for notification context)
     const originalBooking = await Booking.findById(req.params.id);
@@ -342,6 +390,12 @@ router.put("/:id", authenticateToken, isAdmin, async (req, res) => {
     if (date) updateFields.date = date;
     if (time) updateFields.time = time;
 
+    // Payment info — only saved when marking as Completed
+    if (status === 'Completed') {
+      if (amountPaid !== undefined) updateFields.amountPaid = Number(amountPaid);
+      if (paymentMethod) updateFields.paymentMethod = paymentMethod;
+    }
+
     const updatedBooking = await Booking.findByIdAndUpdate(
       req.params.id,
       updateFields,
@@ -351,11 +405,9 @@ router.put("/:id", authenticateToken, isAdmin, async (req, res) => {
     // Notify the client about their booking update (fire-and-forget)
     const isRescheduled = (date && date !== originalBooking.date) || (time && time !== originalBooking.time);
     if (isRescheduled) {
-      // Rescheduled — send reschedule notification
       notifyBookingUpdate(originalBooking, 'Rescheduled', date || originalBooking.date, time || originalBooking.time)
         .catch(err => console.error("Reschedule notification failed:", err));
     } else if (status && status !== originalBooking.status) {
-      // Status change (Confirmed / Cancelled)
       notifyBookingUpdate(originalBooking, status)
         .catch(err => console.error("Status notification failed:", err));
     }

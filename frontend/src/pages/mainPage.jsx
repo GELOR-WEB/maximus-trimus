@@ -214,6 +214,70 @@ const MainPage = () => {
     }
   };
 
+  // Drag-to-scroll for carousels (gallery + reviews)
+  useEffect(() => {
+    const setupDragScroll = (selector) => {
+      const el = document.querySelector(selector);
+      if (!el) return null;
+
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+      let resumeTimer;
+
+      const onMouseDown = (e) => {
+        isDown = true;
+        el.classList.add('is-dragging');
+        startX = e.pageX - el.offsetLeft;
+        scrollLeft = el.scrollLeft;
+        clearTimeout(resumeTimer);
+      };
+
+      const onMouseLeave = () => {
+        if (!isDown) return;
+        isDown = false;
+        resumeTimer = setTimeout(() => el.classList.remove('is-dragging'), 3000);
+      };
+
+      const onMouseUp = () => {
+        isDown = false;
+        resumeTimer = setTimeout(() => el.classList.remove('is-dragging'), 3000);
+      };
+
+      const onMouseMove = (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - el.offsetLeft;
+        const walk = (x - startX) * 2;
+        el.scrollLeft = scrollLeft - walk;
+      };
+
+      el.addEventListener('mousedown', onMouseDown);
+      el.addEventListener('mouseleave', onMouseLeave);
+      el.addEventListener('mouseup', onMouseUp);
+      el.addEventListener('mousemove', onMouseMove);
+
+      return () => {
+        el.removeEventListener('mousedown', onMouseDown);
+        el.removeEventListener('mouseleave', onMouseLeave);
+        el.removeEventListener('mouseup', onMouseUp);
+        el.removeEventListener('mousemove', onMouseMove);
+        clearTimeout(resumeTimer);
+      };
+    };
+
+    const timer = setTimeout(() => {
+      const c1 = setupDragScroll('.carousel');
+      const c2 = setupDragScroll('.reviews-carousel');
+      window.__carouselCleanup = () => { c1?.(); c2?.(); };
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+      window.__carouselCleanup?.();
+    };
+  }, []);
+
   return (
     <>
       {/* 0. AUTH PROMPT MODAL */}

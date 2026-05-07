@@ -50,6 +50,35 @@ const DashboardStats = () => {
                 </div>
             </div>
 
+            {/* 1b. EARNINGS SECTION (New) */}
+            <div className="stats-habits-section" style={{ marginBottom: '30px' }}>
+                <h3>Earnings Analytics</h3>
+                <div className="stats-grid-top" style={{ marginTop: '15px' }}>
+                    <div className="stat-card earnings-card">
+                        <h4>Total Earnings</h4>
+                        <p className="stat-number gold">₱{stats.earnings?.totalEarnings?.toLocaleString() || 0}</p>
+                        <div className="payment-breakdown">
+                            <span>💵 ₱{stats.earnings?.cashTotal?.toLocaleString() || 0}</span>
+                            <span>📱 ₱{stats.earnings?.emoneyTotal?.toLocaleString() || 0}</span>
+                        </div>
+                    </div>
+                    <div className="stat-card earnings-card">
+                        <h4>Current Month</h4>
+                        <p className="stat-number">₱{stats.earnings?.currentMonthEarnings?.toLocaleString() || 0}</p>
+                    </div>
+                    <div className="stat-card profitable-card">
+                        <h4>Most Profitable</h4>
+                        <p className="stat-text">{stats.earnings?.mostProfitableMonth}</p>
+                        <p className="stat-subtext">₱{stats.earnings?.mostProfitableAmount?.toLocaleString() || 0}</p>
+                    </div>
+                    <div className="stat-card profitable-card">
+                        <h4>Least Profitable</h4>
+                        <p className="stat-text text-muted">{stats.earnings?.leastProfitableMonth}</p>
+                        <p className="stat-subtext text-muted">₱{stats.earnings?.leastProfitableAmount?.toLocaleString() || 0}</p>
+                    </div>
+                </div>
+            </div>
+
 
             {/* 2. BOTTOM ROW: CLIENT FREQUENCY CONTAINERS */}
             <div className="stats-habits-section">

@@ -310,6 +310,103 @@
   color: white;
 }
 
+.btn-finished {
+  background-color: #2196F3;
+  color: white;
+  padding: 6px 10px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Earnings Specific Styling */
+.payment-breakdown {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.stat-subtext {
+  font-size: 0.9rem;
+  margin: 5px 0 0;
+  color: gold;
+  font-weight: 600;
+}
+
+/* Payment Form Styling */
+.payment-form-row {
+  background: rgba(33, 150, 243, 0.05);
+}
+
+.payment-form {
+  padding: 20px;
+  border: 1px solid rgba(33, 150, 243, 0.2);
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.payment-label {
+  display: block;
+  margin-bottom: 15px;
+  color: #fff;
+  font-weight: 500;
+}
+
+.payment-inputs {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.payment-amount-input {
+  background: #222;
+  border: 1px solid #444;
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 150px;
+}
+
+.payment-method-toggle {
+  display: flex;
+  background: #222;
+  padding: 4px;
+  border-radius: 6px;
+  border: 1px solid #333;
+}
+
+.method-btn {
+  background: transparent;
+  border: none;
+  color: #888;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.method-btn.active {
+  background: #333;
+  color: gold;
+}
+
+.payment-form .btn-confirm {
+  padding: 10px 20px;
+}
+
+.payment-form .btn-cancel {
+  background: transparent;
+  border: 1px solid #444;
+}
+
 .edit-inputs {
   display: flex;
   gap: 5px;

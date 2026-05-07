@@ -19,6 +19,13 @@ const bookingSchema = new mongoose.Schema({
     enum: ['Pending', 'Confirmed', 'Cancelled', 'Completed'],
     default: 'Pending'
   },
+  // Payment info — populated when admin marks as Completed (Finished)
+  amountPaid: { type: Number, default: null },
+  paymentMethod: {
+    type: String,
+    enum: ['cash', 'e-money', null],
+    default: null
+  },
   createdAt: { type: Date, default: Date.now }
 });
 

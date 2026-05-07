@@ -8,6 +8,10 @@ const BookingsTable = ({ bookings, onActionSuccess }) => {
   const [editingId, setEditingId] = useState(null);
   const [editFormData, setEditFormData] = useState({ date: "", time: "" });
 
+  // State for the "Finished" payment prompt
+  const [finishingId, setFinishingId] = useState(null);
+  const [paymentData, setPaymentData] = useState({ amount: "", method: "cash" });
+
   // Helper: Get auth headers for admin API requests
   const getAuthHeaders = () => ({
     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -59,6 +63,7 @@ const BookingsTable = ({ bookings, onActionSuccess }) => {
   const startEdit = (booking) => {
     setEditingId(booking._id);
     setEditFormData({ date: booking.date, time: booking.time });
+    setFinishingId(null); // Close finish form if open
   };
 
   // 4. SAVE RESCHEDULE
@@ -76,6 +81,31 @@ const BookingsTable = ({ bookings, onActionSuccess }) => {
     }
   };
 
+  // 5. FINISH Booking (Mark as Completed with payment)
+  const startFinish = (booking) => {
+    setFinishingId(booking._id);
+    setPaymentData({ amount: "", method: "cash" });
+    setEditingId(null); // Close reschedule if open
+  };
+
+  const saveFinish = async (id) => {
+    if (!paymentData.amount || Number(paymentData.amount) <= 0) {
+      alert("Please enter a valid payment amount.");
+      return;
+    }
+    try {
+      await axios.put(`${API_URL}/api/bookings/${id}`, {
+        status: "Completed",
+        amountPaid: Number(paymentData.amount),
+        paymentMethod: paymentData.method,
+      }, getAuthHeaders());
+      setFinishingId(null);
+      onActionSuccess();
+    } catch (err) {
+      alert("Error completing booking");
+    }
+  };
+
   return (
     <div className="bookings-table-container">
       <table>
@@ -87,87 +117,163 @@ const BookingsTable = ({ bookings, onActionSuccess }) => {
             <th>Service</th>
             <th>Date & Time</th>
             <th>Status</th>
+            <th>Payment</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {bookings.map((booking, index) => (
-            <tr key={booking._id}>
-              <td>{index + 1}</td>
-              <td>{booking.clientName}</td>
-              <td>{booking.contact}</td>
-              <td>{booking.service}</td>
+            <React.Fragment key={booking._id}>
+              <tr>
+                <td>{index + 1}</td>
+                <td>{booking.clientName}</td>
+                <td>{booking.contact}</td>
+                <td>{booking.serviceType}</td>
 
-              {/* RESCHEDULE LOGIC: Show Inputs if editing, otherwise show Text */}
-              <td>
-                {editingId === booking._id ? (
-                  <div className="edit-inputs">
-                    <input
-                      type="date"
-                      value={editFormData.date}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, date: e.target.value })
-                      }
-                    />
-                    <input
-                      type="time"
-                      value={editFormData.time}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, time: e.target.value })
-                      }
-                    />
-                  </div>
-                ) : (
-                  formatDateTime(booking.date, booking.time)
-                )}
-              </td>
+                {/* RESCHEDULE LOGIC: Show Inputs if editing, otherwise show Text */}
+                <td>
+                  {editingId === booking._id ? (
+                    <div className="edit-inputs">
+                      <input
+                        type="date"
+                        value={editFormData.date}
+                        onChange={(e) =>
+                          setEditFormData({ ...editFormData, date: e.target.value })
+                        }
+                      />
+                      <input
+                        type="time"
+                        value={editFormData.time}
+                        onChange={(e) =>
+                          setEditFormData({ ...editFormData, time: e.target.value })
+                        }
+                      />
+                    </div>
+                  ) : (
+                    formatDateTime(booking.date, booking.time)
+                  )}
+                </td>
 
-              <td className={`status-${booking.status.toLowerCase()}`}>
-                {booking.status}
-              </td>
+                <td className={`status-${booking.status.toLowerCase()}`}>
+                  {booking.status}
+                </td>
 
-              <td>
-                {editingId === booking._id ? (
-                  // Show SAVE button if editing
-                  <button
-                    className="btn-confirm"
-                    onClick={() => saveReschedule(booking._id)}
-                  >
-                    Save
-                  </button>
-                ) : (
-                  // Show Standard Buttons
-                  <>
-                    {booking.status === "Pending" && (
+                {/* Payment info column */}
+                <td>
+                  {booking.status === 'Completed' && booking.amountPaid ? (
+                    <span style={{ fontSize: '0.85rem' }}>
+                      ₱{booking.amountPaid.toLocaleString()}
+                      <br />
+                      <span style={{ color: '#888', textTransform: 'capitalize' }}>
+                        {booking.paymentMethod || '—'}
+                      </span>
+                    </span>
+                  ) : '—'}
+                </td>
+
+                <td>
+                  {editingId === booking._id ? (
+                    // Show SAVE button if editing
+                    <>
                       <button
                         className="btn-confirm"
-                        onClick={() => handleConfirm(booking._id)}
+                        onClick={() => saveReschedule(booking._id)}
                       >
-                        Confirm
+                        Save
                       </button>
-                    )}
-
-                    {booking.status !== "Cancelled" && (
-                      <button
-                        className="btn-move"
-                        onClick={() => startEdit(booking)}
-                      >
-                        Reschedule
-                      </button>
-                    )}
-
-                    {booking.status !== "Cancelled" && (
                       <button
                         className="btn-cancel"
-                        onClick={() => handleCancel(booking._id)}
+                        onClick={() => setEditingId(null)}
+                        style={{ marginLeft: '4px' }}
                       >
-                        Cancel
+                        ✕
                       </button>
-                    )}
-                  </>
-                )}
-              </td>
-            </tr>
+                    </>
+                  ) : (
+                    // Show Standard Buttons
+                    <>
+                      {booking.status === "Pending" && (
+                        <button
+                          className="btn-confirm"
+                          onClick={() => handleConfirm(booking._id)}
+                        >
+                          Confirm
+                        </button>
+                      )}
+
+                      {(booking.status === "Pending" || booking.status === "Confirmed") && (
+                        <button
+                          className="btn-finished"
+                          onClick={() => startFinish(booking)}
+                        >
+                          Finished
+                        </button>
+                      )}
+
+                      {booking.status !== "Cancelled" && booking.status !== "Completed" && (
+                        <button
+                          className="btn-move"
+                          onClick={() => startEdit(booking)}
+                        >
+                          Reschedule
+                        </button>
+                      )}
+
+                      {booking.status !== "Cancelled" && booking.status !== "Completed" && (
+                        <button
+                          className="btn-cancel"
+                          onClick={() => handleCancel(booking._id)}
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </>
+                  )}
+                </td>
+              </tr>
+
+              {/* Inline Payment Form (appears below the row) */}
+              {finishingId === booking._id && (
+                <tr className="payment-form-row">
+                  <td colSpan="8">
+                    <div className="payment-form">
+                      <span className="payment-label">💰 How much did <strong>{booking.clientName}</strong> pay?</span>
+                      <div className="payment-inputs">
+                        <input
+                          type="number"
+                          placeholder="Amount (₱)"
+                          value={paymentData.amount}
+                          onChange={(e) => setPaymentData({ ...paymentData, amount: e.target.value })}
+                          min="0"
+                          step="10"
+                          className="payment-amount-input"
+                        />
+                        <div className="payment-method-toggle">
+                          <button
+                            className={`method-btn ${paymentData.method === 'cash' ? 'active' : ''}`}
+                            onClick={() => setPaymentData({ ...paymentData, method: 'cash' })}
+                          >
+                            💵 Cash
+                          </button>
+                          <button
+                            className={`method-btn ${paymentData.method === 'e-money' ? 'active' : ''}`}
+                            onClick={() => setPaymentData({ ...paymentData, method: 'e-money' })}
+                          >
+                            📱 E-Money
+                          </button>
+                        </div>
+                        <button className="btn-confirm" onClick={() => saveFinish(booking._id)}>
+                          Complete ✓
+                        </button>
+                        <button className="btn-cancel" onClick={() => setFinishingId(null)}>
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
           ))}
         </tbody>
       </table>

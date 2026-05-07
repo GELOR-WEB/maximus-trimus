@@ -219,14 +219,34 @@ const Admin = () => {
       {/* 📊 STATS SECTION */}
       <DashboardStats />
 
-      <h3 className="section-title">Recent Booking Requests ({bookings.length})</h3>
-
       {error && <div className="error-message">{error}</div>}
 
-      <BookingsTable
-        bookings={bookings}
-        onActionSuccess={handleBookingAction}
-      />
+      {/* 1. ACTIVE BOOKINGS (Pending & Confirmed) */}
+      <div className="bookings-section">
+        <h3 className="section-title">Active Requests ({bookings.filter(b => b.status === 'Pending' || b.status === 'Confirmed').length})</h3>
+        <BookingsTable
+          bookings={bookings.filter(b => b.status === 'Pending' || b.status === 'Confirmed')}
+          onActionSuccess={handleBookingAction}
+        />
+      </div>
+
+      {/* 2. COMPLETED BOOKINGS (Finished) */}
+      <div className="bookings-section" style={{ marginTop: '40px' }}>
+        <h3 className="section-title" style={{ color: '#4caf50' }}>Completed Haircuts ({bookings.filter(b => b.status === 'Completed').length})</h3>
+        <BookingsTable
+          bookings={bookings.filter(b => b.status === 'Completed')}
+          onActionSuccess={handleBookingAction}
+        />
+      </div>
+
+      {/* 3. CANCELLED BOOKINGS */}
+      <div className="bookings-section" style={{ marginTop: '40px' }}>
+        <h3 className="section-title" style={{ color: '#f44336' }}>Cancelled Haircuts ({bookings.filter(b => b.status === 'Cancelled').length})</h3>
+        <BookingsTable
+          bookings={bookings.filter(b => b.status === 'Cancelled')}
+          onActionSuccess={handleBookingAction}
+        />
+      </div>
 
       {/* 🔔 NOTIFICATION DIAGNOSTIC PANEL */}
       <div className="hours-control-panel notification-debug">
