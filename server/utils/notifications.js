@@ -31,10 +31,13 @@ async function sendNotification(payload) {
 
     const body = {
         app_id: ONESIGNAL_APP_ID,
+        priority: 10, // High priority for immediate delivery
+        target_channel: 'push',
         ...payload,
     };
 
     try {
+        console.log('📡 Sending OneSignal notification with payload:', JSON.stringify(body));
         const response = await fetch(ONESIGNAL_API_URL, {
             method: 'POST',
             headers: {
@@ -47,14 +50,19 @@ async function sendNotification(payload) {
         const data = await response.json();
 
         if (!response.ok) {
-            console.error('OneSignal API error:', response.status, JSON.stringify(data));
+            console.error('❌ OneSignal API error:', response.status, JSON.stringify(data));
             return null;
         }
 
-        console.log('✅ Notification sent:', data.id, '| Recipients:', data.recipients);
+        console.log(`✅ Notification sent! ID: ${data.id} | Recipients: ${data.recipients || 0}`);
+        
+        if (data.recipients === 0) {
+            console.warn('⚠️ Notification sent but reached 0 recipients. Targeting might be incorrect or user is not subscribed.');
+        }
+
         return data;
     } catch (err) {
-        console.error('OneSignal request failed:', err.message || err);
+        console.error('❌ OneSignal request failed:', err.message || err);
         return null;
     }
 }
@@ -68,6 +76,7 @@ async function sendToAdmin(heading, message) {
     return sendNotification({
         headings: { en: heading },
         contents: { en: message },
+        url: 'https://maximus-trimus.vercel.app/admin/dashboard',
         // Target users who have the "role" tag set to "admin"
         filters: [
             { field: 'tag', key: 'role', relation: '=', value: 'admin' }
