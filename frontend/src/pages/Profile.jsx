@@ -19,6 +19,24 @@ const Profile = () => {
     });
     const [message, setMessage] = useState({ text: "", type: "" });
 
+    // Reschedule state
+    const [rescheduleId, setRescheduleId] = useState(null);
+    const [rescheduleDate, setRescheduleDate] = useState("");
+    const [rescheduleTime, setRescheduleTime] = useState("");
+    const [rescheduleMsg, setRescheduleMsg] = useState({ text: "", type: "" });
+    const [rescheduleLoading, setRescheduleLoading] = useState(false);
+
+    const fetchMyBookings = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const res = await axios.get(`${API_URL}/api/bookings/my-bookings`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setBookings(res.data);
+        } catch (err) {
+            console.error("Failed to fetch bookings:", err);
+        }
+    };
 
     useEffect(() => {
         if (user) {
@@ -27,19 +45,6 @@ const Profile = () => {
                 email: user.email || "",
                 phone: user.phone || ""
             });
-
-            // Fetch My Bookings
-            const fetchMyBookings = async () => {
-                try {
-                    const token = localStorage.getItem("token");
-                    const res = await axios.get(`${API_URL}/api/bookings/my-bookings`, {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    setBookings(res.data);
-                } catch (err) {
-                    console.error("Failed to fetch bookings:", err);
-                }
-            };
             fetchMyBookings();
         }
     }, [user]);
@@ -76,7 +81,60 @@ const Profile = () => {
         navigate("/");
     };
 
+    // Cancel booking handler
+    const handleCancelBooking = async (bookingId) => {
+        if (!window.confirm("Are you sure you want to cancel this booking?")) return;
 
+        try {
+            const token = localStorage.getItem("token");
+            await axios.put(`${API_URL}/api/bookings/my-bookings/${bookingId}/cancel`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            fetchMyBookings(); // Refresh
+        } catch (err) {
+            alert(err.response?.data?.message || "Failed to cancel booking");
+        }
+    };
+
+    // Reschedule booking handler
+    const handleRescheduleSubmit = async (bookingId) => {
+        if (!rescheduleDate || !rescheduleTime) {
+            setRescheduleMsg({ text: "Please select both date and time.", type: "error" });
+            return;
+        }
+
+        setRescheduleLoading(true);
+        setRescheduleMsg({ text: "", type: "" });
+
+        try {
+            const token = localStorage.getItem("token");
+            const res = await axios.put(`${API_URL}/api/bookings/my-bookings/${bookingId}/reschedule`, {
+                date: rescheduleDate,
+                time: rescheduleTime
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            setRescheduleMsg({ text: res.data.message, type: "success" });
+            setTimeout(() => {
+                setRescheduleId(null);
+                setRescheduleDate("");
+                setRescheduleTime("");
+                setRescheduleMsg({ text: "", type: "" });
+                fetchMyBookings();
+            }, 1500);
+        } catch (err) {
+            setRescheduleMsg({
+                text: err.response?.data?.message || "Failed to reschedule",
+                type: "error"
+            });
+        } finally {
+            setRescheduleLoading(false);
+        }
+    };
+
+    // Get today's date as minimum for the reschedule date picker
+    const todayStr = new Date().toISOString().split("T")[0];
 
     return (
         <div className="profile-container">
@@ -194,23 +252,102 @@ const Profile = () => {
                         <p className="no-bookings">You haven't made any bookings yet.</p>
                     ) : (
                         <div className="bookings-list">
-                            {bookings.map((booking) => (
-                                <div key={booking._id} className={`booking-card status-${booking.status.toLowerCase()}`}>
-                                    <div className="booking-info">
-                                        <div className="booking-date">
-                                            <span className="date">{new Date(booking.date).toLocaleDateString()}</span>
-                                            <span className="time">{booking.time}</span>
+                            {bookings.map((booking) => {
+                                const canModify = booking.status === 'Pending' || booking.status === 'Confirmed';
+                                const isRescheduling = rescheduleId === booking._id;
+
+                                return (
+                                    <div key={booking._id} className={`booking-card status-${booking.status.toLowerCase()}`}>
+                                        <div className="booking-info">
+                                            <div className="booking-date">
+                                                <span className="date">{new Date(booking.date).toLocaleDateString()}</span>
+                                                <span className="time">{booking.time}</span>
+                                            </div>
+                                            <div className="booking-service">
+                                                <span className="service-name">{booking.serviceType}</span>
+                                                {booking.location && <span className="location">📍 {booking.location}</span>}
+                                            </div>
                                         </div>
-                                        <div className="booking-service">
-                                            <span className="service-name">{booking.serviceType}</span>
-                                            {booking.location && <span className="location">📍 {booking.location}</span>}
+
+                                        <div className="booking-right">
+                                            <span className="status-badge">{booking.status}</span>
+
+                                            {canModify && !isRescheduling && (
+                                                <div className="booking-actions">
+                                                    <button
+                                                        className="btn-reschedule"
+                                                        onClick={() => {
+                                                            setRescheduleId(booking._id);
+                                                            setRescheduleDate(booking.date);
+                                                            setRescheduleTime(booking.time);
+                                                            setRescheduleMsg({ text: "", type: "" });
+                                                        }}
+                                                    >
+                                                        📅 Reschedule
+                                                    </button>
+                                                    <button
+                                                        className="btn-cancel-booking"
+                                                        onClick={() => handleCancelBooking(booking._id)}
+                                                    >
+                                                        ✕ Cancel
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
+
+                                        {/* Inline Reschedule Form */}
+                                        {isRescheduling && (
+                                            <div className="reschedule-form">
+                                                <h4>Reschedule Booking</h4>
+                                                <div className="reschedule-inputs">
+                                                    <div className="reschedule-field">
+                                                        <label>New Date</label>
+                                                        <input
+                                                            type="date"
+                                                            value={rescheduleDate}
+                                                            min={todayStr}
+                                                            onChange={(e) => setRescheduleDate(e.target.value)}
+                                                        />
+                                                    </div>
+                                                    <div className="reschedule-field">
+                                                        <label>New Time</label>
+                                                        <input
+                                                            type="time"
+                                                            value={rescheduleTime}
+                                                            onChange={(e) => setRescheduleTime(e.target.value)}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                {rescheduleMsg.text && (
+                                                    <div className={`profile-message ${rescheduleMsg.type}`} style={{ marginTop: '10px' }}>
+                                                        {rescheduleMsg.text}
+                                                    </div>
+                                                )}
+
+                                                <div className="reschedule-actions">
+                                                    <button
+                                                        className="btn-save"
+                                                        onClick={() => handleRescheduleSubmit(booking._id)}
+                                                        disabled={rescheduleLoading}
+                                                    >
+                                                        {rescheduleLoading ? "Submitting..." : "Confirm Reschedule"}
+                                                    </button>
+                                                    <button
+                                                        className="btn-cancel"
+                                                        onClick={() => {
+                                                            setRescheduleId(null);
+                                                            setRescheduleMsg({ text: "", type: "" });
+                                                        }}
+                                                    >
+                                                        Never Mind
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                    <div className="booking-status">
-                                        <span className="status-badge">{booking.status}</span>
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     )}
                 </div>

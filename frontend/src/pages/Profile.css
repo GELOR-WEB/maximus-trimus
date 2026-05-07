@@ -225,6 +225,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
     transition: all 0.3s ease;
 }
 
@@ -273,6 +275,14 @@
     color: #aaa;
 }
 
+/* Booking right side — status + actions */
+.booking-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+}
+
 .status-badge {
     padding: 0.4rem 1rem;
     border-radius: 20px;
@@ -305,6 +315,112 @@
     background: rgba(33, 150, 243, 0.15);
     color: #2196f3; /* Blue */
     border: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+/* Booking Action Buttons */
+.booking-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-reschedule {
+    background: rgba(212, 175, 55, 0.15);
+    color: #d4af37;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-reschedule:hover {
+    background: rgba(212, 175, 55, 0.3);
+    border-color: #d4af37;
+    transform: translateY(-1px);
+}
+
+.btn-cancel-booking {
+    background: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+    border: 1px solid rgba(244, 67, 54, 0.3);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel-booking:hover {
+    background: rgba(244, 67, 54, 0.25);
+    border-color: #f44336;
+    transform: translateY(-1px);
+}
+
+/* Inline Reschedule Form */
+.reschedule-form {
+    width: 100%;
+    background: rgba(212, 175, 55, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-top: 0.5rem;
+}
+
+.reschedule-form h4 {
+    margin: 0 0 1rem 0;
+    color: #d4af37;
+    font-size: 1rem;
+}
+
+.reschedule-inputs {
+    display: flex;
+    gap: 1rem;
+}
+
+.reschedule-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.reschedule-field label {
+    font-size: 0.8rem;
+    color: #aaa;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.reschedule-field input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: #fff;
+    padding: 0.6rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+.reschedule-field input:focus {
+    outline: none;
+    border-color: #d4af37;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.reschedule-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.reschedule-actions .btn-save,
+.reschedule-actions .btn-cancel {
+    flex: 1;
+    padding: 0.6rem;
+    font-size: 0.9rem;
 }
 
 .btn-back-home {
@@ -349,5 +465,32 @@
     .info-item {
         flex-direction: column;
         gap: 0.5rem;
+    }
+
+    .booking-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .booking-right {
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .booking-actions {
+        width: 100%;
+    }
+
+    .btn-reschedule,
+    .btn-cancel-booking {
+        flex: 1;
+    }
+
+    .reschedule-inputs {
+        flex-direction: column;
+    }
+
+    .reschedule-actions {
+        flex-direction: column;
     }
 }

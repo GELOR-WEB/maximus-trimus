@@ -17,6 +17,93 @@ router.get("/my-bookings", authenticateToken, async (req, res) => {
   }
 });
 
+// 0b. CLIENT CANCEL BOOKING
+router.put("/my-bookings/:id/cancel", authenticateToken, async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) return res.status(404).json({ message: "Booking not found" });
+
+    // Verify ownership
+    if (String(booking.userId) !== String(req.user._id)) {
+      return res.status(403).json({ message: "You can only cancel your own bookings" });
+    }
+
+    // Only allow cancelling Pending or Confirmed bookings
+    if (booking.status === 'Cancelled' || booking.status === 'Completed') {
+      return res.status(400).json({ message: `Cannot cancel a ${booking.status.toLowerCase()} booking` });
+    }
+
+    booking.status = 'Cancelled';
+    await booking.save();
+
+    res.json({ message: "Booking cancelled successfully", booking });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// 0c. CLIENT RESCHEDULE BOOKING
+router.put("/my-bookings/:id/reschedule", authenticateToken, async (req, res) => {
+  try {
+    const { date, time } = req.body;
+    if (!date || !time) {
+      return res.status(400).json({ message: "New date and time are required" });
+    }
+
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) return res.status(404).json({ message: "Booking not found" });
+
+    // Verify ownership
+    if (String(booking.userId) !== String(req.user._id)) {
+      return res.status(403).json({ message: "You can only reschedule your own bookings" });
+    }
+
+    // Only allow rescheduling Pending or Confirmed bookings
+    if (booking.status === 'Cancelled' || booking.status === 'Completed') {
+      return res.status(400).json({ message: `Cannot reschedule a ${booking.status.toLowerCase()} booking` });
+    }
+
+    // Check business hours
+    let settings = await Settings.findOne();
+    if (!settings) settings = new Settings();
+    if (!isTimeValid(time, settings.startHour, settings.endHour)) {
+      return res.status(400).json({
+        message: `We are closed at this time. Please book between ${settings.startHour}:00 and ${settings.endHour}:00.`
+      });
+    }
+
+    // Check 1-hour overlap (exclude this booking from conflict check)
+    const [reqH, reqM] = time.split(':').map(Number);
+    const reqMinutes = reqH * 60 + reqM;
+    const dayBookings = await Booking.find({
+      date: date,
+      status: { $ne: 'Cancelled' },
+      _id: { $ne: booking._id }
+    });
+
+    const hasConflict = dayBookings.some(b => {
+      const [bH, bM] = b.time.split(':').map(Number);
+      const bMinutes = bH * 60 + bM;
+      return Math.abs(reqMinutes - bMinutes) < 60;
+    });
+
+    if (hasConflict) {
+      return res.status(400).json({
+        message: "This slot is too close to another appointment. Please choose a time at least 1 hour apart."
+      });
+    }
+
+    booking.date = date;
+    booking.time = time;
+    booking.status = 'Pending'; // Reset to pending for admin re-approval
+    await booking.save();
+
+    res.json({ message: "Booking rescheduled successfully! Awaiting confirmation.", booking });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Optional authentication middleware - doesn't block if no token
 const optionalAuth = async (req, res, next) => {
   try {
