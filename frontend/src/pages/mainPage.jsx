@@ -240,7 +240,6 @@ const MainPage = () => {
                   className="btn-prompt guest"
                   onClick={() => {
                     setIsAuthPromptOpen(false);
-                    setIsBookingModalOpen(true);
                   }}
                 >
                   Continue as Guest
