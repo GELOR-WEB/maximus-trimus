@@ -427,30 +427,80 @@
   gap: 15px;
 }
 
+.status-on, .status-off {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid transparent;
+}
+
 .status-on {
   color: #4caf50;
-  font-weight: bold;
+  border-color: rgba(76, 175, 80, 0.3);
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.1);
 }
 
 .status-off {
   color: #f44336;
-  font-weight: bold;
+  border-color: rgba(244, 67, 54, 0.3);
+  box-shadow: 0 0 10px rgba(244, 67, 54, 0.1);
 }
 
 .btn-toggle {
-  background: #333;
-  color: white;
-  border: 1px solid #555;
-  padding: 5px 10px;
+  background: transparent;
+  color: #ccc;
+  border: 1px solid #444;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-toggle:hover {
+  background: #333;
+  border-color: #666;
+  color: white;
 }
 
 .hours-control-panel {
   background: #1a1a1a;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 25px;
+  border-radius: 10px;
   border: 1px solid #333;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.hours-control-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, gold, #b8860b);
+  opacity: 0.7;
+}
+
+.hours-control-panel h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  color: #f5deb3;
+  font-family: "Roboto Slab", serif;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .hours-inputs {
@@ -461,19 +511,69 @@
 }
 
 .hours-inputs input[type="number"] {
-  background: #222;
+  background: #111;
   border: 1px solid #444;
   color: white;
-  padding: 5px;
-  width: 60px;
+  padding: 8px;
+  width: 70px;
+  border-radius: 4px;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  text-align: center;
+  transition: border-color 0.3s ease;
+}
+
+.hours-inputs input[type="number"]:focus {
+  border-color: gold;
+  outline: none;
 }
 
 .hours-inputs input[type="text"] {
-  background: #222;
+  background: #111;
   border: 1px solid #444;
   color: white;
-  padding: 8px 12px;
+  padding: 10px 15px;
   flex: 1;
-  min-width: 350px;
+  min-width: 300px;
   border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.hours-inputs input[type="text"]:focus {
+  border-color: gold;
+  background: #151515;
+  outline: none;
+}
+.btn-save-hours {
+  background: linear-gradient(135deg, #f5deb3, #d4af37);
+  color: #111;
+  border: none;
+  padding: 10px 22px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-save-hours:hover {
+  background: linear-gradient(135deg, #fff, #f5deb3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.3);
+}
+
+.btn-save-hours:active {
+  transform: translateY(0);
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
