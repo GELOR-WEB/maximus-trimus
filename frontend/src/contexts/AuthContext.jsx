@@ -16,6 +16,14 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const interceptor = axios.interceptors.request.use(
             (config) => {
+                // Don't add Authorization header to login/register requests
+                // These endpoints should never need a token, and sending an old/invalid one can cause 403s
+                const isAuthRoute = config.url && (config.url.includes('/api/auth/login') || config.url.includes('/api/auth/register'));
+
+                if (isAuthRoute) {
+                    return config;
+                }
+
                 const token = localStorage.getItem('token');
                 if (token) {
                     config.headers.Authorization = `Bearer ${token}`;
@@ -32,6 +40,37 @@ export const AuthProvider = ({ children }) => {
         };
     }, []);
 
+    // Helper to link browser's push subscription to the user
+    const initializeOneSignal = React.useCallback((userData) => {
+        if (!userData || !userData.id) return;
+
+        if (window.OneSignalDeferred) {
+            window.OneSignalDeferred.push(async function (OneSignal) {
+                try {
+                    console.log('Initializing OneSignal for user:', userData.id);
+                    await OneSignal.login(String(userData.id));
+
+                    // Tag role for targeted notifications (crucial for admins)
+                    if (userData.role) {
+                        await OneSignal.User.addTag('role', userData.role);
+                    }
+
+                    // Request permission if not yet granted
+                    if (OneSignal.Notifications.permission !== true) {
+                        await OneSignal.Notifications.requestPermission();
+                    }
+
+                    // CRITICAL: In v16, must explicitly opt in to create push token
+                    if (!OneSignal.User.PushSubscription.optedIn) {
+                        await OneSignal.User.PushSubscription.optIn();
+                    }
+                } catch (e) {
+                    console.log('OneSignal initialization failed:', e);
+                }
+            });
+        }
+    }, []);
+
     // Verify token on app load
     useEffect(() => {
         const verifyToken = async () => {
@@ -45,33 +84,7 @@ export const AuthProvider = ({ children }) => {
                     setIsAuthenticated(true);
 
                     // Link this browser's push subscription to the user
-                    if (window.OneSignalDeferred) {
-                        window.OneSignalDeferred.push(async function (OneSignal) {
-                            try {
-                                await OneSignal.login(String(res.data.id));
-
-                                // Tag admin users for targeted admin notifications
-                                if (res.data.role === 'admin') {
-                                    await OneSignal.User.addTag('role', 'admin');
-                                }
-
-                                // Request permission if not yet granted
-                                if (OneSignal.Notifications.permission !== true) {
-                                    console.log('Requesting notification permission...');
-                                    await OneSignal.Notifications.requestPermission();
-                                }
-
-                                // CRITICAL: In v16, must explicitly opt in to create push token
-                                if (!OneSignal.User.PushSubscription.optedIn) {
-                                    console.log('Opting in to push subscription...');
-                                    await OneSignal.User.PushSubscription.optIn();
-                                    console.log('Push subscription opted in!');
-                                }
-                            } catch (e) {
-                                console.log('OneSignal login failed:', e);
-                            }
-                        });
-                    }
+                    initializeOneSignal(res.data);
                 } catch (err) {
                     console.error('Token verification failed:', err);
                     localStorage.removeItem('token');
@@ -82,7 +95,7 @@ export const AuthProvider = ({ children }) => {
         };
 
         verifyToken();
-    }, []);
+    }, [initializeOneSignal]);
 
     // Reset inactivity timeout
     const resetInactivityTimeout = React.useCallback(() => {
@@ -134,6 +147,10 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (email, password, fullName, phone) => {
         try {
+            // Clear any existing auth data before registering
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+
             const res = await axios.post(`${API_URL}/api/auth/register`, {
                 email,
                 password,
@@ -146,6 +163,9 @@ export const AuthProvider = ({ children }) => {
             setUser(res.data.user);
             setIsAuthenticated(true);
 
+            // Initialize notifications for the new user
+            initializeOneSignal(res.data.user);
+
             return { success: true };
         } catch (err) {
             return {
@@ -157,6 +177,11 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
+            // CRITICAL: Clear any existing stale auth data before making the login request.
+            // This ensures the interceptor doesn't send a stale token that might cause a 403.
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+
             const res = await axios.post(`${API_URL}/api/auth/login`, {
                 email,
                 password
@@ -168,19 +193,7 @@ export const AuthProvider = ({ children }) => {
             setIsAuthenticated(true);
 
             // Link this browser's push subscription to the user
-            if (window.OneSignalDeferred) {
-                window.OneSignalDeferred.push(async function (OneSignal) {
-                    try {
-                        await OneSignal.login(String(res.data.user.id));
-                        // Ensure push subscription is active
-                        if (!OneSignal.User.PushSubscription.optedIn) {
-                            await OneSignal.User.PushSubscription.optIn();
-                        }
-                    } catch (e) {
-                        console.log('OneSignal login failed:', e);
-                    }
-                });
-            }
+            initializeOneSignal(res.data.user);
 
             return { success: true };
         } catch (err) {

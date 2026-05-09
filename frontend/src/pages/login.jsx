@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:3000');
 import { useNavigate } from "react-router-dom";
-import "./login.css"; // We will create this next
+import { useAuth } from "../contexts/AuthContext";
+import "./login.css";
 
 const Login = () => {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,46 +23,23 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(""); // Clear previous errors
+    setLoading(true);
 
     try {
-      // 1. Send credentials to the backend
-      const res = await axios.post(
-        `${API_URL}/api/auth/login`,
-        formData
-      );
+      // Use the centralized login function from AuthContext
+      // This handles: axios post, localStorage, React state, and OneSignal tagging
+      const result = await login(formData.username, formData.password);
 
-      // 2. If successful, save the token to LocalStorage (The "Key")
-      localStorage.setItem("token", res.data.token);
-
-      // 3. Link this browser to the admin user in OneSignal
-      if (window.OneSignalDeferred) {
-        window.OneSignalDeferred.push(async function (OneSignal) {
-          try {
-            await OneSignal.login(String(res.data.user.id));
-            await OneSignal.User.addTag('role', 'admin');
-            // Request permission if needed
-            if (OneSignal.Notifications.permission !== true) {
-              await OneSignal.Notifications.requestPermission();
-            }
-            // CRITICAL: opt in to create push token
-            if (!OneSignal.User.PushSubscription.optedIn) {
-              await OneSignal.User.PushSubscription.optIn();
-            }
-          } catch (e) {
-            console.log('OneSignal admin login failed:', e);
-          }
-        });
+      if (result.success) {
+        // Redirect to the Dashboard
+        navigate("/admin/dashboard");
+      } else {
+        setError(result.message);
       }
-
-      // 4. Redirect to the Dashboard
-      navigate("/admin/dashboard");
     } catch (err) {
-      // 4. Handle errors (Wrong password, etc.)
-      const msg =
-        err.response && err.response.data && err.response.data.message
-          ? err.response.data.message
-          : "Login failed. Please try again.";
-      setError(msg);
+      setError("Login failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -101,8 +78,8 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" className="btn-login">
-            Enter Dashboard
+          <button type="submit" className="btn-login" disabled={loading}>
+            {loading ? "Entering..." : "Enter Dashboard"}
           </button>
         </form>
       </div>
