@@ -1,0 +1,372 @@
+/* ============================================
+   ADMIN DAYS OFF CALENDAR
+   Dark admin theme consistent with admin.css
+   ============================================ */
+
+.daysoff-panel {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 25px;
+  margin-top: 25px;
+}
+
+.daysoff-panel h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.daysoff-subtitle {
+  color: #aaa;
+  font-size: 0.85rem;
+  margin: 0 0 20px 0;
+}
+
+/* Calendar Container */
+.daysoff-calendar {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 500px;
+}
+
+/* Header Row */
+.daysoff-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.daysoff-month-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.5px;
+}
+
+.daysoff-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.daysoff-nav button {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.daysoff-nav button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Day Names */
+.daysoff-day-names {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.daysoff-day-name {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 0;
+}
+
+/* Day Grid */
+.daysoff-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.daysoff-cell {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
+  gap: 3px;
+  padding: 0;
+}
+
+.daysoff-cell:hover:not(.daysoff-cell--empty):not(.daysoff-cell--past) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.daysoff-cell--empty {
+  background: transparent;
+  cursor: default;
+}
+
+.daysoff-cell--past {
+  opacity: 0.2;
+  cursor: default;
+}
+
+.daysoff-cell--today {
+  border-color: #d4af37 !important;
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.daysoff-cell--dayoff {
+  background: rgba(244, 67, 54, 0.15) !important;
+  border-color: rgba(244, 67, 54, 0.4) !important;
+  color: #ff6b6b;
+}
+
+.daysoff-cell--dayoff:hover:not(.daysoff-cell--past) {
+  background: rgba(244, 67, 54, 0.25) !important;
+}
+
+.daysoff-cell-note {
+  font-size: 0.45rem;
+  color: #ff9090;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 2px;
+}
+
+/* Has bookings indicator */
+.daysoff-cell-bookings {
+  font-size: 0.5rem;
+  color: #888;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.daysoff-cell-bookings-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #4caf50;
+}
+
+/* Upcoming Days Off List */
+.daysoff-upcoming {
+  margin-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 16px;
+}
+
+.daysoff-upcoming h4 {
+  color: #ccc;
+  font-size: 0.9rem;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.daysoff-upcoming-empty {
+  color: #666;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.daysoff-upcoming-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.daysoff-upcoming-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(244, 67, 54, 0.06);
+  border: 1px solid rgba(244, 67, 54, 0.15);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.daysoff-upcoming-item:hover {
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.daysoff-upcoming-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.daysoff-upcoming-date {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.daysoff-upcoming-note {
+  color: #999;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.daysoff-remove-btn {
+  background: rgba(244, 67, 54, 0.15);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: #ff6b6b;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.daysoff-remove-btn:hover {
+  background: rgba(244, 67, 54, 0.3);
+  border-color: #f44336;
+  color: white;
+}
+
+/* Day Off Modal (for adding note) */
+.daysoff-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(4px);
+}
+
+.daysoff-modal {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 30px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  color: white;
+  animation: daysoffModalIn 0.2s ease-out;
+}
+
+@keyframes daysoffModalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.daysoff-modal h4 {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+}
+
+.daysoff-modal p {
+  color: #aaa;
+  font-size: 0.85rem;
+  margin: 0 0 20px 0;
+}
+
+.daysoff-modal input {
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: white;
+  font-size: 0.95rem;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+
+.daysoff-modal input:focus {
+  border-color: #d4af37;
+}
+
+.daysoff-modal input::placeholder {
+  color: #666;
+}
+
+.daysoff-modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.daysoff-modal-actions button {
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.daysoff-modal-cancel {
+  background: transparent;
+  border: 1px solid #555;
+  color: #aaa;
+}
+
+.daysoff-modal-cancel:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.daysoff-modal-confirm {
+  background: #f44336;
+  border: none;
+  color: white;
+}
+
+.daysoff-modal-confirm:hover {
+  background: #e53935;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .daysoff-calendar {
+    max-width: 100%;
+    padding: 14px;
+  }
+
+  .daysoff-cell {
+    font-size: 0.8rem;
+  }
+
+  .daysoff-cell-note {
+    display: none;
+  }
+}

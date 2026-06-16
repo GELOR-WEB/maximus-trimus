@@ -1,0 +1,416 @@
+/* ============================================
+   AVAILABILITY MINI CALENDAR
+   Glassmorphic dark theme with gold accents
+   ============================================ */
+
+.mini-calendar-wrapper {
+  position: absolute;
+  bottom: 8%;
+  left: 5%;
+  z-index: 10;
+  width: 320px;
+  animation: calendarSlideIn 0.8s ease-out 0.5s both;
+}
+
+@keyframes calendarSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mini-calendar {
+  background: rgba(10, 10, 10, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 16px;
+  padding: 18px;
+  color: white;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.mini-calendar:hover {
+  border-color: rgba(212, 175, 55, 0.3);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 175, 55, 0.05);
+}
+
+/* Calendar Header */
+.mini-cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.mini-cal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f5deb3;
+  letter-spacing: 0.5px;
+}
+
+.mini-cal-nav {
+  display: flex;
+  gap: 6px;
+}
+
+.mini-cal-nav button {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #d4af37;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.mini-cal-nav button:hover {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: rgba(212, 175, 55, 0.3);
+  transform: scale(1.05);
+}
+
+/* Day Names Row */
+.mini-cal-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.mini-cal-day-name {
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(212, 175, 55, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 0;
+}
+
+/* Day Grid */
+.mini-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.mini-cal-cell {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  font-size: 0.8rem;
+  font-weight: 500;
+  gap: 2px;
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 0;
+}
+
+.mini-cal-cell:hover:not(.mini-cal-cell--empty):not(.mini-cal-cell--past) {
+  background: rgba(255, 255, 255, 0.08);
+  transform: scale(1.1);
+}
+
+.mini-cal-cell--empty {
+  cursor: default;
+}
+
+.mini-cal-cell--past {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.mini-cal-cell--today {
+  border: 1px solid rgba(212, 175, 55, 0.5) !important;
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.mini-cal-cell--selected {
+  background: rgba(212, 175, 55, 0.2) !important;
+  border: 1px solid #d4af37 !important;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+}
+
+.mini-cal-cell--dayoff {
+  opacity: 0.4;
+}
+
+.mini-cal-cell--dayoff .mini-cal-cell-num {
+  text-decoration: line-through;
+  color: #ff6b6b;
+}
+
+/* Status Dots */
+.mini-cal-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.mini-cal-dot--available {
+  background-color: #4caf50;
+  box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
+}
+
+.mini-cal-dot--partial {
+  background-color: #ff9800;
+  box-shadow: 0 0 4px rgba(255, 152, 0, 0.5);
+}
+
+.mini-cal-dot--full {
+  background-color: #f44336;
+  box-shadow: 0 0 4px rgba(244, 67, 54, 0.5);
+}
+
+.mini-cal-dot--dayoff {
+  background-color: #f44336;
+  width: 6px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+/* Slot Detail Panel */
+.mini-cal-details {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  animation: detailsFadeIn 0.3s ease-out;
+}
+
+@keyframes detailsFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mini-cal-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.mini-cal-details-date {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.85rem;
+  color: #f5deb3;
+  font-weight: 600;
+}
+
+.mini-cal-details-close {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.mini-cal-details-close:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.mini-cal-dayoff-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.2);
+  border-radius: 8px;
+  color: #ff6b6b;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.mini-cal-slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  max-height: 180px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 175, 55, 0.3) transparent;
+}
+
+.mini-cal-slots::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mini-cal-slots::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+}
+
+.mini-cal-slot {
+  padding: 6px 4px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.mini-cal-slot--available {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  color: #81c784;
+}
+
+.mini-cal-slot--booked {
+  background: rgba(244, 67, 54, 0.08);
+  border: 1px solid rgba(244, 67, 54, 0.15);
+  color: #777;
+  text-decoration: line-through;
+}
+
+/* Legend */
+.mini-cal-legend {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  flex-wrap: wrap;
+}
+
+.mini-cal-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.6rem;
+  color: #888;
+  letter-spacing: 0.3px;
+}
+
+.mini-cal-legend-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.mini-cal-legend-dot--available {
+  background-color: #4caf50;
+}
+
+.mini-cal-legend-dot--partial {
+  background-color: #ff9800;
+}
+
+.mini-cal-legend-dot--full {
+  background-color: #f44336;
+}
+
+/* Loading Shimmer */
+.mini-cal-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 0;
+}
+
+.mini-cal-shimmer {
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .mini-calendar-wrapper {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: 90%;
+    max-width: 340px;
+    margin: 0 auto;
+    margin-top: 10px;
+    animation-delay: 0.3s;
+  }
+
+  .mini-calendar {
+    padding: 14px;
+  }
+
+  .mini-cal-title {
+    font-size: 0.85rem;
+  }
+
+  .mini-cal-cell {
+    font-size: 0.7rem;
+  }
+
+  .mini-cal-slots {
+    grid-template-columns: repeat(3, 1fr);
+    max-height: 140px;
+  }
+
+  .mini-cal-slot {
+    font-size: 0.65rem;
+    padding: 5px 3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mini-calendar-wrapper {
+    width: 95%;
+    max-width: 300px;
+  }
+
+  .mini-calendar {
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .mini-cal-cell {
+    font-size: 0.65rem;
+  }
+
+  .mini-cal-legend {
+    gap: 8px;
+  }
+
+  .mini-cal-slots {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
