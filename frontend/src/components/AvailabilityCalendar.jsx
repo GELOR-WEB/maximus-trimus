@@ -234,16 +234,27 @@ const AvailabilityCalendar = () => {
                 🚫 Day Off{availability[selectedDate].dayOffNote ? ` — ${availability[selectedDate].dayOffNote}` : ''}
               </div>
             ) : (
-              <div className="mini-cal-slots">
-                {getSlots().map(slot => (
-                  <div
-                    key={slot.time}
-                    className={`mini-cal-slot ${slot.isBooked ? 'mini-cal-slot--booked' : 'mini-cal-slot--available'}`}
-                  >
-                    {slot.label}
+              <>
+                {availability[selectedDate].blockedSlots > 0 ? (
+                  <div className="mini-cal-bookings-summary" style={{ fontSize: '0.85rem', color: '#ffcc00', marginBottom: '10px' }}>
+                    ⚠️ There are {availability[selectedDate].blockedSlots} booked slot(s) for this date.
                   </div>
-                ))}
-              </div>
+                ) : (
+                  <div className="mini-cal-bookings-summary-free" style={{ fontSize: '0.85rem', color: '#4caf50', marginBottom: '10px' }}>
+                    ✨ No bookings yet! Wide open.
+                  </div>
+                )}
+                <div className="mini-cal-slots">
+                  {getSlots().map(slot => (
+                    <div
+                      key={slot.time}
+                      className={`mini-cal-slot ${slot.isBooked ? 'mini-cal-slot--booked' : 'mini-cal-slot--available'}`}
+                    >
+                      {slot.label} {slot.isBooked && <span style={{ fontSize: '0.75rem', marginLeft: '5px', opacity: 0.8 }}>(Booked)</span>}
+                    </div>
+                  ))}
+                </div>
+              </>
             )}
           </div>
         )}

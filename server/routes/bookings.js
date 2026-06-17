@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Booking = require("../models/Booking");
 const Settings = require("../models/Settings");
+const DayOff = require("../models/DayOff");
 const jwt = require('jsonwebtoken');
 const { authenticateToken, isAdmin } = require('../middleware/authMiddleware');
 const User = require('../models/User');
@@ -146,6 +147,71 @@ router.get("/check-date", async (req, res) => {
   }
 });
 
+// GET MONTHLY AVAILABILITY (For Frontend Availability Calendar)
+router.get("/availability", async (req, res) => {
+  try {
+    const { month } = req.query; // YYYY-MM
+    let settings = await Settings.findOne();
+    if (!settings) settings = new Settings({ startHour: 7, endHour: 22 });
+
+    const startHour = settings.startHour || 7;
+    const endHour = settings.endHour || 22;
+
+    const daysOff = await DayOff.find({ date: { $regex: `^${month}` } });
+    const bookings = await Booking.find({
+      date: { $regex: `^${month}` },
+      status: { $ne: 'Cancelled' }
+    });
+
+    const availability = {};
+    
+    if (month && month.includes('-')) {
+      const [year, monthStr] = month.split('-');
+      const daysInMonth = new Date(year, monthStr, 0).getDate();
+      
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${month}-${String(d).padStart(2, '0')}`;
+        
+        const dayOffData = daysOff.filter(d => d.date === dateStr);
+        const isFullDayOff = dayOffData.some(d => d.isFullDay);
+        const partialDaysOff = dayOffData.filter(d => !d.isFullDay);
+        
+        const dayBookings = bookings.filter(b => b.date === dateStr).map(b => b.time);
+        
+        let allBlockedTimes = [...dayBookings];
+        
+        partialDaysOff.forEach(pd => {
+          const [startH] = pd.startTime.split(':').map(Number);
+          const [endH] = pd.endTime.split(':').map(Number);
+          
+          for (let h = startH; h < endH; h++) {
+            allBlockedTimes.push(`${String(h).padStart(2, '0')}:00`);
+          }
+        });
+        
+        allBlockedTimes = [...new Set(allBlockedTimes)];
+        const availableSlots = (endHour - startHour) - allBlockedTimes.length;
+        
+        availability[dateStr] = {
+          isDayOff: isFullDayOff,
+          dayOffNote: isFullDayOff ? dayOffData.find(d => d.isFullDay)?.note : '',
+          bookedTimes: allBlockedTimes,
+          availableSlots: Math.max(0, availableSlots),
+          blockedSlots: allBlockedTimes.length
+        };
+      }
+    }
+    
+    res.json({
+      startHour,
+      endHour,
+      availability
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // 2. CREATE BOOKING (With Conflict Logic and Optional Authentication)
 router.post("/", optionalAuth, async (req, res) => {
   try {
@@ -255,9 +321,14 @@ router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
 
     // B. Busiest/Quiet Month
     const monthCounts = {};
+    const monthlyCutsData = {}; // NEW: explicit YYYY-MM counts
     allActiveBookings.forEach(b => {
-      const month = new Date(b.date).toLocaleString('default', { month: 'long' });
-      monthCounts[month] = (monthCounts[month] || 0) + 1;
+      const d = new Date(b.date);
+      const monthStr = d.toLocaleString('default', { month: 'long' });
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      
+      monthCounts[monthStr] = (monthCounts[monthStr] || 0) + 1;
+      monthlyCutsData[key] = (monthlyCutsData[key] || 0) + 1;
     });
 
     let busiestMonth = 'N/A';
@@ -349,6 +420,7 @@ router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
     res.json({
       totalCutsAllTime,
       totalCutsThisYear,
+      monthlyCutsData, // NEW
       busiestMonth,
       leastBusyMonth,
       clientFrequency: {
@@ -359,6 +431,7 @@ router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
       earnings: {
         totalEarnings,
         currentMonthEarnings,
+        monthlyEarnings, // NEW
         mostProfitableMonth,
         mostProfitableAmount: maxEarnings > 0 ? maxEarnings : 0,
         leastProfitableMonth,

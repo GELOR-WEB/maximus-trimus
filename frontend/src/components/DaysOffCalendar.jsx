@@ -15,6 +15,9 @@ const DaysOffCalendar = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [note, setNote] = useState('');
+  const [isFullDay, setIsFullDay] = useState(true);
+  const [startTime, setStartTime] = useState('12:00');
+  const [endTime, setEndTime] = useState('14:00');
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -84,6 +87,9 @@ const DaysOffCalendar = () => {
       // If it's a normal day, open modal to add it as a day off
       setSelectedDay(dateStr);
       setNote('');
+      setIsFullDay(true);
+      setStartTime('12:00');
+      setEndTime('14:00');
       setModalOpen(true);
     }
   };
@@ -93,7 +99,10 @@ const DaysOffCalendar = () => {
     try {
       await axios.post(`${API_URL}/api/daysoff`, {
         date: selectedDay,
-        note: note.trim()
+        note: note.trim(),
+        isFullDay,
+        startTime: isFullDay ? undefined : startTime,
+        endTime: isFullDay ? undefined : endTime
       }, getAuthHeaders());
       setModalOpen(false);
       fetchData(); // Refresh data
@@ -197,6 +206,7 @@ const DaysOffCalendar = () => {
                 <div key={d._id} className="daysoff-upcoming-item">
                   <div className="daysoff-upcoming-info">
                     <span className="daysoff-upcoming-date">{dateDisplay}</span>
+                    <span className="daysoff-upcoming-type">{d.isFullDay ? 'Full Day' : `${d.startTime} - ${d.endTime}`}</span>
                     {d.note && <span className="daysoff-upcoming-note">{d.note}</span>}
                   </div>
                   <button className="daysoff-remove-btn" onClick={() => removeDayOff(d._id)}>Remove</button>
@@ -212,7 +222,43 @@ const DaysOffCalendar = () => {
         <div className="daysoff-modal-backdrop" onClick={() => setModalOpen(false)}>
           <div className="daysoff-modal" onClick={e => e.stopPropagation()}>
             <h4>Mark {selectedDay} as Day Off</h4>
-            <p>Clients will not be able to book on this date.</p>
+            <p>Clients will not be able to book on this date/time.</p>
+            
+            <div className="daysoff-modal-type-toggle">
+              <label>
+                <input 
+                  type="radio" 
+                  checked={isFullDay} 
+                  onChange={() => setIsFullDay(true)} 
+                />
+                Full Day
+              </label>
+              <label>
+                <input 
+                  type="radio" 
+                  checked={!isFullDay} 
+                  onChange={() => setIsFullDay(false)} 
+                />
+                Partial Hours
+              </label>
+            </div>
+
+            {!isFullDay && (
+              <div className="daysoff-modal-times">
+                <input 
+                  type="time" 
+                  value={startTime} 
+                  onChange={e => setStartTime(e.target.value)} 
+                />
+                <span> to </span>
+                <input 
+                  type="time" 
+                  value={endTime} 
+                  onChange={e => setEndTime(e.target.value)} 
+                />
+              </div>
+            )}
+
             <input
               type="text"
               placeholder="Reason / Note (e.g. Holiday, Personal)"

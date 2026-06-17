@@ -35,16 +35,17 @@ app.use(
 );
 app.use(express.json());
 
-// Routes
 const bookingRoutes = require("./routes/bookings");
 const authRoutes = require("./routes/auth");
 const settingsRoutes = require("./routes/settings");
 const reviewRoutes = require("./routes/reviews");
+const dayoffRoutes = require("./routes/daysoff");
 
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/daysoff", dayoffRoutes);
 
 
 

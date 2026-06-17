@@ -5,6 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'ht
 import { useNavigate } from "react-router-dom"; // For redirecting if not logged in
 import BookingsTable from "../components/bookingsTable";
 import DashboardStats from "../components/DashboardStats";
+import DaysOffCalendar from "../components/DaysOffCalendar";
 import "./admin.css";
 
 const Admin = () => {
@@ -216,6 +217,9 @@ const Admin = () => {
         </div>
       </div>
 
+      {/* DAYS OFF CALENDAR */}
+      <DaysOffCalendar />
+
       {/* 📊 STATS SECTION */}
       <DashboardStats />
 
@@ -232,10 +236,12 @@ const Admin = () => {
 
       {/* 2. COMPLETED BOOKINGS (Finished) */}
       <div className="bookings-section" style={{ marginTop: '40px' }}>
-        <h3 className="section-title" style={{ color: '#4caf50' }}>Completed Haircuts ({bookings.filter(b => b.status === 'Completed').length})</h3>
+        <h3 className="section-title" style={{ color: '#4caf50' }}>Completed Haircuts</h3>
         <BookingsTable
           bookings={bookings.filter(b => b.status === 'Completed')}
           onActionSuccess={handleBookingAction}
+          showFilters={true}
+          hideActions={true}
         />
       </div>
 
@@ -245,117 +251,11 @@ const Admin = () => {
         <BookingsTable
           bookings={bookings.filter(b => b.status === 'Cancelled')}
           onActionSuccess={handleBookingAction}
+          hideActions={true}
+          hidePayment={true}
         />
       </div>
 
-      {/* 🔔 NOTIFICATION DIAGNOSTIC PANEL */}
-      <div className="hours-control-panel notification-debug">
-        <h3>🔔 Notification Diagnostics</h3>
-        <p style={{ color: '#aaa', fontSize: '0.85rem', margin: '0 0 15px' }}>
-          Test and debug push notification delivery to your devices.
-        </p>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {/* Browser Permission Status */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '6px' }}>
-            <span>Browser Permission:</span>
-            <span style={{ fontWeight: 'bold', color: (window.Notification?.permission === 'granted') ? '#4caf50' : '#ff4d4d' }}>
-              {window.Notification?.permission?.toUpperCase() || 'UNSUPPORTED'}
-            </span>
-          </div>
-
-          {/* Action Buttons */}
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <button
-              className="btn-toggle"
-              onClick={() => {
-                if (window.OneSignalDeferred) {
-                  window.OneSignalDeferred.push(async function (OneSignal) {
-                    await OneSignal.Notifications.requestPermission();
-                    window.location.reload();
-                  });
-                }
-              }}
-              style={{ backgroundColor: '#444', flex: 1 }}
-            >
-              Request Permission
-            </button>
-
-            <button
-              className="btn-save-hours"
-              onClick={async () => {
-                try {
-                  const res = await axios.post(`${API_URL}/api/auth/test-notification`, {}, getAuthHeaders());
-                  alert(JSON.stringify(res.data, null, 2));
-                } catch (err) {
-                  alert("Failed: " + JSON.stringify(err.response?.data || err.message));
-                }
-              }}
-              style={{ flex: 1 }}
-            >
-              Test (Admin Tag)
-            </button>
-
-            <button
-              className="btn-save-hours"
-              onClick={async () => {
-                try {
-                  const res = await axios.post(`${API_URL}/api/auth/test-broadcast`, {}, getAuthHeaders());
-                  alert(JSON.stringify(res.data, null, 2));
-                } catch (err) {
-                  alert("Failed: " + JSON.stringify(err.response?.data || err.message));
-                }
-              }}
-              style={{ flex: 1, backgroundColor: '#2a6e2a' }}
-            >
-              Test (Broadcast ALL)
-            </button>
-          </div>
-
-          {/* OneSignal Subscription Check */}
-          <button
-            className="btn-toggle"
-            onClick={async () => {
-              if (window.OneSignalDeferred) {
-                window.OneSignalDeferred.push(async function (OneSignal) {
-                  const permission = OneSignal.Notifications.permission;
-                  const userId = OneSignal.User?.onesignalId || 'not set';
-                  const externalId = OneSignal.User?.externalId || 'not set';
-                  const optedIn = OneSignal.User.PushSubscription.optedIn;
-                  const pushToken = OneSignal.User.PushSubscription.token || 'none';
-                  const tags = await OneSignal.User.getTags();
-                  alert(
-                    `OneSignal Status:\n` +
-                    `─────────────────\n` +
-                    `Permission: ${permission}\n` +
-                    `Opted In: ${optedIn}\n` +
-                    `Push Token: ${pushToken ? pushToken.substring(0, 30) + '...' : 'NONE'}\n` +
-                    `OneSignal ID: ${userId}\n` +
-                    `External ID (MongoDB): ${externalId}\n` +
-                    `Tags: ${JSON.stringify(tags)}\n\n` +
-                    `If "Opted In" is false, log out and log back in to fix.`
-                  );
-                });
-              } else {
-                alert('OneSignal SDK not loaded on this page.');
-              }
-            }}
-            style={{ backgroundColor: '#333', borderColor: '#555' }}
-          >
-            Check OneSignal Status
-          </button>
-
-          <div style={{ marginTop: '5px', padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', fontSize: '0.8rem' }}>
-            <strong>Troubleshooting:</strong>
-            <ul style={{ margin: '5px 0', paddingLeft: '20px', color: '#888' }}>
-              <li><strong>Recipients: 0</strong> = Your browser is not registered. Click "Request Permission" then log out/in.</li>
-              <li><strong>Test (Admin Tag)</strong> fails but <strong>Test (Broadcast)</strong> works = The admin tag is missing. Log out and log back in.</li>
-              <li><strong>Both tests show Recipients: 0</strong> = OneSignal can't find any subscribed device. Check that you allowed notifications in your browser.</li>
-              <li><strong>env vars missing</strong> = Add ONESIGNAL_APP_ID and ONESIGNAL_REST_API_KEY to Vercel environment variables.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

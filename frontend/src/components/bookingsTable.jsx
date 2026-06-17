@@ -3,7 +3,7 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:3000');
 
-const BookingsTable = ({ bookings, onActionSuccess }) => {
+const BookingsTable = ({ bookings, onActionSuccess, showFilters = false, hideActions = false, hidePayment = false }) => {
   // State to track which row is being edited (for rescheduling)
   const [editingId, setEditingId] = useState(null);
   const [editFormData, setEditFormData] = useState({ date: "", time: "" });
@@ -11,6 +11,12 @@ const BookingsTable = ({ bookings, onActionSuccess }) => {
   // State for the "Finished" payment prompt
   const [finishingId, setFinishingId] = useState(null);
   const [paymentData, setPaymentData] = useState({ amount: "", method: "cash" });
+
+  // Filters and Pagination
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortPayment, setSortPayment] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
 
   // Helper: Get auth headers for admin API requests
   const getAuthHeaders = () => ({
@@ -24,6 +30,30 @@ const BookingsTable = ({ bookings, onActionSuccess }) => {
 
   if (bookings.length === 0) {
     return <p className="no-bookings">No current bookings found.</p>;
+  }
+
+  // --- FILTER & SORT LOGIC ---
+  let displayedBookings = [...bookings];
+
+  if (showFilters) {
+    if (searchQuery) {
+      displayedBookings = displayedBookings.filter(b => 
+        (b.clientName || "").toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    if (sortPayment === "highest") {
+      displayedBookings.sort((a, b) => (b.amountPaid || 0) - (a.amountPaid || 0));
+    } else if (sortPayment === "lowest") {
+      displayedBookings.sort((a, b) => (a.amountPaid || 0) - (b.amountPaid || 0));
+    }
+  }
+
+  const totalPages = showFilters ? Math.ceil(displayedBookings.length / ITEMS_PER_PAGE) : 1;
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  if (showFilters) {
+    displayedBookings = displayedBookings.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }
 
   // Helper: Format Date
@@ -108,7 +138,31 @@ const BookingsTable = ({ bookings, onActionSuccess }) => {
 
   return (
     <div className="bookings-table-container">
-      <table>
+      {showFilters && (
+        <div className="table-filters" style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+          <input 
+            type="text" 
+            placeholder="Search by client name..." 
+            value={searchQuery}
+            onChange={e => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #444', background: '#222', color: '#fff', flex: 1, outline: 'none' }}
+          />
+          <select 
+            value={sortPayment} 
+            onChange={e => { setSortPayment(e.target.value); setCurrentPage(1); }}
+            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #444', background: '#222', color: '#fff', outline: 'none' }}
+          >
+            <option value="">Sort by Payment</option>
+            <option value="highest">Highest Payment</option>
+            <option value="lowest">Lowest Payment</option>
+          </select>
+        </div>
+      )}
+      
+      {displayedBookings.length === 0 ? (
+        <p className="no-bookings" style={{ padding: '20px', textAlign: 'center' }}>No results match your search.</p>
+      ) : (
+        <table>
         <thead>
           <tr>
             <th>#</th>
@@ -117,15 +171,15 @@ const BookingsTable = ({ bookings, onActionSuccess }) => {
             <th>Service</th>
             <th>Date & Time</th>
             <th>Status</th>
-            <th>Payment</th>
-            <th>Actions</th>
+            {!hidePayment && <th>Payment</th>}
+            {!hideActions && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
-          {bookings.map((booking, index) => (
+          {displayedBookings.map((booking, index) => (
             <React.Fragment key={booking._id}>
               <tr>
-                <td>{index + 1}</td>
+                <td>{showFilters ? startIndex + index + 1 : index + 1}</td>
                 <td>{booking.clientName}</td>
                 <td>{booking.contact}</td>
                 <td>{booking.serviceType}</td>
@@ -159,20 +213,23 @@ const BookingsTable = ({ bookings, onActionSuccess }) => {
                 </td>
 
                 {/* Payment info column */}
-                <td>
-                  {booking.status === 'Completed' && booking.amountPaid ? (
-                    <span style={{ fontSize: '0.85rem' }}>
-                      ₱{booking.amountPaid.toLocaleString()}
-                      <br />
-                      <span style={{ color: '#888', textTransform: 'capitalize' }}>
-                        {booking.paymentMethod || '—'}
+                {!hidePayment && (
+                  <td>
+                    {booking.status === 'Completed' && booking.amountPaid ? (
+                      <span style={{ fontSize: '0.85rem' }}>
+                        ₱{booking.amountPaid.toLocaleString()}
+                        <br />
+                        <span style={{ color: '#888', textTransform: 'capitalize' }}>
+                          {booking.paymentMethod || '—'}
+                        </span>
                       </span>
-                    </span>
-                  ) : '—'}
-                </td>
+                    ) : '—'}
+                  </td>
+                )}
 
-                <td>
-                  {editingId === booking._id ? (
+                {!hideActions && (
+                  <td>
+                    {editingId === booking._id ? (
                     // Show SAVE button if editing
                     <>
                       <button
@@ -230,6 +287,7 @@ const BookingsTable = ({ bookings, onActionSuccess }) => {
                     </>
                   )}
                 </td>
+                )}
               </tr>
 
               {/* Inline Payment Form (appears below the row) */}
@@ -277,6 +335,29 @@ const BookingsTable = ({ bookings, onActionSuccess }) => {
           ))}
         </tbody>
       </table>
+      )}
+      
+      {showFilters && totalPages > 1 && (
+        <div className="pagination" style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '15px' }}>
+          <button 
+            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="btn-toggle"
+            style={{ opacity: currentPage === 1 ? 0.5 : 1 }}
+          >
+            Previous
+          </button>
+          <span style={{ display: 'flex', alignItems: 'center', color: '#ccc' }}>Page {currentPage} of {totalPages}</span>
+          <button 
+            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="btn-toggle"
+            style={{ opacity: currentPage === totalPages ? 0.5 : 1 }}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

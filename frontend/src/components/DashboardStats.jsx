@@ -7,6 +7,10 @@ const DashboardStats = () => {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const now = new Date();
+    const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const [selectedMonth, setSelectedMonth] = useState(currentMonthKey);
+
     useEffect(() => {
         const fetchStats = async () => {
             try {
@@ -26,10 +30,36 @@ const DashboardStats = () => {
     if (loading) return <div className="stats-loading">Calculating Analytics...</div>;
     if (!stats) return null;
 
+    const availableMonths = Array.from(new Set([
+        ...Object.keys(stats.monthlyCutsData || {}),
+        ...Object.keys(stats.earnings?.monthlyEarnings || {}),
+        currentMonthKey // Ensure current month is always an option
+    ])).sort().reverse();
 
+    const formatMonthKey = (key) => {
+        const [y, m] = key.split('-');
+        const date = new Date(parseInt(y), parseInt(m) - 1);
+        return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+    };
+
+    const selectedCuts = stats.monthlyCutsData?.[selectedMonth] || 0;
+    const selectedEarnings = stats.earnings?.monthlyEarnings?.[selectedMonth]?.total || 0;
 
     return (
         <div className="stats-container">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <h3 style={{ margin: 0, color: 'white' }}>Performance Dashboard</h3>
+                <select 
+                    value={selectedMonth} 
+                    onChange={e => setSelectedMonth(e.target.value)}
+                    style={{ padding: '8px 12px', borderRadius: '4px', border: '1px solid #444', background: '#222', color: '#fff', fontSize: '1rem', outline: 'none' }}
+                >
+                    {availableMonths.map(key => (
+                        <option key={key} value={key}>{formatMonthKey(key)}</option>
+                    ))}
+                </select>
+            </div>
+
             {/* 1. TOP ROW: KEY METRICS */}
             <div className="stats-grid-top">
                 <div className="stat-card">
@@ -37,8 +67,8 @@ const DashboardStats = () => {
                     <p className="stat-number">{stats.totalCutsAllTime}</p>
                 </div>
                 <div className="stat-card">
-                    <h4>Cuts This Year</h4>
-                    <p className="stat-number gold">{stats.totalCutsThisYear}</p>
+                    <h4>Cuts in {formatMonthKey(selectedMonth).split(' ')[0]}</h4>
+                    <p className="stat-number gold">{selectedCuts}</p>
                 </div>
                 <div className="stat-card">
                     <h4>Busiest Month</h4>
@@ -63,8 +93,8 @@ const DashboardStats = () => {
                         </div>
                     </div>
                     <div className="stat-card earnings-card">
-                        <h4>Current Month</h4>
-                        <p className="stat-number">₱{stats.earnings?.currentMonthEarnings?.toLocaleString() || 0}</p>
+                        <h4>{formatMonthKey(selectedMonth).split(' ')[0]} Earnings</h4>
+                        <p className="stat-number">₱{selectedEarnings.toLocaleString()}</p>
                     </div>
                     <div className="stat-card profitable-card">
                         <h4>Most Profitable</h4>
