@@ -640,6 +640,12 @@ const MainPage = () => {
                   >
                     <img src="/images/8.jpg" alt="/images/mainlogo.png" />
                   </div>
+                  <div
+                    className="card"
+                    onClick={(e) => handleImageClick(e, "/images/9.jpg")}
+                  >
+                    <img src="/images/9.jpg" alt="/images/mainlogo.png" />
+                  </div>
                 </div>
                 <div aria-hidden className="group">
                   <div
@@ -689,6 +695,12 @@ const MainPage = () => {
                     onClick={(e) => handleImageClick(e, "/images/8.jpg")}
                   >
                     <img src="/images/8.jpg" alt="/images/mainlogo.png" />
+                  </div>
+                  <div
+                    className="card"
+                    onClick={(e) => handleImageClick(e, "/images/9.jpg")}
+                  >
+                    <img src="/images/9.jpg" alt="/images/mainlogo.png" />
                   </div>
                 </div>
               </div>
