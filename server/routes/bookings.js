@@ -176,28 +176,35 @@ router.get("/availability", async (req, res) => {
         const isFullDayOff = dayOffData.some(d => d.isFullDay);
         const partialDaysOff = dayOffData.filter(d => !d.isFullDay);
         
+        // Only actual customer bookings
         const dayBookings = bookings.filter(b => b.date === dateStr).map(b => b.time);
         
-        let allBlockedTimes = [...dayBookings];
+        // Partial day-off ranges with their notes (separate from bookings)
+        const blockedTimes = partialDaysOff.map(pd => ({
+          start: pd.startTime,
+          end: pd.endTime,
+          note: pd.note || 'Unavailable'
+        }));
         
+        // Compute all blocked hour strings for slot counting
+        let allBlockedHours = [...dayBookings];
         partialDaysOff.forEach(pd => {
           const [startH] = pd.startTime.split(':').map(Number);
           const [endH] = pd.endTime.split(':').map(Number);
-          
           for (let h = startH; h < endH; h++) {
-            allBlockedTimes.push(`${String(h).padStart(2, '0')}:00`);
+            allBlockedHours.push(`${String(h).padStart(2, '0')}:00`);
           }
         });
-        
-        allBlockedTimes = [...new Set(allBlockedTimes)];
-        const availableSlots = (endHour - startHour) - allBlockedTimes.length;
+        allBlockedHours = [...new Set(allBlockedHours)];
+        const availableSlots = (endHour - startHour) - allBlockedHours.length;
         
         availability[dateStr] = {
           isDayOff: isFullDayOff,
           dayOffNote: isFullDayOff ? dayOffData.find(d => d.isFullDay)?.note : '',
-          bookedTimes: allBlockedTimes,
+          bookedTimes: dayBookings,
+          blockedTimes: blockedTimes,
           availableSlots: Math.max(0, availableSlots),
-          blockedSlots: allBlockedTimes.length
+          blockedSlots: allBlockedHours.length
         };
       }
     }
@@ -241,11 +248,32 @@ router.post("/", optionalAuth, async (req, res) => {
       });
     }
 
-    // C. Check 1-Hour Overlap Rule
-    // We convert the requested time to minutes
+    // B2. Check if the requested time falls within a partial day-off block
+    const daysOffForDate = await DayOff.find({ date: date });
+    const isFullDayOff = daysOffForDate.some(d => d.isFullDay);
+    if (isFullDayOff) {
+      return res.status(400).json({
+        message: "The barber is not available on this date."
+      });
+    }
+
     const [reqH, reqM] = time.split(':').map(Number);
     const reqMinutes = reqH * 60 + reqM;
 
+    const partialBlocks = daysOffForDate.filter(d => !d.isFullDay);
+    for (const block of partialBlocks) {
+      const [startH] = block.startTime.split(':').map(Number);
+      const [endH] = block.endTime.split(':').map(Number);
+      const blockStart = startH * 60;
+      const blockEnd = endH * 60;
+      if (reqMinutes >= blockStart && reqMinutes < blockEnd) {
+        return res.status(400).json({
+          message: `The barber is unavailable from ${block.startTime} to ${block.endTime}${block.note ? ` (${block.note})` : ''}. Please choose a different time.`
+        });
+      }
+    }
+
+    // C. Check 1-Hour Overlap Rule
     const dayBookings = await Booking.find({ date: date, status: { $ne: 'Cancelled' } });
 
     const hasConflict = dayBookings.some(b => {

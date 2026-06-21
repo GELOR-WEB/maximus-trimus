@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "./mainPage.css";
 import { BsStars } from "react-icons/bs";
+import BarberPole from "../components/BarberPole";
 import { PiScissorsThin } from "react-icons/pi";
 import BookingForm from "../components/bookingForm";
 import AvailabilityCalendar from "../components/AvailabilityCalendar";
@@ -356,7 +357,7 @@ const MainPage = () => {
               style={{ cursor: "pointer" }}
               title={isAuthenticated ? `Go to Profile (${user?.fullName})` : "Home"}
             >
-              <img src="/images/weblogo.png" alt="Maximus Trimus Logo" />
+              <BarberPole isActive={isShopOpen} size={50} />
             </div>
             <ul className={`nav-links ${isMenuOpen ? "nav-links--open" : ""}`}>
               <li>
@@ -498,9 +499,12 @@ const MainPage = () => {
                     </div>
 
                     <div className="business-details">
-                      <p className={`status ${!isShopOpen ? 'status--out' : ''}`}>
-                        {isShopOpen ? "🟢 THE BARBER IS IN!" : "🔴 THE BARBER IS OUT"}
-                      </p>
+                      <div className="status-indicator-row">
+                        <BarberPole isActive={isShopOpen} size={42} />
+                        <p className={`status ${!isShopOpen ? 'status--out' : ''}`}>
+                          {isShopOpen ? "THE BARBER IS IN!" : "THE BARBER IS OUT"}
+                        </p>
+                      </div>
                       <p>
                         <strong>Hours of Operation:</strong>
                       </p>

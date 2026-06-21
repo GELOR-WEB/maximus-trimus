@@ -1,0 +1,118 @@
+/* ============================================
+   BARBER POLE INDICATOR
+   Greek-themed barber pole that spins & glows
+   when the barber is IN, and stays still when OUT.
+   ============================================ */
+
+.barber-pole-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.6s ease, transform 0.3s ease;
+}
+
+.barber-pole-wrapper:hover {
+  transform: scale(1.08);
+}
+
+/* ── Active state: glowing, alive ── */
+.barber-pole--active .barber-pole-svg {
+  filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.5))
+          drop-shadow(0 0 12px rgba(212, 175, 55, 0.25));
+}
+
+.barber-pole--active .pole-body {
+  opacity: 1;
+}
+
+.barber-pole--active .pole-knob {
+  transition: fill 0.6s ease;
+}
+
+.barber-pole--active .pole-cap {
+  transition: fill 0.6s ease;
+}
+
+.barber-pole--active .laurel {
+  transition: stroke 0.6s ease;
+}
+
+/* Pulsing glow animation when active */
+.barber-pole--active .barber-pole-svg {
+  animation: poleGlowPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes poleGlowPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.4))
+            drop-shadow(0 0 10px rgba(212, 175, 55, 0.2));
+  }
+  50% {
+    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.7))
+            drop-shadow(0 0 20px rgba(212, 175, 55, 0.35));
+  }
+}
+
+/* Meander ring slow rotation */
+.barber-pole--active .meander-ring {
+  animation: meaderSpin 12s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes meaderSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Inactive state: dimmed, still ── */
+.barber-pole--inactive .barber-pole-svg {
+  filter: grayscale(0.6) brightness(0.5);
+  animation: none;
+}
+
+.barber-pole--inactive .pole-body {
+  opacity: 0.5;
+}
+
+.barber-pole--inactive .pole-knob,
+.barber-pole--inactive .pole-cap,
+.barber-pole--inactive .laurel {
+  transition: fill 0.6s ease, stroke 0.6s ease;
+}
+
+/* ── Status dot (bottom-right corner) ── */
+.pole-status-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(20, 20, 20, 0.9);
+  transition: background-color 0.4s ease, box-shadow 0.4s ease;
+  z-index: 5;
+}
+
+.pole-status-dot--on {
+  background-color: #4caf50;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.7),
+              0 0 12px rgba(76, 175, 80, 0.3);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+.pole-status-dot--off {
+  background-color: #ff4d4d;
+  box-shadow: none;
+}
+
+@keyframes dotPulse {
+  0%, 100% {
+    box-shadow: 0 0 4px rgba(76, 175, 80, 0.5),
+                0 0 8px rgba(76, 175, 80, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.8),
+                0 0 16px rgba(76, 175, 80, 0.4);
+  }
+}

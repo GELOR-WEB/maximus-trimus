@@ -96,6 +96,19 @@ const AvailabilityCalendar = () => {
     setSelectedDate(selectedDate === dateStr ? null : dateStr);
   };
 
+  // Helper: check if a given hour is within any blocked time range
+  const getBlockedNote = (dayData, hour) => {
+    if (!dayData.blockedTimes || dayData.blockedTimes.length === 0) return null;
+    for (const bt of dayData.blockedTimes) {
+      const [startH] = bt.start.split(':').map(Number);
+      const [endH] = bt.end.split(':').map(Number);
+      if (hour >= startH && hour < endH) {
+        return bt.note || 'Unavailable';
+      }
+    }
+    return null;
+  };
+
   // Get slots for the selected date
   const getSlots = () => {
     if (!selectedDate || !availability) return [];
@@ -107,16 +120,21 @@ const AvailabilityCalendar = () => {
       const timeStr = `${String(hour).padStart(2, '0')}:00`;
       const slotMinutes = hour * 60;
 
-      const isBooked = dayData.bookedTimes.some(bTime => {
+      // Check if this slot is booked by a customer
+      const isBooked = (dayData.bookedTimes || []).some(bTime => {
         const [bH, bM] = bTime.split(':').map(Number);
         const bMinutes = bH * 60 + bM;
         return Math.abs(slotMinutes - bMinutes) < 60;
       });
 
+      // Check if this slot is blocked by admin (partial day off)
+      const blockedNote = getBlockedNote(dayData, hour);
+
       slots.push({
         time: timeStr,
         label: formatTime(hour),
-        isBooked
+        isBooked,
+        blockedNote // null if not blocked, string with reason if blocked
       });
     }
     return slots;
@@ -135,6 +153,13 @@ const AvailabilityCalendar = () => {
     if (!selectedDate) return '';
     const d = new Date(selectedDate + 'T00:00:00');
     return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  };
+
+  // Count total blocked slots for the summary (bookings + admin blocks)
+  const getBlockedSummary = (dayData) => {
+    const bookingCount = (dayData.bookedTimes || []).length;
+    const blockedRanges = dayData.blockedTimes || [];
+    return { bookingCount, blockedRanges };
   };
 
   return (
@@ -235,24 +260,57 @@ const AvailabilityCalendar = () => {
               </div>
             ) : (
               <>
-                {availability[selectedDate].blockedSlots > 0 ? (
-                  <div className="mini-cal-bookings-summary" style={{ fontSize: '0.85rem', color: '#ffcc00', marginBottom: '10px' }}>
-                    ⚠️ There are {availability[selectedDate].blockedSlots} booked slot(s) for this date.
-                  </div>
-                ) : (
-                  <div className="mini-cal-bookings-summary-free" style={{ fontSize: '0.85rem', color: '#4caf50', marginBottom: '10px' }}>
-                    ✨ No bookings yet! Wide open.
-                  </div>
-                )}
-                <div className="mini-cal-slots">
-                  {getSlots().map(slot => (
-                    <div
-                      key={slot.time}
-                      className={`mini-cal-slot ${slot.isBooked ? 'mini-cal-slot--booked' : 'mini-cal-slot--available'}`}
-                    >
-                      {slot.label} {slot.isBooked && <span style={{ fontSize: '0.75rem', marginLeft: '5px', opacity: 0.8 }}>(Booked)</span>}
+                {(() => {
+                  const { bookingCount, blockedRanges } = getBlockedSummary(availability[selectedDate]);
+                  const hasAny = bookingCount > 0 || blockedRanges.length > 0;
+                  
+                  if (!hasAny) {
+                    return (
+                      <div className="mini-cal-bookings-summary-free" style={{ fontSize: '0.85rem', color: '#4caf50', marginBottom: '10px' }}>
+                        ✨ No bookings yet! Wide open.
+                      </div>
+                    );
+                  }
+                  
+                  return (
+                    <div style={{ marginBottom: '10px' }}>
+                      {bookingCount > 0 && (
+                        <div className="mini-cal-bookings-summary" style={{ fontSize: '0.85rem', color: '#ffcc00', marginBottom: '4px' }}>
+                          📋 {bookingCount} booked slot{bookingCount > 1 ? 's' : ''}
+                        </div>
+                      )}
+                      {blockedRanges.length > 0 && blockedRanges.map((br, idx) => (
+                        <div key={idx} className="mini-cal-blocked-summary" style={{ fontSize: '0.85rem', color: '#ff9090', marginBottom: '4px' }}>
+                          🚧 {br.start} – {br.end}: {br.note}
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  );
+                })()}
+                <div className="mini-cal-slots">
+                  {getSlots().map(slot => {
+                    let slotClass = 'mini-cal-slot mini-cal-slot--available';
+                    let slotLabel = slot.label;
+                    
+                    if (slot.blockedNote) {
+                      slotClass = 'mini-cal-slot mini-cal-slot--blocked';
+                      slotLabel = `${slot.label}`;
+                    } else if (slot.isBooked) {
+                      slotClass = 'mini-cal-slot mini-cal-slot--booked';
+                    }
+                    
+                    return (
+                      <div key={slot.time} className={slotClass}>
+                        {slotLabel}
+                        {slot.blockedNote && (
+                          <span className="mini-cal-slot-reason">{slot.blockedNote}</span>
+                        )}
+                        {slot.isBooked && !slot.blockedNote && (
+                          <span style={{ fontSize: '0.75rem', marginLeft: '5px', opacity: 0.8 }}>(Booked)</span>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </>
             )}
@@ -280,3 +338,4 @@ const AvailabilityCalendar = () => {
 };
 
 export default AvailabilityCalendar;
+

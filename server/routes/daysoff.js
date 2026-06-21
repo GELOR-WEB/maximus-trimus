@@ -42,6 +42,34 @@ router.post('/', authenticateToken, isAdmin, async (req, res) => {
   }
 });
 
+// POST create days off for MULTIPLE dates at once (Admin only)
+router.post('/batch', authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const { dates, note, isFullDay, startTime, endTime } = req.body;
+    
+    if (!Array.isArray(dates) || dates.length === 0) {
+      return res.status(400).json({ message: 'Please provide an array of dates.' });
+    }
+
+    const created = [];
+    for (const date of dates) {
+      const dayOff = new DayOff({
+        date,
+        note: note || '',
+        isFullDay: isFullDay !== undefined ? isFullDay : true,
+        startTime: isFullDay ? undefined : startTime,
+        endTime: isFullDay ? undefined : endTime
+      });
+      await dayOff.save();
+      created.push(dayOff);
+    }
+    
+    res.status(201).json({ message: `${created.length} day(s) off created.`, daysOff: created });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
 // DELETE a day off (Admin only)
 router.delete('/:id', authenticateToken, isAdmin, async (req, res) => {
   try {
