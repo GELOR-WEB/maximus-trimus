@@ -131,6 +131,9 @@ async function sendResetEmail(to, resetLink, userName) {
         return info;
     } catch (err) {
         console.error('❌ Failed to send reset email:', err.message || err);
+        console.error('❌ Error code:', err.code);
+        console.error('❌ SMTP response:', err.response);
+        console.error('❌ Email config: HOST=' + process.env.EMAIL_HOST + ', PORT=' + process.env.EMAIL_PORT + ', USER=' + process.env.EMAIL_USER + ', PASS_SET=' + !!process.env.EMAIL_PASS);
         return null;
     }
 }
