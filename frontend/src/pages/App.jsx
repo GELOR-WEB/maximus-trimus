@@ -8,6 +8,8 @@ import Admin from "./admin";
 import Login from "./login"; // Admin login
 import ClientLogin from "./ClientLogin"; // Client login
 import Register from "./Register";
+import ForgotPassword from "./ForgotPassword";
+import ResetPassword from "./ResetPassword";
 import Profile from "./Profile";
 import ProtectedRoute from "../components/ProtectedRoute";
 
@@ -27,6 +29,8 @@ function App() {
             />
             <Route path="/login" element={<ClientLogin />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route
               path="/profile"
               element={

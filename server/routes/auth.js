@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const User = require('../models/User');
 const { authenticateToken } = require('../middleware/authMiddleware');
+const { sendResetEmail } = require('../utils/emailService');
 
 // Rate limiter for login: max 10 attempts per 15 minutes per IP
 const loginLimiter = rateLimit({
@@ -246,6 +247,117 @@ router.post('/test-broadcast', authenticateToken, async (req, res) => {
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
+    }
+});
+
+// Rate limiter for forgot-password: max 5 requests per 15 minutes per IP
+const forgotPasswordLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    message: { message: 'Too many password reset requests. Please try again after 15 minutes.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// Rate limiter for reset-password: max 10 attempts per 15 minutes per IP
+const resetPasswordLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    message: { message: 'Too many reset attempts. Please try again after 15 minutes.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// Forgot Password — sends reset link via email
+router.post('/forgot-password', forgotPasswordLimiter, async (req, res) => {
+    const { email } = req.body;
+
+    // Always return the same message to prevent email enumeration
+    const successMessage = 'If an account with that email exists, a password reset link has been sent.';
+
+    try {
+        if (!email) {
+            return res.status(400).json({ message: 'Email is required' });
+        }
+
+        const user = await User.findOne({ email: email.toLowerCase().trim() });
+
+        if (!user) {
+            // Don't reveal whether the email exists
+            return res.json({ message: successMessage });
+        }
+
+        // Generate a short-lived JWT reset token (15 minutes)
+        const resetToken = jwt.sign(
+            { id: user._id, purpose: 'password-reset' },
+            process.env.JWT_SECRET,
+            { expiresIn: '15m' }
+        );
+
+        // Build the reset link
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+        const resetLink = `${frontendUrl}/reset-password?token=${resetToken}`;
+
+        // Send the email
+        const emailResult = await sendResetEmail(user.email, resetLink, user.fullName);
+
+        if (!emailResult) {
+            console.error('Failed to send reset email to:', user.email);
+            return res.status(500).json({ message: 'Failed to send reset email. Please try again later.' });
+        }
+
+        res.json({ message: successMessage });
+    } catch (err) {
+        console.error('Forgot password error:', err);
+        res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+    }
+});
+
+// Reset Password — verifies token and updates password
+router.post('/reset-password', resetPasswordLimiter, async (req, res) => {
+    const { token, newPassword } = req.body;
+
+    try {
+        if (!token || !newPassword) {
+            return res.status(400).json({ message: 'Token and new password are required' });
+        }
+
+        if (newPassword.length < 6) {
+            return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+        }
+
+        // Verify the reset token
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SECRET);
+        } catch (jwtErr) {
+            if (jwtErr.name === 'TokenExpiredError') {
+                return res.status(400).json({ message: 'Reset link has expired. Please request a new one.' });
+            }
+            return res.status(400).json({ message: 'Invalid reset link. Please request a new one.' });
+        }
+
+        // Ensure the token was created for password reset
+        if (decoded.purpose !== 'password-reset') {
+            return res.status(400).json({ message: 'Invalid reset token' });
+        }
+
+        // Find the user
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            return res.status(400).json({ message: 'User not found' });
+        }
+
+        // Hash new password and save
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(newPassword, salt);
+        await user.save();
+
+        console.log(`✅ Password reset successful for user: ${user.email}`);
+        res.json({ message: 'Password has been reset successfully. You can now log in with your new password.' });
+    } catch (err) {
+        console.error('Reset password error:', err);
+        res.status(500).json({ message: 'Something went wrong. Please try again later.' });
     }
 });
 

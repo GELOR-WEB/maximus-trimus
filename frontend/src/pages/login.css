@@ -149,3 +149,62 @@
 .password-toggle-btn:hover {
     color: gold;
 }
+
+/* Forgot Password Link */
+.forgot-password-link {
+    text-align: right;
+    margin-top: 8px;
+}
+
+.forgot-password-link a {
+    color: #888;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.forgot-password-link a:hover {
+    color: gold;
+    text-decoration: underline;
+}
+
+/* Reset Password Success States */
+.reset-success-container {
+    padding: 20px 0;
+    text-align: center;
+}
+
+.reset-success-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    animation: fadeInBounce 0.5s ease-out;
+}
+
+.reset-success-message {
+    color: #4caf50;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.reset-success-hint {
+    color: #888;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+@keyframes fadeInBounce {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

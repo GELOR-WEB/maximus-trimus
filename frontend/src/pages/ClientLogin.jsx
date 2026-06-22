@@ -82,6 +82,9 @@ const ClientLogin = () => {
                                 {showPassword ? <FaEyeSlash /> : <FaEye />}
                             </button>
                         </div>
+                        <div className="forgot-password-link">
+                            <Link to="/forgot-password">Forgot password?</Link>
+                        </div>
                     </div>
 
                     <button type="submit" className="btn-login" disabled={loading}>
