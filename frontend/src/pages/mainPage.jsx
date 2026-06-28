@@ -508,7 +508,7 @@ const MainPage = () => {
                       <p>
                         <strong>Hours of Operation:</strong>
                       </p>
-                      <p>All Week<br></br>8:00 am to 8:00 pm</p>
+                      <p>All week<br></br>9:00 am to 8:00 pm</p>
                       <div className="social-links">
                         <a href="tel:09916461936">
                           <img src="/images/phone.png" alt="Phone Number" className="contact-icon" />
