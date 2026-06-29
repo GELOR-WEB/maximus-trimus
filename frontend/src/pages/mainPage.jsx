@@ -500,7 +500,6 @@ const MainPage = () => {
 
                     <div className="business-details">
                       <div className="status-indicator-row">
-                        <BarberPole isActive={isShopOpen} size={42} />
                         <p className={`status ${!isShopOpen ? 'status--out' : ''}`}>
                           {isShopOpen ? "THE BARBER IS IN!" : "THE BARBER IS OUT"}
                         </p>
