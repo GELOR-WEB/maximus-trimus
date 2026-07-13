@@ -91,8 +91,11 @@ section {
 }
 
 .book-now-btn:hover {
-  background: white;
-  color: rgb(162, 113, 0);
+  background: rgba(20, 20, 20, 0.9);
+  color: #d4af37;
+  border-color: #d4af37;
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 6px 25px rgba(212, 175, 55, 0.3), 0 0 15px rgba(212, 175, 55, 0.1);
 }
 
 /* Flip Container */
@@ -1321,10 +1324,33 @@ iframe {
   }
 
   .book-now-btn {
-    margin: 30px 0 0 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin: 0;
     transform: none;
-    font-size: 1.2rem;
-    padding: 0.5rem 1.5rem;
+    font-size: 1.1rem;
+    padding: 1rem 2rem;
+    border: none;
+    border-top: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: 0;
+    background: rgba(10, 10, 10, 0.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    z-index: 99;
+    letter-spacing: 3px;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    color: #d4af37;
+  }
+
+  .book-now-btn:hover {
+    background: rgba(212, 175, 55, 0.15);
+    color: #d4af37;
+    border-top-color: rgba(212, 175, 55, 0.6);
   }
 
   .hamburger {
@@ -1380,6 +1406,9 @@ iframe {
     justify-content: flex-start;
     text-align: center;
     padding-top: 60px;
+    padding-bottom: 70px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .nav-links::after {
