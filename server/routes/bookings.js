@@ -426,9 +426,15 @@ router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
       const monthName = d.toLocaleString('default', { month: 'long', year: 'numeric' });
       if (!monthlyEarnings[key]) {
-        monthlyEarnings[key] = { name: monthName, total: 0 };
+        monthlyEarnings[key] = { name: monthName, total: 0, cashTotal: 0, emoneyTotal: 0 };
       }
       monthlyEarnings[key].total += b.amountPaid;
+      if (b.paymentMethod === 'e-money') {
+        monthlyEarnings[key].emoneyTotal += b.amountPaid;
+      } else {
+        // Treat 'cash' and unspecified/null as cash
+        monthlyEarnings[key].cashTotal += b.amountPaid;
+      }
     });
 
     let mostProfitableMonth = 'N/A';
@@ -441,9 +447,9 @@ router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
       if (m.total < minEarnings) { minEarnings = m.total; leastProfitableMonth = m.name; }
     });
 
-    // Payment method breakdown
-    const cashTotal = paidBookings.filter(b => b.paymentMethod === 'cash').reduce((s, b) => s + b.amountPaid, 0);
+    // Payment method breakdown (treat unspecified/null as cash)
     const emoneyTotal = paidBookings.filter(b => b.paymentMethod === 'e-money').reduce((s, b) => s + b.amountPaid, 0);
+    const cashTotal = totalEarnings - emoneyTotal;
 
     res.json({
       totalCutsAllTime,
