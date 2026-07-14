@@ -49,8 +49,8 @@ const DashboardStats = () => {
         <div className="stats-container">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <h3 style={{ margin: 0, color: 'white' }}>Performance Dashboard</h3>
-                <select 
-                    value={selectedMonth} 
+                <select
+                    value={selectedMonth}
                     onChange={e => setSelectedMonth(e.target.value)}
                     style={{ padding: '8px 12px', borderRadius: '4px', border: '1px solid #444', background: '#222', color: '#fff', fontSize: '1rem', outline: 'none' }}
                 >
@@ -95,6 +95,10 @@ const DashboardStats = () => {
                     <div className="stat-card earnings-card">
                         <h4>{formatMonthKey(selectedMonth).split(' ')[0]} Earnings</h4>
                         <p className="stat-number">₱{selectedEarnings.toLocaleString()}</p>
+                        <div className="payment-breakdown">
+                            <span>💵 ₱{stats.earnings?.[selectedMonth]?.cashTotal?.toLocaleString() || 0}</span>
+                            <span>📱 ₱{stats.earnings?.[selectedMonth]?.emoneyTotal?.toLocaleString() || 0}</span>
+                        </div>
                     </div>
                     <div className="stat-card profitable-card">
                         <h4>Most Profitable</h4>
