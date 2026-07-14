@@ -96,8 +96,8 @@ const DashboardStats = () => {
                         <h4>{formatMonthKey(selectedMonth).split(' ')[0]} Earnings</h4>
                         <p className="stat-number">₱{selectedEarnings.toLocaleString()}</p>
                         <div className="payment-breakdown">
-                            <span>💵 ₱{stats.earnings?.[selectedMonth]?.cashTotal?.toLocaleString() || 0}</span>
-                            <span>📱 ₱{stats.earnings?.[selectedMonth]?.emoneyTotal?.toLocaleString() || 0}</span>
+                            <span>💵 ₱{stats.earnings?.monthlyEarnings?.[selectedMonth]?.cashTotal?.toLocaleString() || 0}</span>
+                            <span>📱 ₱{stats.earnings?.monthlyEarnings?.[selectedMonth]?.emoneyTotal?.toLocaleString() || 0}</span>
                         </div>
                     </div>
                     <div className="stat-card profitable-card">
