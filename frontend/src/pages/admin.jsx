@@ -41,7 +41,9 @@ const Admin = () => {
         const res = await axios.get(`${API_URL}/api/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        if (res.data.role !== 'admin') {
+        const role = res.data.role;
+        const isAdmin = Array.isArray(role) ? role.includes('admin') : role === 'admin';
+        if (!isAdmin) {
           localStorage.removeItem("token");
           navigate("/admin/login");
         }

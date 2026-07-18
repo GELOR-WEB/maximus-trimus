@@ -52,7 +52,7 @@ router.post('/register', registerLimiter, async (req, res) => {
             password: hashedPassword,
             fullName,
             phone,
-            role: 'client'
+            role: ['client']
         });
 
         await newUser.save();
@@ -98,8 +98,8 @@ router.post('/login', loginLimiter, async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
-        // Token expiry based on role
-        const expiresIn = user.role === 'admin' ? '1h' : '24h';
+        // Token expiry based on role — admin gets shorter expiry for security
+        const expiresIn = user.hasRole('admin') ? '1h' : '24h';
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn });
 
         // Return user data based on role
@@ -110,7 +110,7 @@ router.post('/login', loginLimiter, async (req, res) => {
         };
 
         // Include profile data for clients
-        if (user.role === 'client') {
+        if (user.hasRole('client')) {
             userData.email = user.email;
             userData.fullName = user.fullName;
             userData.phone = user.phone;
@@ -144,7 +144,7 @@ router.put('/profile', authenticateToken, async (req, res) => {
 
     try {
         // Only allow clients to update their profile
-        if (req.user.role !== 'client') {
+        if (!req.user.hasRole('client')) {
             return res.status(403).json({ message: 'Only clients can update profiles this way' });
         }
 
@@ -189,7 +189,7 @@ const { sendToAll } = require('../utils/notifications');
 
 router.post('/test-notification', authenticateToken, async (req, res) => {
     try {
-        if (req.user.role !== 'admin') {
+        if (!req.user.hasRole('admin')) {
             return res.status(403).json({ message: 'Only admins can send test notifications' });
         }
 
@@ -229,7 +229,7 @@ router.post('/test-notification', authenticateToken, async (req, res) => {
 // Test Broadcast — sends to ALL subscribed users (bypasses tag filter)
 router.post('/test-broadcast', authenticateToken, async (req, res) => {
     try {
-        if (req.user.role !== 'admin') {
+        if (!req.user.hasRole('admin')) {
             return res.status(403).json({ message: 'Only admins can send test notifications' });
         }
 

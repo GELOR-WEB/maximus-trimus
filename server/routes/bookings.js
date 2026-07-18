@@ -225,7 +225,7 @@ router.post("/", optionalAuth, async (req, res) => {
     let { date, time, contact, clientName, serviceType, location } = req.body;
 
     // If user is authenticated, use their profile data
-    if (req.user && req.user.role === 'client') {
+    if (req.user && req.user.hasRole('client')) {
       clientName = req.user.fullName;
       contact = req.user.email || req.user.phone;
     }

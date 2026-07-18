@@ -27,7 +27,7 @@ const resetAdmin = async () => {
             const newAdmin = new User({
                 username: newUsername,
                 password: hashedPassword,
-                role: 'admin'
+                role: ['admin']
             });
             await newAdmin.save();
             console.log('New admin user created.');

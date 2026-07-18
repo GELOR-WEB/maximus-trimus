@@ -50,9 +50,15 @@ export const AuthProvider = ({ children }) => {
                     console.log('Initializing OneSignal for user:', userData.id);
                     await OneSignal.login(String(userData.id));
 
-                    // Tag role for targeted notifications (crucial for admins)
+                    // Tag role(s) for targeted notifications (crucial for admins)
                     if (userData.role) {
-                        await OneSignal.User.addTag('role', userData.role);
+                        const roles = Array.isArray(userData.role) ? userData.role : [userData.role];
+                        // Set the primary 'role' tag (used by OneSignal filters for admin targeting)
+                        if (roles.includes('admin')) {
+                            await OneSignal.User.addTag('role', 'admin');
+                        } else {
+                            await OneSignal.User.addTag('role', roles[0]);
+                        }
                     }
 
                     // Request permission if not yet granted

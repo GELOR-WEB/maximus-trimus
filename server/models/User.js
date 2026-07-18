@@ -4,9 +4,9 @@ const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true }, // Will be hashed
     role: {
-        type: String,
+        type: [String],
         enum: ['admin', 'client'],
-        default: 'client',
+        default: ['client'],
         required: true
     },
     // Client-specific fields
@@ -22,5 +22,13 @@ const userSchema = new mongoose.Schema({
 }, {
     timestamps: true // Adds createdAt and updatedAt automatically
 });
+
+// Backward-compatible role checker: works with both old string and new array values
+userSchema.methods.hasRole = function(roleName) {
+    if (Array.isArray(this.role)) {
+        return this.role.includes(roleName);
+    }
+    return this.role === roleName;
+};
 
 module.exports = mongoose.model('User', userSchema);
