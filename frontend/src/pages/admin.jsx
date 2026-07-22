@@ -24,7 +24,8 @@ const Admin = () => {
     isShopOpen: true,
     startHour: 7,
     endHour: 22,
-    greetingMessage: 'how do you want your hair done?'
+    greetingMessage: 'how do you want your hair done?',
+    autoSchedule: true
   });
 
   const navigate = useNavigate();
@@ -108,21 +109,49 @@ const Admin = () => {
     navigate("/admin/login");
   };
 
-  // NEW: Handler for Toggling "Barber is In/Out"
+  // Helper: format hour as 12-hour string
+  const formatHour = (h) => {
+    const hr = h % 12 || 12;
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    return `${hr} ${ampm}`;
+  };
+
+  // Handler for Toggling "Barber is In/Out" (manual override disables auto-schedule)
   const toggleStatus = async () => {
     try {
       const newStatus = !settings.isShopOpen;
-      // Optimistic update (update UI immediately)
-      setSettings({ ...settings, isShopOpen: newStatus });
+      // Optimistic update — also disable auto-schedule on manual toggle
+      setSettings({ ...settings, isShopOpen: newStatus, autoSchedule: false });
 
       // Send to backend
       await axios.put(`${API_URL}/api/settings`, {
-        isShopOpen: newStatus
+        isShopOpen: newStatus,
+        autoSchedule: false
       }, getAuthHeaders());
     } catch (err) {
       alert("Failed to update status");
       // Revert on error
       setSettings({ ...settings, isShopOpen: !settings.isShopOpen });
+    }
+  };
+
+  // Handler for toggling Auto-Schedule on/off
+  const toggleAutoSchedule = async () => {
+    try {
+      const newAutoSchedule = !settings.autoSchedule;
+      setSettings({ ...settings, autoSchedule: newAutoSchedule });
+
+      const res = await axios.put(`${API_URL}/api/settings`, {
+        autoSchedule: newAutoSchedule
+      }, getAuthHeaders());
+
+      // Update with server-computed status
+      if (res.data) {
+        setSettings(res.data);
+      }
+    } catch (err) {
+      alert("Failed to update auto-schedule");
+      setSettings({ ...settings, autoSchedule: !settings.autoSchedule });
     }
   };
 
@@ -167,6 +196,27 @@ const Admin = () => {
             <button onClick={toggleStatus} className="btn-toggle">
               {settings.isShopOpen ? "Go Offline" : "Go Online"}
             </button>
+
+            {/* Auto-Schedule Toggle */}
+            <div className="auto-schedule-control">
+              <button
+                onClick={toggleAutoSchedule}
+                className={`btn-auto-schedule ${settings.autoSchedule ? 'btn-auto-schedule--active' : ''}`}
+                title={settings.autoSchedule
+                  ? `Auto: Opens ${formatHour(settings.startHour)}, Closes ${formatHour(settings.endHour)}`
+                  : 'Auto-schedule is off — click to enable'
+                }
+              >
+                <span className="auto-schedule-icon">⏰</span>
+                {settings.autoSchedule ? 'Auto' : 'Manual'}
+                <span className={`auto-schedule-dot ${settings.autoSchedule ? 'auto-schedule-dot--on' : 'auto-schedule-dot--off'}`} />
+              </button>
+              {settings.autoSchedule && (
+                <span className="auto-schedule-info">
+                  {formatHour(settings.startHour)} – {formatHour(settings.endHour)}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 

@@ -470,6 +470,87 @@
   color: white;
 }
 
+/* =========================================
+   AUTO-SCHEDULE TOGGLE
+   ========================================= */
+.auto-schedule-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 5px;
+  padding-left: 15px;
+  border-left: 1px solid #333;
+}
+
+.btn-auto-schedule {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #777;
+  border: 1px solid #333;
+  padding: 5px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.btn-auto-schedule:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #555;
+  color: #aaa;
+}
+
+.btn-auto-schedule--active {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: rgba(212, 175, 55, 0.4);
+  color: #d4af37;
+}
+
+.btn-auto-schedule--active:hover {
+  background: rgba(212, 175, 55, 0.18);
+  border-color: rgba(212, 175, 55, 0.6);
+}
+
+.auto-schedule-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.auto-schedule-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.auto-schedule-dot--on {
+  background: #d4af37;
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.6);
+  animation: autoPulse 2s ease-in-out infinite;
+}
+
+.auto-schedule-dot--off {
+  background: #555;
+}
+
+@keyframes autoPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(212, 175, 55, 0.6); }
+  50% { opacity: 0.5; box-shadow: 0 0 2px rgba(212, 175, 55, 0.2); }
+}
+
+.auto-schedule-info {
+  font-size: 0.75rem;
+  color: #888;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
 .hours-control-panel {
   background: #1a1a1a;
   padding: 20px;
