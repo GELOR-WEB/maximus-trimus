@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'ht
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-const AvailabilityCalendar = () => {
+const AvailabilityCalendar = ({ onSlotClick }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [availability, setAvailability] = useState(null);
   const [startHour, setStartHour] = useState(7);
@@ -291,6 +291,7 @@ const AvailabilityCalendar = () => {
                   {getSlots().map(slot => {
                     let slotClass = 'mini-cal-slot mini-cal-slot--available';
                     let slotLabel = slot.label;
+                    const isAvailable = !slot.blockedNote && !slot.isBooked;
                     
                     if (slot.blockedNote) {
                       slotClass = 'mini-cal-slot mini-cal-slot--blocked';
@@ -300,7 +301,17 @@ const AvailabilityCalendar = () => {
                     }
                     
                     return (
-                      <div key={slot.time} className={slotClass}>
+                      <button
+                        key={slot.time}
+                        className={slotClass}
+                        disabled={!isAvailable}
+                        onClick={() => {
+                          if (isAvailable && onSlotClick) {
+                            onSlotClick(selectedDate, slot.time);
+                          }
+                        }}
+                        title={isAvailable ? `Book ${slot.label} on ${formatSelectedDate()}` : undefined}
+                      >
                         {slotLabel}
                         {slot.blockedNote && (
                           <span className="mini-cal-slot-reason">{slot.blockedNote}</span>
@@ -308,7 +319,7 @@ const AvailabilityCalendar = () => {
                         {slot.isBooked && !slot.blockedNote && (
                           <span style={{ fontSize: '0.75rem', marginLeft: '5px', opacity: 0.8 }}>(Booked)</span>
                         )}
-                      </div>
+                      </button>
                     );
                   })}
                 </div>

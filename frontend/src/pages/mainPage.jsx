@@ -44,6 +44,8 @@ const MainPage = () => {
 
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isAuthPromptOpen, setIsAuthPromptOpen] = useState(false);
+  const [bookingDate, setBookingDate] = useState('');
+  const [bookingTime, setBookingTime] = useState('');
 
   // Function to handle the click and set the selected image
   const handleImageClick = (e, imageUrl) => {
@@ -72,8 +74,10 @@ const MainPage = () => {
     setSelectedImage(null);
   };
 
-  // Define click handler for book now button
-  const handleBookNowClick = () => {
+  // Define click handler for calendar slot booking
+  const handleSlotClick = (date, time) => {
+    setBookingDate(date);
+    setBookingTime(time);
     if (!isAuthenticated) {
       setIsAuthPromptOpen(true);
     } else {
@@ -84,6 +88,8 @@ const MainPage = () => {
   // Function to close the booking modal
   const closeBookingModal = () => {
     setIsBookingModalOpen(false);
+    setBookingDate('');
+    setBookingTime('');
   };
   const [isShopOpen, setIsShopOpen] = useState(true);
   const [greetingMessage, setGreetingMessage] = useState('how do you want your hair done?');
@@ -336,7 +342,7 @@ const MainPage = () => {
                 Fill out the details below to secure your spot with the barber.
               </p>
               {/* 👈 Render the BookingForm here */}
-              <BookingForm />
+              <BookingForm initialDate={bookingDate} initialTime={bookingTime} />
             </div>
           </div>
         </div>
@@ -455,11 +461,7 @@ const MainPage = () => {
               </div>
 
               {/* AVAILABILITY CALENDAR WIDGET */}
-              <AvailabilityCalendar />
-
-              <button className="book-now-btn" onClick={handleBookNowClick}>
-                BOOK A CUT
-              </button>
+              <AvailabilityCalendar onSlotClick={handleSlotClick} />
             </section>
 
             <section

@@ -279,12 +279,28 @@
   font-size: 0.7rem;
   font-weight: 500;
   transition: all 0.2s ease;
+  font-family: inherit;
+  cursor: default;
 }
 
 .mini-cal-slot--available {
   background: rgba(76, 175, 80, 0.1);
   border: 1px solid rgba(76, 175, 80, 0.2);
   color: #81c784;
+  cursor: pointer;
+}
+
+.mini-cal-slot--available:hover:not(:disabled) {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: rgba(212, 175, 55, 0.5);
+  color: #f5deb3;
+  transform: scale(1.06);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.15);
+}
+
+.mini-cal-slot--available:active:not(:disabled) {
+  transform: scale(0.97);
+  background: rgba(212, 175, 55, 0.3);
 }
 
 .mini-cal-slot--booked {
@@ -292,6 +308,8 @@
   border: 1px solid rgba(244, 67, 54, 0.15);
   color: #777;
   text-decoration: line-through;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 /* Admin-blocked slot (partial day off with custom reason) */
@@ -310,6 +328,8 @@
   align-items: center;
   gap: 1px;
   text-decoration: none;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .mini-cal-slot-reason {

@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'ht
 import { useAuth } from "../contexts/AuthContext";
 import "./BookingForm.css"; // We will create a specific CSS file for this
 
-const BookingForm = () => {
+const BookingForm = ({ initialDate, initialTime }) => {
   const { isAuthenticated, user } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -13,8 +13,8 @@ const BookingForm = () => {
     contact: "",
     serviceType: "Shop Service", // Default
     location: "",
-    date: "",
-    time: "",
+    date: initialDate || "",
+    time: initialTime || "",
   });
 
   // Auto-fill form when user is authenticated
