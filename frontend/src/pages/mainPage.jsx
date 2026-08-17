@@ -389,6 +389,14 @@ const MainPage = () => {
               </li>
               <li>
                 <a
+                  href="#services"
+                  onClick={(e) => { scrollToSection(e, "services"); closeMenu(); }}
+                >
+                  Services
+                </a>
+              </li>
+              <li>
+                <a
                   href="#the-barber"
                   onClick={(e) => { scrollToSection(e, "the-barber"); closeMenu(); }}
                 >
@@ -472,7 +480,7 @@ const MainPage = () => {
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                height: "100vh",
+                minHeight: "100vh",
                 width: "100%",
               }}
             >
@@ -509,7 +517,7 @@ const MainPage = () => {
                       <p>
                         <strong>Hours of Operation:</strong>
                       </p>
-                      <p>All week<br></br>9:00 am to 8:00 pm</p>
+                      <p>All week<br></br>7:00 am to 8:00pm </p>
                       <div className="social-links">
                         <a href="tel:09916461936">
                           <img src="/images/phone.png" alt="Phone Number" className="contact-icon" />
@@ -708,9 +716,31 @@ const MainPage = () => {
                   </div>
                 </div>
               </div>
+
+              {/* ✂️ SERVICES & PRICING */}
+              <div id="services" className="services-content">
+                <h2 className="services-title">Services & Pricing</h2>
+                <p className="services-subtitle">Quality cuts, honest prices</p>
+                <div className="services-grid">
+                  <div className="service-card">
+                    <div className="service-icon">💈</div>
+                    <h3>Shop Service</h3>
+                    <p className="service-desc">Walk in to the shop and get a fresh cut in a chill, homey atmosphere.</p>
+                    <div className="service-price">₱200</div>
+                  </div>
+                  <div className="service-card service-card--home">
+                    <div className="service-icon">🏠</div>
+                    <h3>Home Service</h3>
+                    <p className="service-desc">Can't come to the shop? The barber comes to you — wherever you are.</p>
+                    <div className="service-price service-price--varies">Price may vary</div>
+                    <p className="service-note">Depends on distance & gas</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
         </div >
+
         <section
           id="the-barber"
           className="barber-section1"
