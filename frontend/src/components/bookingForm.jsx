@@ -100,6 +100,22 @@ const BookingForm = ({ initialDate, initialTime }) => {
     setMessage("Processing...");
     setIsError(false);
 
+    // Prevent booking a time that has already passed today
+    const selectedDate = new Date(formData.date + 'T00:00:00');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (selectedDate.getTime() === today.getTime()) {
+      const now = new Date();
+      const [selH, selM] = formData.time.split(':').map(Number);
+      const selectedMinutes = selH * 60 + selM;
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      if (selectedMinutes <= currentMinutes) {
+        setIsError(true);
+        setMessage("This time has already passed. Please select a later time.");
+        return;
+      }
+    }
+
     try {
       // Token will be automatically included by axios interceptor if user is logged in
       await axios.post(`${API_URL}/api/bookings`, formData);

@@ -115,10 +115,19 @@ const AvailabilityCalendar = ({ onSlotClick }) => {
     const dayData = availability[selectedDate];
     if (!dayData || dayData.isDayOff) return [];
 
+    // Check if selected date is today for past-time filtering
+    const isSelectedToday = selectedDate === todayStr;
+    const nowHours = new Date().getHours();
+    const nowMinutes = new Date().getMinutes();
+    const currentTotalMinutes = nowHours * 60 + nowMinutes;
+
     const slots = [];
     for (let hour = startHour; hour < endHour; hour++) {
       const timeStr = `${String(hour).padStart(2, '0')}:00`;
       const slotMinutes = hour * 60;
+
+      // Check if this slot's time has already passed today
+      const isPast = isSelectedToday && slotMinutes <= currentTotalMinutes;
 
       // Check if this slot is booked by a customer
       const isBooked = (dayData.bookedTimes || []).some(bTime => {
@@ -134,6 +143,7 @@ const AvailabilityCalendar = ({ onSlotClick }) => {
         time: timeStr,
         label: formatTime(hour),
         isBooked,
+        isPast,
         blockedNote // null if not blocked, string with reason if blocked
       });
     }
@@ -291,9 +301,11 @@ const AvailabilityCalendar = ({ onSlotClick }) => {
                   {getSlots().map(slot => {
                     let slotClass = 'mini-cal-slot mini-cal-slot--available';
                     let slotLabel = slot.label;
-                    const isAvailable = !slot.blockedNote && !slot.isBooked;
+                    const isAvailable = !slot.blockedNote && !slot.isBooked && !slot.isPast;
                     
-                    if (slot.blockedNote) {
+                    if (slot.isPast) {
+                      slotClass = 'mini-cal-slot mini-cal-slot--past';
+                    } else if (slot.blockedNote) {
                       slotClass = 'mini-cal-slot mini-cal-slot--blocked';
                       slotLabel = `${slot.label}`;
                     } else if (slot.isBooked) {
@@ -310,13 +322,16 @@ const AvailabilityCalendar = ({ onSlotClick }) => {
                             onSlotClick(selectedDate, slot.time);
                           }
                         }}
-                        title={isAvailable ? `Book ${slot.label} on ${formatSelectedDate()}` : undefined}
+                        title={isAvailable ? `Book ${slot.label} on ${formatSelectedDate()}` : slot.isPast ? 'This time has already passed' : undefined}
                       >
                         {slotLabel}
+                        {slot.isPast && (
+                          <span className="mini-cal-slot-past-label">Passed</span>
+                        )}
                         {slot.blockedNote && (
                           <span className="mini-cal-slot-reason">{slot.blockedNote}</span>
                         )}
-                        {slot.isBooked && !slot.blockedNote && (
+                        {slot.isBooked && !slot.blockedNote && !slot.isPast && (
                           <span style={{ fontSize: '0.75rem', marginLeft: '5px', opacity: 0.8 }}>(Booked)</span>
                         )}
                       </button>

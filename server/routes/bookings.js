@@ -73,6 +73,20 @@ router.put("/my-bookings/:id/reschedule", authenticateToken, async (req, res) =>
       });
     }
 
+    // Check if the reschedule time has already passed today
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    if (date === todayStr) {
+      const [bookH, bookM] = time.split(':').map(Number);
+      const bookMinutes = bookH * 60 + bookM;
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      if (bookMinutes <= currentMinutes) {
+        return res.status(400).json({
+          message: "This time has already passed. Please select a later time."
+        });
+      }
+    }
+
     // Check 1-hour overlap (exclude this booking from conflict check)
     const [reqH, reqM] = time.split(':').map(Number);
     const reqMinutes = reqH * 60 + reqM;
@@ -246,6 +260,20 @@ router.post("/", optionalAuth, async (req, res) => {
       return res.status(400).json({
         message: `We are closed at this time. Please book between ${settings.startHour}:00 and ${settings.endHour}:00.`
       });
+    }
+
+    // B1. Check if the booking time has already passed today
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    if (date === todayStr) {
+      const [bookH, bookM] = time.split(':').map(Number);
+      const bookMinutes = bookH * 60 + bookM;
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      if (bookMinutes <= currentMinutes) {
+        return res.status(400).json({
+          message: "This time has already passed. Please select a later time."
+        });
+      }
     }
 
     // B2. Check if the requested time falls within a partial day-off block

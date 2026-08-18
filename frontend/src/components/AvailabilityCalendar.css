@@ -312,6 +312,27 @@
   opacity: 0.6;
 }
 
+.mini-cal-slot--past {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #555;
+  text-decoration: line-through;
+  cursor: not-allowed;
+  opacity: 0.45;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.mini-cal-slot-past-label {
+  font-size: 0.5rem;
+  color: #666;
+  font-style: italic;
+  text-decoration: none;
+  line-height: 1.2;
+}
+
 /* Admin-blocked slot (partial day off with custom reason) */
 .mini-cal-slot--blocked {
   background: repeating-linear-gradient(
