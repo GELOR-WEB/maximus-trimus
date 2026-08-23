@@ -125,13 +125,39 @@ router.post('/login', loginLimiter, async (req, res) => {
 // Get Current User Profile (Protected)
 router.get('/me', authenticateToken, async (req, res) => {
     try {
+        // Normalize role in case it's corrupted (e.g. nested stringified arrays)
+        // The User model's hasRole() already handles this, but we also need
+        // to send clean data to the frontend.
+        const role = req.user.role;
+        const cleanRole = (() => {
+            function extract(value) {
+                const out = [];
+                if (typeof value === 'string') {
+                    try {
+                        const parsed = JSON.parse(value);
+                        if (typeof parsed !== 'string') {
+                            out.push(...extract(parsed));
+                        } else {
+                            out.push(parsed);
+                        }
+                    } catch {
+                        out.push(value);
+                    }
+                } else if (Array.isArray(value)) {
+                    for (const item of value) out.push(...extract(item));
+                }
+                return out;
+            }
+            return [...new Set(extract(role))];
+        })();
+
         res.json({
             id: req.user._id,
             username: req.user.username,
             email: req.user.email,
             fullName: req.user.fullName,
             phone: req.user.phone,
-            role: req.user.role
+            role: cleanRole
         });
     } catch (err) {
         res.status(500).json({ error: err.message });

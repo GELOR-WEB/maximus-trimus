@@ -19,17 +19,14 @@ const addAdminRole = async () => {
         console.log(`Found user: ${user.email}`);
         console.log(`Current role:`, user.role);
 
-        // Convert to array if it's a string, and add 'admin' if not present
-        let currentRoles = Array.isArray(user.role) ? user.role : [user.role];
-        
-        if (!currentRoles.includes('admin')) {
-            currentRoles.push('admin');
-        }
+        // Use $addToSet to atomically add 'admin' without duplicates or serialization bugs
+        const updated = await User.findOneAndUpdate(
+            { email },
+            { $addToSet: { role: 'admin' } },
+            { new: true }
+        );
 
-        user.role = currentRoles;
-        await user.save();
-
-        console.log(`Successfully updated role to:`, user.role);
+        console.log(`Successfully updated role to:`, updated.role);
 
         process.exit(0);
     } catch (err) {
@@ -39,3 +36,4 @@ const addAdminRole = async () => {
 };
 
 addAdminRole();
+
