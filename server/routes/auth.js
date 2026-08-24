@@ -103,10 +103,34 @@ router.post('/login', loginLimiter, async (req, res) => {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn });
 
         // Return user data based on role
+        // Normalize role to clean array (same as /me endpoint) so the frontend
+        // always gets ['admin'] or ['client'], never corrupted nested strings.
+        const cleanRole = (() => {
+            function extract(value) {
+                const out = [];
+                if (typeof value === 'string') {
+                    try {
+                        const parsed = JSON.parse(value);
+                        if (typeof parsed !== 'string') {
+                            out.push(...extract(parsed));
+                        } else {
+                            out.push(parsed);
+                        }
+                    } catch {
+                        out.push(value);
+                    }
+                } else if (Array.isArray(value)) {
+                    for (const item of value) out.push(...extract(item));
+                }
+                return out;
+            }
+            return [...new Set(extract(user.role))];
+        })();
+
         const userData = {
             id: user._id,
             username: user.username,
-            role: user.role
+            role: cleanRole
         };
 
         // Include profile data for clients

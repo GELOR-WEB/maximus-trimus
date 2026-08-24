@@ -13,7 +13,7 @@ const resetAdmin = async () => {
         const newPassword = process.argv[3] || 'admin123';
 
         // Check for existing admin
-        const adminUser = await User.findOne({ role: 'admin' });
+        const adminUser = await User.findOne({ role: { $in: ['admin'] } });
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);

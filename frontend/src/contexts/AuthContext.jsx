@@ -52,7 +52,18 @@ export const AuthProvider = ({ children }) => {
 
                     // Tag role(s) for targeted notifications (crucial for admins)
                     if (userData.role) {
-                        const roles = Array.isArray(userData.role) ? userData.role : [userData.role];
+                        // Defensively normalize — unwrap any nested/stringified arrays
+                        const extractRoles = (val) => {
+                            if (typeof val === 'string') {
+                                try {
+                                    const parsed = JSON.parse(val);
+                                    return typeof parsed !== 'string' ? extractRoles(parsed) : [parsed];
+                                } catch { return [val]; }
+                            }
+                            if (Array.isArray(val)) return val.flatMap(extractRoles);
+                            return [];
+                        };
+                        const roles = [...new Set(extractRoles(userData.role))];
                         // Set the primary 'role' tag (used by OneSignal filters for admin targeting)
                         if (roles.includes('admin')) {
                             await OneSignal.User.addTag('role', 'admin');
