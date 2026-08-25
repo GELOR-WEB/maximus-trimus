@@ -28,9 +28,10 @@ const BookingForm = ({ initialDate, initialTime }) => {
     }
   }, [isAuthenticated, user]);
 
-  const [message, setMessage] = useState(null);
-  const [isError, setIsError] = useState(false);
   const [bookedTimes, setBookedTimes] = useState([]);
+
+  // Result modal state: { show, success, message }
+  const [resultModal, setResultModal] = useState({ show: false, success: false, message: "" });
 
   // Settings State
   const [settings, setSettings] = useState({ startHour: 7, endHour: 22 });
@@ -61,6 +62,22 @@ const BookingForm = ({ initialDate, initialTime }) => {
 
     // Future dates can use any time within business hours
     return `${settings.startHour.toString().padStart(2, '0')}:00`;
+  };
+
+  // Helper: Format date for display
+  const formatDisplayDate = (dateStr) => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
+  // Helper: Format time for display
+  const formatDisplayTime = (timeStr) => {
+    if (!timeStr) return '';
+    const [h, m] = timeStr.split(':').map(Number);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const hr = h % 12 || 12;
+    return `${hr}:${String(m).padStart(2, '0')} ${ampm}`;
   };
 
   // 1. Fetch Global Settings on Load
@@ -97,8 +114,6 @@ const BookingForm = ({ initialDate, initialTime }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("Processing...");
-    setIsError(false);
 
     // Prevent booking a time that has already passed today
     const selectedDate = new Date(formData.date + 'T00:00:00');
@@ -110,17 +125,25 @@ const BookingForm = ({ initialDate, initialTime }) => {
       const selectedMinutes = selH * 60 + selM;
       const currentMinutes = now.getHours() * 60 + now.getMinutes();
       if (selectedMinutes <= currentMinutes) {
-        setIsError(true);
-        setMessage("This time has already passed. Please select a later time.");
+        setResultModal({
+          show: true,
+          success: false,
+          message: "This time has already passed. Please select a later time."
+        });
         return;
       }
     }
 
     try {
-      // Token will be automatically included by axios interceptor if user is logged in
       await axios.post(`${API_URL}/api/bookings`, formData);
-      setMessage("Booking Confirmed! See you then.");
-      setIsError(false);
+
+      // Show success result modal
+      setResultModal({
+        show: true,
+        success: true,
+        message: "Your booking has been submitted and is awaiting confirmation. See you then!"
+      });
+
       // Reset only date/time/service fields, keep user info if logged in
       setFormData({
         clientName: isAuthenticated ? user.fullName : "",
@@ -132,8 +155,11 @@ const BookingForm = ({ initialDate, initialTime }) => {
       });
     } catch (error) {
       console.error(error);
-      setIsError(true);
-      setMessage(error.response?.data?.message || "Booking failed.");
+      setResultModal({
+        show: true,
+        success: false,
+        message: error.response?.data?.message || "Booking failed. Please try again."
+      });
     }
   };
 
@@ -152,11 +178,6 @@ const BookingForm = ({ initialDate, initialTime }) => {
 
   return (
     <div className="booking-form-wrapper">
-      {message && (
-        <div className={`form-message ${isError ? "error" : "success"}`}>
-          {message}
-        </div>
-      )}
 
       {!isAuthenticated && (
         <div className="info-message">
@@ -242,6 +263,44 @@ const BookingForm = ({ initialDate, initialTime }) => {
 
         <button type="submit" className="submit-button">Book Now</button>
       </form>
+
+      {/* RESULT MODAL — shows after booking attempt */}
+      {resultModal.show && (
+        <div className="result-overlay" onClick={() => setResultModal({ ...resultModal, show: false })}>
+          <div className="result-modal" onClick={(e) => e.stopPropagation()}>
+
+            {/* Icon */}
+            <div className={`result-icon-circle ${resultModal.success ? "result-icon-circle--success" : "result-icon-circle--error"}`}>
+              {resultModal.success ? (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              )}
+            </div>
+
+            {/* Title */}
+            <h3 className={`result-title ${resultModal.success ? "result-title--success" : "result-title--error"}`}>
+              {resultModal.success ? "Booking Submitted!" : "Booking Failed"}
+            </h3>
+
+            {/* Message */}
+            <p className="result-message">{resultModal.message}</p>
+
+            {/* Dismiss */}
+            <button
+              className={`result-dismiss-btn ${resultModal.success ? "result-dismiss-btn--success" : "result-dismiss-btn--error"}`}
+              onClick={() => setResultModal({ ...resultModal, show: false })}
+            >
+              {resultModal.success ? "Got It ✓" : "Try Again"}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

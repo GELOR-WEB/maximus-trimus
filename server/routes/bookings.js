@@ -553,4 +553,76 @@ router.put("/:id", authenticateToken, isAdmin, async (req, res) => {
   }
 });
 
+// WALK-IN: Search existing users (Admin only)
+router.get("/search-users", authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (!q || q.trim().length < 2) {
+      return res.json([]);
+    }
+
+    const regex = new RegExp(q.trim(), 'i');
+    const users = await User.find({
+      role: { $in: ['client'] },
+      $or: [
+        { fullName: regex },
+        { email: regex },
+        { phone: regex }
+      ]
+    })
+      .select('fullName email phone _id')
+      .limit(10);
+
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// WALK-IN: Quick-add a completed haircut for an existing user (Admin only)
+router.post("/walk-in", authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const { userId, amountPaid, paymentMethod } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+    if (!amountPaid || Number(amountPaid) <= 0) {
+      return res.status(400).json({ message: "Valid payment amount is required" });
+    }
+
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Build the booking — immediately completed
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    const newBooking = new Booking({
+      userId: user._id,
+      clientName: user.fullName || user.username,
+      contact: user.email || user.phone || '',
+      serviceType: 'Shop Service',
+      date: dateStr,
+      time: timeStr,
+      status: 'Completed',
+      amountPaid: Number(amountPaid),
+      paymentMethod: paymentMethod || 'cash'
+    });
+
+    await newBooking.save();
+
+    res.status(201).json({
+      message: `Walk-in recorded for ${user.fullName || user.username}!`,
+      booking: newBooking
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;

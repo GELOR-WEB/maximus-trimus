@@ -74,3 +74,157 @@
         transform: translateY(0);
     }
 }
+
+/* =========================================
+   RESULT MODAL (success / error overlay)
+   ========================================= */
+.result-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    border-radius: inherit;
+    animation: resultFadeIn 0.2s ease;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+@keyframes resultFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.result-modal {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 36px 32px 28px;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+    animation: resultSlideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes resultSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.94);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Animated icon circle */
+.result-icon-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: resultIconPop 0.4s 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes resultIconPop {
+    from {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.result-icon-circle svg {
+    width: 36px;
+    height: 36px;
+}
+
+.result-icon-circle--success {
+    background: rgba(76, 175, 80, 0.15);
+    border: 2px solid rgba(76, 175, 80, 0.4);
+    color: #4caf50;
+}
+
+.result-icon-circle--error {
+    background: rgba(244, 67, 54, 0.15);
+    border: 2px solid rgba(244, 67, 54, 0.4);
+    color: #f44336;
+}
+
+/* Title */
+.result-title {
+    margin: 0 0 8px 0;
+    font-family: "Playfair Display", serif;
+    font-size: 1.35rem;
+}
+
+.result-title--success {
+    color: #81c784;
+}
+
+.result-title--error {
+    color: #e57373;
+}
+
+/* Message */
+.result-message {
+    color: #aaa;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 24px 0;
+}
+
+/* Dismiss button */
+.result-dismiss-btn {
+    width: 100%;
+    padding: 13px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.25s ease;
+}
+
+.result-dismiss-btn--success {
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    color: white;
+    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.25);
+}
+
+.result-dismiss-btn--success:hover {
+    background: linear-gradient(135deg, #66bb6a, #43a047);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.result-dismiss-btn--error {
+    background: linear-gradient(135deg, #f44336, #c62828);
+    color: white;
+    box-shadow: 0 4px 16px rgba(244, 67, 54, 0.25);
+}
+
+.result-dismiss-btn--error:hover {
+    background: linear-gradient(135deg, #ef5350, #d32f2f);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+}
+
+.result-dismiss-btn:active {
+    transform: translateY(0);
+}

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"; // For redirecting if not logged
 import BookingsTable from "../components/bookingsTable";
 import DashboardStats from "../components/DashboardStats";
 import DaysOffCalendar from "../components/DaysOffCalendar";
+import WalkInForm from "../components/WalkInForm";
 import "./admin.css";
 
 const Admin = () => {
@@ -268,6 +269,9 @@ const Admin = () => {
           <button onClick={saveGreeting} className="btn-save-hours">Update Greeting</button>
         </div>
       </div>
+
+      {/* 🚶 WALK-IN QUICK ADD */}
+      <WalkInForm onSuccess={handleBookingAction} />
 
       {/* DAYS OFF CALENDAR */}
       <DaysOffCalendar />
