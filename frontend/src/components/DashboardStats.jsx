@@ -3,6 +3,46 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:3000');
 
+// Pure CSS bar chart component
+const BarChart = ({ data, color, gradientFrom, gradientTo, formatValue, subtitle }) => {
+    const maxVal = Math.max(...data.map(d => d.value), 1);
+
+    return (
+        <div className="chart-container">
+            {subtitle && <p className="chart-subtitle">{subtitle}</p>}
+            <div className="chart-bars-wrapper">
+                {data.map((item, i) => {
+                    const heightPct = (item.value / maxVal) * 100;
+                    return (
+                        <div key={item.label} className="chart-bar-col">
+                            <div className="chart-bar-tooltip">
+                                <span className="chart-tooltip-label">{item.fullLabel}</span>
+                                <span className="chart-tooltip-value" style={{ color: gradientFrom }}>
+                                    {formatValue(item.value)}
+                                </span>
+                                {item.breakdown && (
+                                    <span className="chart-tooltip-breakdown">{item.breakdown}</span>
+                                )}
+                            </div>
+                            <div className="chart-bar-track">
+                                <div
+                                    className="chart-bar-fill"
+                                    style={{
+                                        height: `${heightPct}%`,
+                                        background: `linear-gradient(to top, ${gradientTo}, ${gradientFrom})`,
+                                        animationDelay: `${i * 0.04}s`
+                                    }}
+                                />
+                            </div>
+                            <span className="chart-bar-label">{item.label}</span>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
 const DashboardStats = () => {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -42,8 +82,45 @@ const DashboardStats = () => {
         return date.toLocaleString('default', { month: 'long', year: 'numeric' });
     };
 
+    const shortMonthLabel = (key) => {
+        const [y, m] = key.split('-');
+        const date = new Date(parseInt(y), parseInt(m) - 1);
+        return date.toLocaleString('default', { month: 'short' });
+    };
+
     const selectedCuts = stats.monthlyCutsData?.[selectedMonth] || 0;
     const selectedEarnings = stats.earnings?.monthlyEarnings?.[selectedMonth]?.total || 0;
+
+    // Build chart data — last 12 months
+    const getLast12Months = () => {
+        const months = [];
+        for (let i = 11; i >= 0; i--) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            months.push(key);
+        }
+        return months;
+    };
+
+    const last12 = getLast12Months();
+
+    const clientsChartData = last12.map(key => ({
+        label: shortMonthLabel(key),
+        fullLabel: formatMonthKey(key),
+        value: stats.monthlyCutsData?.[key] || 0,
+    }));
+
+    const earningsChartData = last12.map(key => {
+        const monthData = stats.earnings?.monthlyEarnings?.[key];
+        return {
+            label: shortMonthLabel(key),
+            fullLabel: formatMonthKey(key),
+            value: monthData?.total || 0,
+            breakdown: monthData
+                ? `💵 ₱${(monthData.cashTotal || 0).toLocaleString()} · 📱 ₱${(monthData.emoneyTotal || 0).toLocaleString()}`
+                : null,
+        };
+    });
 
     return (
         <div className="stats-container">
@@ -80,7 +157,7 @@ const DashboardStats = () => {
                 </div>
             </div>
 
-            {/* 1b. EARNINGS SECTION (New) */}
+            {/* 1b. EARNINGS SECTION */}
             <div className="stats-habits-section" style={{ marginBottom: '30px' }}>
                 <h3>Earnings Analytics</h3>
                 <div className="stats-grid-top" style={{ marginTop: '15px' }}>
@@ -109,6 +186,33 @@ const DashboardStats = () => {
                         <h4>Least Profitable</h4>
                         <p className="stat-text text-muted">{stats.earnings?.leastProfitableMonth}</p>
                         <p className="stat-subtext text-muted">₱{stats.earnings?.leastProfitableAmount?.toLocaleString() || 0}</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* 📊 BAR CHARTS */}
+            <div className="stats-habits-section" style={{ marginBottom: '30px' }}>
+                <h3>📊 Monthly Overview</h3>
+                <p className="subtitle">Last 12 months at a glance. Hover bars for details.</p>
+
+                <div className="charts-grid">
+                    <div className="chart-card">
+                        <h4 className="chart-title">✂️ Clients Per Month</h4>
+                        <BarChart
+                            data={clientsChartData}
+                            gradientFrom="#f5deb3"
+                            gradientTo="#b8860b"
+                            formatValue={(v) => `${v} cuts`}
+                        />
+                    </div>
+                    <div className="chart-card">
+                        <h4 className="chart-title">💰 Earnings Per Month</h4>
+                        <BarChart
+                            data={earningsChartData}
+                            gradientFrom="#4caf50"
+                            gradientTo="#1b5e20"
+                            formatValue={(v) => `₱${v.toLocaleString()}`}
+                        />
                     </div>
                 </div>
             </div>
@@ -170,4 +274,4 @@ const DashboardStats = () => {
     );
 };
 
-export default DashboardStats;
+export default DashboardStats;
