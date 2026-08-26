@@ -50,6 +50,8 @@ const DashboardStats = () => {
     const now = new Date();
     const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     const [selectedMonth, setSelectedMonth] = useState(currentMonthKey);
+    const [upNextPage, setUpNextPage] = useState(1);
+    const ITEMS_PER_PAGE = 5;
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -270,6 +272,73 @@ const DashboardStats = () => {
                     </div>
                 </div>
             </div>
+
+            {/* 🔮 WHO'S UP NEXT */}
+            {stats.whosUpNext && stats.whosUpNext.length > 0 && (
+                <div className="stats-habits-section" style={{ marginTop: '30px' }}>
+                    <h3>🔮 Who's Up Next</h3>
+                    <p className="subtitle">Predicted next visits based on each client's haircut frequency.</p>
+
+                    <div className="up-next-list">
+                        {stats.whosUpNext
+                            .slice((upNextPage - 1) * ITEMS_PER_PAGE, upNextPage * ITEMS_PER_PAGE)
+                            .map((client, idx) => (
+                            <div key={idx} className={`up-next-card up-next-${client.urgency}`}>
+                                <div className="up-next-rank">
+                                    {client.urgency === 'overdue' ? '🔴' :
+                                     client.urgency === 'due-now' ? '🟠' :
+                                     client.urgency === 'due-soon' ? '🟡' : '🟢'}
+                                </div>
+                                <div className="up-next-info">
+                                    <span className="up-next-name">{client.name}</span>
+                                    <span className="up-next-meta">
+                                        Every ~{client.avgDays}d · {client.totalVisits} visits
+                                    </span>
+                                </div>
+                                <div className="up-next-dates">
+                                    <span className="up-next-last">Last: {client.lastVisit}</span>
+                                    <span className="up-next-predicted">Next: {client.predictedNext}</span>
+                                </div>
+                                <div className={`up-next-badge up-next-badge-${client.urgency}`}>
+                                    {client.urgency === 'overdue' ? `${Math.abs(client.daysUntilNext)}d overdue` :
+                                     client.urgency === 'due-now' ? (client.daysUntilNext === 0 ? 'Today!' : `${client.daysUntilNext}d`) :
+                                     client.urgency === 'due-soon' ? `${client.daysUntilNext}d` :
+                                     `${client.daysUntilNext}d`}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Pagination Controls */}
+                    {stats.whosUpNext.length > ITEMS_PER_PAGE && (
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '15px' }}>
+                            <button
+                                onClick={() => setUpNextPage(Math.max(1, upNextPage - 1))}
+                                disabled={upNextPage === 1}
+                                style={{
+                                    padding: '5px 12px', background: '#333', color: 'white', border: '1px solid #555',
+                                    borderRadius: '4px', cursor: upNextPage === 1 ? 'not-allowed' : 'pointer', opacity: upNextPage === 1 ? 0.5 : 1
+                                }}
+                            >
+                                Previous
+                            </button>
+                            <span style={{ color: '#ccc', alignSelf: 'center', fontSize: '0.9rem' }}>
+                                Page {upNextPage} of {Math.ceil(stats.whosUpNext.length / ITEMS_PER_PAGE)}
+                            </span>
+                            <button
+                                onClick={() => setUpNextPage(Math.min(Math.ceil(stats.whosUpNext.length / ITEMS_PER_PAGE), upNextPage + 1))}
+                                disabled={upNextPage === Math.ceil(stats.whosUpNext.length / ITEMS_PER_PAGE)}
+                                style={{
+                                    padding: '5px 12px', background: '#333', color: 'white', border: '1px solid #555',
+                                    borderRadius: '4px', cursor: upNextPage === Math.ceil(stats.whosUpNext.length / ITEMS_PER_PAGE) ? 'not-allowed' : 'pointer', opacity: upNextPage === Math.ceil(stats.whosUpNext.length / ITEMS_PER_PAGE) ? 0.5 : 1
+                                }}
+                            >
+                                Next
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

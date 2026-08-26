@@ -835,3 +835,166 @@
   padding-top: 4px;
   margin-top: 2px;
 }
+
+/* =========================================
+   WHO'S UP NEXT
+   ========================================= */
+.up-next-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.up-next-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #2a2a2a;
+  border: 1px solid #333;
+  border-left: 4px solid #555;
+  border-radius: 8px;
+  padding: 14px 18px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.up-next-card:hover {
+  transform: translateX(4px);
+  background: #303030;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Urgency border colors */
+.up-next-overdue {
+  border-left-color: #f44336;
+  background: rgba(244, 67, 54, 0.04);
+}
+
+.up-next-due-now {
+  border-left-color: #ff9800;
+  background: rgba(255, 152, 0, 0.04);
+}
+
+.up-next-due-soon {
+  border-left-color: #d4af37;
+  background: rgba(212, 175, 55, 0.04);
+}
+
+.up-next-upcoming {
+  border-left-color: #4caf50;
+}
+
+/* Rank indicator */
+.up-next-rank {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  width: 28px;
+  text-align: center;
+}
+
+/* Client info block */
+.up-next-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 140px;
+}
+
+.up-next-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+
+.up-next-meta {
+  font-size: 0.75rem;
+  color: #777;
+  letter-spacing: 0.2px;
+}
+
+/* Date columns */
+.up-next-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: auto;
+  text-align: right;
+}
+
+.up-next-last {
+  font-size: 0.78rem;
+  color: #666;
+}
+
+.up-next-predicted {
+  font-size: 0.78rem;
+  color: #aaa;
+  font-weight: 500;
+}
+
+/* Urgency badge */
+.up-next-badge {
+  flex-shrink: 0;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 70px;
+  text-align: center;
+}
+
+.up-next-badge-overdue {
+  background: rgba(244, 67, 54, 0.15);
+  color: #ef5350;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  animation: overduePulse 2s ease-in-out infinite;
+}
+
+.up-next-badge-due-now {
+  background: rgba(255, 152, 0, 0.15);
+  color: #ffb74d;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.up-next-badge-due-soon {
+  background: rgba(212, 175, 55, 0.12);
+  color: #d4af37;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.up-next-badge-upcoming {
+  background: rgba(76, 175, 80, 0.08);
+  color: #66bb6a;
+  border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+@keyframes overduePulse {
+  0%, 100% {
+    box-shadow: 0 0 6px rgba(244, 67, 54, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(244, 67, 54, 0.4);
+  }
+}
+
+/* Responsive: stack dates + badge on smaller screens */
+@media (max-width: 700px) {
+  .up-next-card {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .up-next-dates {
+    margin-left: 0;
+    flex-basis: 100%;
+    text-align: left;
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .up-next-badge {
+    margin-left: auto;
+  }
+}

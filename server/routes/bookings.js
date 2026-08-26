@@ -413,8 +413,12 @@ router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
     const frequentClients = [];
     const regularClients = [];
     const rareClients = [];
+    const whosUpNext = [];
 
-    Object.values(clientVisits).forEach(client => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    Object.entries(clientVisits).forEach(([contact, client]) => {
       if (client.dates.length < 2) {
         rareClients.push(client.firstName);
         return;
@@ -431,7 +435,32 @@ router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
       if (avgDays <= 14) frequentClients.push(client.firstName);
       else if (avgDays <= 60) regularClients.push(client.firstName);
       else rareClients.push(client.firstName);
+
+      // Who's Up Next: predict next visit based on last visit + average interval
+      const lastVisit = client.dates[client.dates.length - 1];
+      const predictedNext = new Date(lastVisit);
+      predictedNext.setDate(predictedNext.getDate() + Math.round(avgDays));
+
+      const daysUntilNext = Math.ceil((predictedNext - today) / (1000 * 60 * 60 * 24));
+
+      let urgency = 'upcoming';
+      if (daysUntilNext < 0) urgency = 'overdue';
+      else if (daysUntilNext <= 3) urgency = 'due-now';
+      else if (daysUntilNext <= 7) urgency = 'due-soon';
+
+      whosUpNext.push({
+        name: client.firstName,
+        totalVisits: client.dates.length,
+        avgDays: Math.round(avgDays),
+        lastVisit: lastVisit.toISOString().split('T')[0],
+        predictedNext: predictedNext.toISOString().split('T')[0],
+        daysUntilNext,
+        urgency
+      });
     });
+
+    // Sort: overdue first (most overdue at top), then due-soon, then upcoming
+    whosUpNext.sort((a, b) => a.daysUntilNext - b.daysUntilNext);
 
     // D. Earnings Data (from Completed bookings with amountPaid)
     const paidBookings = completedBookings.filter(b => b.amountPaid && b.amountPaid > 0);
@@ -490,6 +519,7 @@ router.get("/stats", authenticateToken, isAdmin, async (req, res) => {
         regular: regularClients,
         rare: rareClients
       },
+      whosUpNext,
       earnings: {
         totalEarnings,
         currentMonthEarnings,
