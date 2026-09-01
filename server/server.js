@@ -40,12 +40,14 @@ const authRoutes = require("./routes/auth");
 const settingsRoutes = require("./routes/settings");
 const reviewRoutes = require("./routes/reviews");
 const dayoffRoutes = require("./routes/daysoff");
+const galleryRoutes = require("./routes/gallery");
 
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/daysoff", dayoffRoutes);
+app.use("/api/gallery", galleryRoutes);
 
 
 

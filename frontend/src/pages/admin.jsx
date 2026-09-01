@@ -181,6 +181,77 @@ const Admin = () => {
     }
   };
 
+  // ============ GALLERY MANAGEMENT ============
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [galleryUploading, setGalleryUploading] = useState(false);
+  const [galleryError, setGalleryError] = useState('');
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+
+  // Fetch gallery images
+  const fetchGallery = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/api/gallery`);
+      if (Array.isArray(res.data)) setGalleryImages(res.data);
+    } catch (err) {
+      console.error('Failed to fetch gallery:', err);
+    }
+  };
+
+  useEffect(() => { fetchGallery(); }, []);
+
+  // Upload gallery image
+  const handleGalleryUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setGalleryError('Please select an image file.');
+      return;
+    }
+
+    // Validate file size (15 MB max)
+    if (file.size > 15 * 1024 * 1024) {
+      setGalleryError('Image must be under 15 MB.');
+      return;
+    }
+
+    setGalleryUploading(true);
+    setGalleryError('');
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      await axios.post(`${API_URL}/api/gallery`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      await fetchGallery();
+    } catch (err) {
+      setGalleryError(err.response?.data?.message || 'Failed to upload image.');
+    } finally {
+      setGalleryUploading(false);
+      // Reset file input
+      e.target.value = '';
+    }
+  };
+
+  // Delete gallery image
+  const handleGalleryDelete = async (id) => {
+    try {
+      await axios.delete(`${API_URL}/api/gallery/${id}`, getAuthHeaders());
+      setGalleryImages(prev => prev.filter(img => img._id !== id));
+      setDeleteConfirmId(null);
+    } catch (err) {
+      setGalleryError(err.response?.data?.message || 'Failed to delete image.');
+      setDeleteConfirmId(null);
+    }
+  };
+
   if (loading) return <div className="admin-page loading">Loading Command Center...</div>;
 
   return (
@@ -275,6 +346,62 @@ const Admin = () => {
 
       {/* DAYS OFF CALENDAR */}
       <DaysOffCalendar />
+
+      {/* 📸 GALLERY MANAGEMENT */}
+      <div className="gallery-management-panel">
+        <h3>📸 Gallery Management</h3>
+        <p style={{ color: '#aaa', fontSize: '0.85rem', margin: '0 0 15px' }}>Upload photos of cuts to display in the gallery carousel on the main page.</p>
+
+        {/* Upload Button */}
+        <div className="gallery-upload-area">
+          <label className="gallery-upload-btn" htmlFor="gallery-upload-input">
+            {galleryUploading ? (
+              <><span className="upload-spinner" /> Uploading...</>
+            ) : (
+              <>📤 Upload Photo</>
+            )}
+          </label>
+          <input
+            id="gallery-upload-input"
+            type="file"
+            accept="image/*"
+            onChange={handleGalleryUpload}
+            disabled={galleryUploading}
+            style={{ display: 'none' }}
+          />
+          <span style={{ color: '#666', fontSize: '0.8rem', marginLeft: '10px' }}>
+            Max 15 MB · JPG, PNG, WebP
+          </span>
+        </div>
+
+        {galleryError && (
+          <div style={{ color: '#f44336', fontSize: '0.85rem', margin: '10px 0' }}>{galleryError}</div>
+        )}
+
+        {/* Gallery Grid */}
+        <div className="gallery-manage-grid">
+          {galleryImages.length === 0 ? (
+            <p style={{ color: '#666', gridColumn: '1 / -1', textAlign: 'center', padding: '2rem 0' }}>No gallery photos yet. Upload your first one!</p>
+          ) : (
+            galleryImages.map(img => (
+              <div key={img._id} className="gallery-manage-item">
+                <img src={img.url} alt="Gallery" loading="lazy" />
+                {deleteConfirmId === img._id ? (
+                  <div className="gallery-delete-confirm">
+                    <p>Delete this photo?</p>
+                    <div>
+                      <button className="btn-confirm-yes" onClick={() => handleGalleryDelete(img._id)}>Yes, Delete</button>
+                      <button className="btn-confirm-no" onClick={() => setDeleteConfirmId(null)}>Cancel</button>
+                    </div>
+                  </div>
+                ) : (
+                  <button className="gallery-delete-btn" onClick={() => setDeleteConfirmId(img._id)} title="Delete photo">🗑️</button>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+      </div>
 
       {/* 📊 STATS SECTION */}
       <DashboardStats />

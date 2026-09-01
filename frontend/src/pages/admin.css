@@ -998,3 +998,196 @@
     margin-left: auto;
   }
 }
+
+/* =========================================
+   GALLERY MANAGEMENT
+   ========================================= */
+.gallery-management-panel {
+  background-color: #1a1a1a;
+  padding: 25px;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid #2a2a2a;
+}
+
+.gallery-management-panel h3 {
+  color: #e6c547;
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-size: 1.1rem;
+}
+
+.gallery-upload-area {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gallery-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #e6c547, #d4a82b);
+  color: #1a1a1a;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gallery-upload-btn:hover {
+  background: linear-gradient(135deg, #f0d060, #e6c547);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(230, 197, 71, 0.3);
+}
+
+/* Upload spinner */
+.upload-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(26, 26, 26, 0.3);
+  border-top-color: #1a1a1a;
+  border-radius: 50%;
+  animation: gallery-spin 0.6s linear infinite;
+}
+
+@keyframes gallery-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Gallery image grid */
+.gallery-manage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.gallery-manage-item {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  background: #2a2a2a;
+  border: 1px solid #333;
+  transition: border-color 0.2s;
+}
+
+.gallery-manage-item:hover {
+  border-color: #555;
+}
+
+.gallery-manage-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Delete button (shows on hover) */
+.gallery-delete-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(244, 67, 54, 0.85);
+  border: none;
+  color: white;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.gallery-manage-item:hover .gallery-delete-btn {
+  opacity: 1;
+}
+
+.gallery-delete-btn:hover {
+  background: rgba(244, 67, 54, 1);
+  transform: scale(1.1);
+}
+
+/* Delete confirmation overlay */
+.gallery-delete-confirm {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  backdrop-filter: blur(4px);
+}
+
+.gallery-delete-confirm p {
+  color: white;
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.gallery-delete-confirm div {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-confirm-yes {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-confirm-yes:hover {
+  background: #d32f2f;
+}
+
+.btn-confirm-no {
+  background: transparent;
+  color: #aaa;
+  border: 1px solid #555;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-confirm-no:hover {
+  border-color: #888;
+  color: white;
+}
+
+/* Mobile: always show delete button on touch devices */
+@media (hover: none) {
+  .gallery-delete-btn {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .gallery-manage-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
+}

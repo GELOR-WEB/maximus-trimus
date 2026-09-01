@@ -21,6 +21,33 @@ const MainPage = () => {
   // 1. NEW STATE: State to store the URL of the image to display in the modal
   const [selectedImage, setSelectedImage] = useState(null);
 
+  // Fallback static gallery images (used when database is empty)
+  const STATIC_GALLERY_IMAGES = [
+    { _id: 's1', url: '/images/1.png' },
+    { _id: 's2', url: '/images/2.jpg' },
+    { _id: 's3', url: '/images/3.png' },
+    { _id: 's4', url: '/images/4.png' },
+    { _id: 's5', url: '/images/5.png' },
+    { _id: 's6', url: '/images/6.jpg' },
+    { _id: 's7', url: '/images/7.jpg' },
+    { _id: 's8', url: '/images/8.jpg' },
+    { _id: 's9', url: '/images/9.jpg' },
+  ];
+
+  // Gallery images (dynamic from API, falls back to static)
+  const [galleryImages, setGalleryImages] = useState(() => {
+    // Try to load from sessionStorage for instant display on repeat visits
+    try {
+      const cached = sessionStorage.getItem('galleryImages');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return STATIC_GALLERY_IMAGES;
+  });
+  const [galleryLoading, setGalleryLoading] = useState(true);
+
   const [isFlipped, setIsFlipped] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -102,6 +129,26 @@ const MainPage = () => {
   const [reviewComment, setReviewComment] = useState('');
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewMessage, setReviewMessage] = useState({ text: '', type: '' });
+
+  // Fetch gallery images from API
+  useEffect(() => {
+    axios.get(`${API_URL}/api/gallery`)
+      .then(res => {
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setGalleryImages(res.data);
+          try { sessionStorage.setItem('galleryImages', JSON.stringify(res.data)); } catch {}
+        } else {
+          // No images in database — use static fallback
+          setGalleryImages(STATIC_GALLERY_IMAGES);
+          try { sessionStorage.removeItem('galleryImages'); } catch {}
+        }
+      })
+      .catch(err => {
+        console.error('Failed to fetch gallery:', err);
+        // On error, keep whatever we have (static fallback or cached)
+      })
+      .finally(() => setGalleryLoading(false));
+  }, []);
 
   // Fetch reviews
   useEffect(() => {
@@ -553,168 +600,58 @@ const MainPage = () => {
             <div className="gallery-content">
               <h1>The Cuts</h1>
               <div className="carousel">
-                <div className="group">
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/1.png")}
-                  >
-                    <img src="/images/1.png" alt="/images/mainlogo.png" />
+                {galleryLoading && galleryImages.length === 0 ? (
+                  /* Skeleton placeholders while loading */
+                  <div className="group">
+                    {[...Array(6)].map((_, i) => (
+                      <div key={i} className="card-skeleton">
+                        <div className="card-skeleton-inner" />
+                      </div>
+                    ))}
                   </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/2.jpg")}
-                  >
-                    <img src="/images/2.jpg" alt="/images/mainlogo.png" />
+                ) : galleryImages.length > 0 ? (
+                  /* Dynamic gallery images — 3 groups for infinite scroll effect */
+                  <>
+                    <div className="group">
+                      {galleryImages.map((img) => (
+                        <div
+                          key={img._id}
+                          className="card"
+                          onClick={(e) => handleImageClick(e, img.url)}
+                        >
+                          <img src={img.url} alt="Haircut" loading="lazy" />
+                        </div>
+                      ))}
+                    </div>
+                    <div aria-hidden className="group">
+                      {galleryImages.map((img) => (
+                        <div
+                          key={`dup1-${img._id}`}
+                          className="card"
+                          onClick={(e) => handleImageClick(e, img.url)}
+                        >
+                          <img src={img.url} alt="Haircut" loading="lazy" />
+                        </div>
+                      ))}
+                    </div>
+                    <div aria-hidden className="group">
+                      {galleryImages.map((img) => (
+                        <div
+                          key={`dup2-${img._id}`}
+                          className="card"
+                          onClick={(e) => handleImageClick(e, img.url)}
+                        >
+                          <img src={img.url} alt="Haircut" loading="lazy" />
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  /* No images uploaded yet */
+                  <div style={{ color: '#888', textAlign: 'center', width: '100%', padding: '2rem' }}>
+                    Gallery photos coming soon
                   </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/3.png")}
-                  >
-                    <img src="/images/3.png" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/4.png")}
-                  >
-                    <img src="/images/4.png" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/5.png")}
-                  >
-                    <img src="/images/5.png" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/6.jpg")}
-                  >
-                    <img src="/images/6.jpg" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/7.jpg")}
-                  >
-                    <img src="/images/7.jpg" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/8.jpg")}
-                  >
-                    <img src="/images/8.jpg" alt="/images/mainlogo.png" />
-                  </div>
-                </div>
-                <div aria-hidden className="group">
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/1.png")}
-                  >
-                    <img src="/images/1.png" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/2.jpg")}
-                  >
-                    <img src="/images/2.jpg" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/3.png")}
-                  >
-                    <img src="/images/3.png" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/4.png")}
-                  >
-                    <img src="/images/4.png" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/5.png")}
-                  >
-                    <img src="/images/5.png" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/6.jpg")}
-                  >
-                    <img src="/images/6.jpg" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/7.jpg")}
-                  >
-                    <img src="/images/7.jpg" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/8.jpg")}
-                  >
-                    <img src="/images/8.jpg" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/9.jpg")}
-                  >
-                    <img src="/images/9.jpg" alt="/images/mainlogo.png" />
-                  </div>
-                </div>
-                <div aria-hidden className="group">
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/1.png")}
-                  >
-                    <img src="/images/1.png" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/2.jpg")}
-                  >
-                    <img src="/images/2.jpg" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/3.png")}
-                  >
-                    <img src="/images/3.png" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/4.png")}
-                  >
-                    <img src="/images/4.png" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/5.png")}
-                  >
-                    <img src="/images/5.png" alt="H/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/6.jpg")}
-                  >
-                    <img src="/images/6.jpg" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/7.jpg")}
-                  >
-                    <img src="/images/7.jpg" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/8.jpg")}
-                  >
-                    <img src="/images/8.jpg" alt="/images/mainlogo.png" />
-                  </div>
-                  <div
-                    className="card"
-                    onClick={(e) => handleImageClick(e, "/images/9.jpg")}
-                  >
-                    <img src="/images/9.jpg" alt="/images/mainlogo.png" />
-                  </div>
-                </div>
+                )}
               </div>
 
               {/* ✂️ SERVICES & PRICING */}
