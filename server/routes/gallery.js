@@ -34,8 +34,8 @@ router.get('/', async (req, res) => {
     try {
         const images = await GalleryImage.find().sort({ order: 1, createdAt: 1 });
 
-        // Cache for 1 hour, allow CDN/browser caching
-        res.set('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+        // Use a short cache or no-cache to ensure new uploads appear immediately
+        res.set('Cache-Control', 'public, max-age=0, s-maxage=60, stale-while-revalidate=300');
         res.json(images);
     } catch (err) {
         res.status(500).json({ message: err.message });
