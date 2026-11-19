@@ -12,7 +12,7 @@ const bookingSchema = new mongoose.Schema({
   contact: { type: String, required: true },
   serviceType: { type: String, enum: ['Shop Service', 'Home Service'], required: true },
   location: { type: String }, // Only required if Home Service
-  date: { type: Date, required: true },
+  date: { type: String, required: true },
   time: { type: String, required: true },
   status: {
     type: String,

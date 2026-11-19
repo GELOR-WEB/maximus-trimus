@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const DayOffSchema = new mongoose.Schema({
   date: {
-    type: Date, // Format: YYYY-MM-DD
+    type: String, // Format: YYYY-MM-DD
     required: true,
   },
   note: {
