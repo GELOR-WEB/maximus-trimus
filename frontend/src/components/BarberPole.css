@@ -116,3 +116,44 @@
                 0 0 16px rgba(76, 175, 80, 0.4);
   }
 }
+
+/* ── Notification badge (top-right corner) ── */
+.pole-notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 50%;
+  background-color: #e53935;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  box-shadow: 0 0 6px rgba(229, 57, 53, 0.7),
+              0 0 12px rgba(229, 57, 53, 0.3);
+  z-index: 10;
+  pointer-events: none;
+  animation: badgePop 0.35s ease-out;
+}
+
+/* When count >= 10, make it pill-shaped instead of a circle */
+.pole-notification-badge:not(:empty) {
+  min-width: 18px;
+}
+
+@keyframes badgePop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}

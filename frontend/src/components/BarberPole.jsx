@@ -5,8 +5,9 @@ import "./BarberPole.css";
  * Greek-themed Barber Pole indicator.
  * When `isActive` is true  → the pole glows, the stripes spin, and the laurel wreath illuminates.
  * When `isActive` is false → everything is still and dimmed.
+ * `notificationCount` shows a red badge when > 0.
  */
-const BarberPole = ({ isActive = false, size = 50, onClick, title, style }) => {
+const BarberPole = ({ isActive = false, size = 50, onClick, title, style, notificationCount = 0 }) => {
   const poleHeight = size * 0.85;
   const poleWidth = size * 0.28;
   const capWidth = poleWidth + 6;
@@ -214,6 +215,13 @@ const BarberPole = ({ isActive = false, size = 50, onClick, title, style }) => {
 
       {/* Status dot indicator */}
       <span className={`pole-status-dot ${isActive ? "pole-status-dot--on" : "pole-status-dot--off"}`} />
+
+      {/* Notification badge */}
+      {notificationCount > 0 && (
+        <span className="pole-notification-badge">
+          {notificationCount}
+        </span>
+      )}
     </div>
   );
 };

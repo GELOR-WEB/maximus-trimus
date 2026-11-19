@@ -121,6 +121,14 @@ const MainPage = () => {
   const [isShopOpen, setIsShopOpen] = useState(true);
   const [greetingMessage, setGreetingMessage] = useState('how do you want your hair done?');
 
+  // ── Booking notification badge state ──
+  const [bookingNotifCount, setBookingNotifCount] = useState(() => {
+    try {
+      const stored = localStorage.getItem('bookingNotifCount');
+      return stored ? Number(stored) : 0;
+    } catch { return 0; }
+  });
+
   // Reviews state
   const [reviews, setReviews] = useState([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -221,6 +229,80 @@ const MainPage = () => {
 
     return () => clearInterval(pollSettings);
   }, []);
+
+  // ── Poll for booking status updates (notification badge) ──
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setBookingNotifCount(0);
+      return;
+    }
+
+    const STORAGE_KEY = 'bookingSnapshot';
+    const NOTIF_KEY = 'bookingNotifCount';
+
+    const checkForUpdates = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const res = await axios.get(`${API_URL}/api/bookings/my-bookings`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const bookings = res.data;
+
+        // Build current snapshot: { bookingId: { status, date, time } }
+        const currentSnap = {};
+        bookings.forEach(b => {
+          currentSnap[b._id] = { status: b.status, date: b.date, time: b.time };
+        });
+
+        // Load previous snapshot
+        let prevSnap = {};
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) prevSnap = JSON.parse(raw);
+        } catch {}
+
+        // If no previous snapshot, store current one and skip (first load — no notifications)
+        if (Object.keys(prevSnap).length === 0) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(currentSnap));
+          return;
+        }
+
+        // Count changes: status changed to Confirmed/Cancelled, or date/time changed (moved)
+        let newNotifs = 0;
+        // Load any existing unacknowledged count so we accumulate
+        try {
+          const existing = localStorage.getItem(NOTIF_KEY);
+          if (existing) newNotifs = Number(existing);
+        } catch {}
+
+        Object.entries(currentSnap).forEach(([id, cur]) => {
+          const prev = prevSnap[id];
+          if (!prev) return; // new booking the client just created — not a notification
+          if (prev.status !== cur.status && (cur.status === 'Confirmed' || cur.status === 'Cancelled')) {
+            newNotifs++;
+          } else if (prev.date !== cur.date || prev.time !== cur.time) {
+            // Date or time was changed (moved/rescheduled by admin)
+            newNotifs++;
+          }
+        });
+
+        // Save updated snapshot
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentSnap));
+        localStorage.setItem(NOTIF_KEY, String(newNotifs));
+        setBookingNotifCount(newNotifs);
+      } catch {
+        // Silently ignore errors during polling
+      }
+    };
+
+    // Check immediately, then every 30 seconds
+    checkForUpdates();
+    const pollBookings = setInterval(checkForUpdates, 30 * 1000);
+
+    return () => clearInterval(pollBookings);
+  }, [isAuthenticated]);
 
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -406,11 +488,20 @@ const MainPage = () => {
           >
             <div
               className="logo"
-              onClick={() => navigate(isAuthenticated ? "/profile" : "/")}
+              onClick={() => {
+                if (isAuthenticated) {
+                  // Clear notification count when navigating to profile
+                  setBookingNotifCount(0);
+                  localStorage.setItem('bookingNotifCount', '0');
+                  navigate("/profile");
+                } else {
+                  navigate("/");
+                }
+              }}
               style={{ cursor: "pointer" }}
               title={isAuthenticated ? `Go to Profile (${user?.fullName})` : "Home"}
             >
-              <BarberPole isActive={isShopOpen} size={50} />
+              <BarberPole isActive={isShopOpen} size={50} notificationCount={isAuthenticated ? bookingNotifCount : 0} />
             </div>
             <ul className={`nav-links ${isMenuOpen ? "nav-links--open" : ""}`}>
               <li>
