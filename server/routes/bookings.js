@@ -339,6 +339,27 @@ router.post("/", optionalAuth, async (req, res) => {
 
     await newBooking.save();
 
+    // Trigger n8n webhook notification (fire-and-forget)
+    const webhookUrl = process.env.N8N_WEBHOOK_URL;
+    if (webhookUrl) {
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          eventType: "new_booking",
+          bookingId: newBooking._id,
+          customerName: clientName,
+          phone: cleanContact,
+          service: serviceType,
+          date: date,
+          time: time,
+          location: location || "",
+          message: `New booking submitted by ${clientName} for ${serviceType} on ${date} at ${time}.${location ? ` Address: ${location}` : ""}`,
+          timestamp: new Date().toISOString(),
+        }),
+      }).catch((err) => console.error("n8n Webhook delivery error:", err.message));
+    }
+
     // Trigger push notification to admin (fire-and-forget)
     notifyNewBooking({
       customerName: clientName,
