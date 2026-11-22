@@ -12,6 +12,7 @@ import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
 import Profile from "./Profile";
 import ProtectedRoute from "../components/ProtectedRoute";
+import N8nChat from "../components/N8nChat";
 
 import "./App.css";
 
@@ -19,6 +20,7 @@ function App() {
   return (
     <AuthProvider>
       <div className="App">
+        <N8nChat />
         <main className="container">
           <Routes>
             {/* CLIENT-FACING ROUTES */}
