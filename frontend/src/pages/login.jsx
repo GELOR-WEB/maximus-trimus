@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import "./login.css";
+import AuthLayout from "../components/AuthLayout";
+import { PasswordField, TextField } from "../components/ui/Fields";
 
 const Login = () => {
   const { login } = useAuth();
@@ -12,7 +12,6 @@ const Login = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -20,6 +19,7 @@ const Login = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    if (error) setError("");
   };
 
   const handleSubmit = async (e) => {
@@ -46,56 +46,65 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h2>Admin Access</h2>
-        <p className="login-subtitle">Maximus Trimus Command Center</p>
+    <AuthLayout
+      mode="admin"
+      showTabs={false}
+      eyebrow="Staff access"
+      title={
+        <>
+          The command <em>center.</em>
+        </>
+      }
+      subtitle="Owner and staff sign-in for the booking desk, calendar, and shop settings."
+      footer={
+        <p>
+          Here to book a cut? <Link to="/login">Client sign in</Link>.
+        </p>
+      }
+    >
+      {error && (
+        <div className="ui-alert" role="alert">
+          <span className="ui-alert__icon" aria-hidden="true">
+            !
+          </span>
+          <p>{error}</p>
+        </div>
+      )}
 
-        {error && <div className="login-error">{error}</div>}
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <TextField
+          id="username"
+          name="username"
+          type="text"
+          label="Username"
+          placeholder="Enter username"
+          value={formData.username}
+          onChange={handleChange}
+          autoComplete="username"
+          required
+        />
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="Enter username"
-              required
-            />
-          </div>
+        <PasswordField
+          id="password"
+          name="password"
+          label="Password"
+          placeholder="Enter password"
+          value={formData.password}
+          onChange={handleChange}
+          autoComplete="current-password"
+          required
+        />
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <div className="password-input-wrapper">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter password"
-                required
-              />
-              <button
-                type="button"
-                className="password-toggle-btn"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
-            </div>
-          </div>
-
-          <button type="submit" className="btn-login" disabled={loading}>
-            {loading ? "Entering..." : "Enter Dashboard"}
-          </button>
-        </form>
-      </div>
-    </div>
+        <button
+          type="submit"
+          className="ui-btn ui-btn--primary ui-btn--block auth-submit"
+          disabled={loading}
+        >
+          {loading && <span className="ui-spinner" aria-hidden="true" />}
+          {loading ? "Entering…" : "Enter dashboard"}
+        </button>
+      </form>
+    </AuthLayout>
   );
 };
 

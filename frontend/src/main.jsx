@@ -3,6 +3,7 @@ import axios from "axios";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import "./styles/ui.css";
 import App from "./pages/App.jsx"; // ✅ pages folder
 
 axios.defaults.withCredentials = true;

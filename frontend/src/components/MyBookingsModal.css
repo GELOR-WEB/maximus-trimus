@@ -1,0 +1,613 @@
+/* Sit above the n8n chat widget (z-index 9999) */
+.booking-modal-backdrop.mbk-backdrop {
+  z-index: 10001;
+}
+
+/* =========================================================
+   My Bookings modal + account prompt
+   Matches the Maximus Trimus dark / gold aesthetic.
+   Reuses the global .booking-modal-backdrop, .booking-modal-container,
+   .modal-close-btn and .btn-prompt styles from mainPage.css.
+   ========================================================= */
+
+.booking-modal-container.my-bookings-modal {
+  max-width: 680px;
+  width: 92%;
+  max-height: 88vh;
+  padding: 34px 32px 0;
+  background: linear-gradient(165deg, #1d1d1d 0%, #141414 55%, #101010 100%);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 14px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(0, 0, 0, 0.4) inset;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  text-align: left;
+}
+
+.my-bookings-modal .modal-close-btn {
+  z-index: 3;
+  top: 18px;
+  right: 20px;
+  font-size: 1.9rem;
+  line-height: 1;
+  color: #d8d8d8;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* The dialog itself is focused on open for screen readers; no visible ring needed. */
+.my-bookings-modal:focus,
+.mbk-auth-modal:focus {
+  outline: none;
+}
+
+.my-bookings-modal .modal-close-btn:hover {
+  color: #d4af37;
+  transform: rotate(90deg);
+}
+
+/* ── Scrollable body ── */
+.my-bookings-modal .mbk-scroll {
+  overflow-y: auto;
+  padding-right: 6px;
+  margin-right: -6px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 175, 55, 0.4) transparent;
+}
+
+.my-bookings-modal .mbk-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.my-bookings-modal .mbk-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.my-bookings-modal .mbk-scroll::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.35);
+  border-radius: 3px;
+}
+
+/* ── Header ── */
+.mbk-header {
+  padding: 0 40px 20px 0;
+}
+
+.mbk-eyebrow {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #d4af37;
+  margin-bottom: 6px;
+}
+
+.mbk-header h2 {
+  margin: 0 0 6px;
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  color: #f5deb3;
+  letter-spacing: 0.5px;
+}
+
+.mbk-greeting {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+/* ── Sections ── */
+/* Neutralise the global `section { width:100vw; min-height:100vh; padding-top:70px }`
+   rule from mainPage.css, which otherwise leaks into this modal. */
+.my-bookings-modal section.mbk-section {
+  width: auto;
+  min-height: 0;
+  padding: 0;
+  margin: 0 0 22px;
+  position: static;
+  scroll-snap-align: none;
+}
+
+.mbk-section {
+  margin-bottom: 22px;
+}
+
+.mbk-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #d4af37;
+}
+
+.mbk-section-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.35), transparent);
+}
+
+.mbk-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mbk-list--history .mbk-card {
+  opacity: 0.82;
+}
+
+.mbk-list--history .mbk-card:hover {
+  opacity: 1;
+}
+
+.mbk-none-upcoming {
+  margin: 0 0 22px;
+  padding: 14px 16px;
+  border: 1px dashed rgba(212, 175, 55, 0.3);
+  border-radius: 10px;
+  background: rgba(212, 175, 55, 0.05);
+  color: #bdbdbd;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* ── Booking card ── */
+.mbk-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-left: 3px solid rgba(212, 175, 55, 0.55);
+  border-radius: 12px;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.mbk-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(212, 175, 55, 0.5);
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+}
+
+.mbk-card.status-confirmed {
+  border-left-color: #4caf50;
+}
+
+.mbk-card.status-pending {
+  border-left-color: #ff9800;
+}
+
+.mbk-card.status-cancelled {
+  border-left-color: #f44336;
+}
+
+.mbk-card.status-completed {
+  border-left-color: #2196f3;
+}
+
+/* Date block */
+.mbk-date-block {
+  flex: 0 0 auto;
+  width: 62px;
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 10px;
+}
+
+.mbk-date-month {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #d4af37;
+}
+
+.mbk-date-day {
+  font-family: "Playfair Display", serif;
+  font-size: 1.6rem;
+  line-height: 1.05;
+  color: #f5deb3;
+}
+
+.mbk-date-weekday {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Card content */
+.mbk-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.mbk-card-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.mbk-card-heading h3 {
+  margin: 0;
+  font-family: "Roboto Slab", Georgia, serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.mbk-status-badge {
+  margin-left: auto;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mbk-card.status-pending .mbk-status-badge {
+  background: rgba(255, 152, 0, 0.15);
+  border: 1px solid rgba(255, 152, 0, 0.35);
+  color: #ff9800;
+}
+
+.mbk-card.status-confirmed .mbk-status-badge {
+  background: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.35);
+  color: #66bb6a;
+}
+
+.mbk-card.status-cancelled .mbk-status-badge {
+  background: rgba(244, 67, 54, 0.15);
+  border: 1px solid rgba(244, 67, 54, 0.35);
+  color: #ef5350;
+}
+
+.mbk-card.status-completed .mbk-status-badge {
+  background: rgba(33, 150, 243, 0.15);
+  border: 1px solid rgba(33, 150, 243, 0.35);
+  color: #42a5f5;
+}
+
+.mbk-card-when {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  color: #cfcfcf;
+  font-size: 0.88rem;
+}
+
+.mbk-separator {
+  color: rgba(212, 175, 55, 0.7);
+}
+
+.mbk-card-location,
+.mbk-card-paid {
+  margin: 5px 0 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.55);
+  overflow-wrap: anywhere;
+}
+
+.mbk-next-tag {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f5deb3, #d4af37);
+  color: #1a1a1a;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(212, 175, 55, 0.25);
+}
+
+/* ── Empty / error states ── */
+.mbk-empty,
+.mbk-error {
+  text-align: center;
+  padding: 32px 22px 30px;
+  border: 1px dashed rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: 8px;
+}
+
+.mbk-empty-icon,
+.mbk-error-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.32);
+  font-size: 1.7rem;
+}
+
+.mbk-empty h3 {
+  margin: 0 0 8px;
+  font-family: "Playfair Display", serif;
+  font-size: 1.3rem;
+  color: #f5deb3;
+}
+
+.mbk-empty p,
+.mbk-error p {
+  margin: 0 auto 18px;
+  max-width: 42ch;
+  color: #b5b5b5;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.mbk-error {
+  border-color: rgba(244, 67, 54, 0.35);
+}
+
+/* ── Skeleton loaders ── */
+.mbk-card--skeleton {
+  pointer-events: none;
+  border-left-color: rgba(212, 175, 55, 0.2);
+}
+
+.mbk-skeleton-block {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.12) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: mbk-shimmer 1.4s ease infinite;
+  border-radius: 8px;
+}
+
+.mbk-skeleton-date {
+  flex: 0 0 auto;
+  width: 62px;
+  height: 66px;
+}
+
+.mbk-skeleton-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mbk-skeleton-line {
+  height: 12px;
+  width: 55%;
+}
+
+.mbk-skeleton-line--wide {
+  width: 80%;
+  height: 16px;
+}
+
+@keyframes mbk-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* ── Footer actions ── */
+.mbk-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 0 26px;
+  margin-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mbk-btn {
+  padding: 11px 18px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.mbk-btn:active {
+  transform: translateY(1px);
+}
+
+.mbk-btn--primary {
+  background: linear-gradient(135deg, #d4af37, #a27100);
+  color: #1a1a1a;
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.22);
+}
+
+.mbk-btn--primary:hover {
+  background: linear-gradient(135deg, #f5deb3, #d4af37);
+}
+
+.mbk-btn--secondary {
+  background: transparent;
+  border-color: rgba(212, 175, 55, 0.5);
+  color: #d4af37;
+}
+
+.mbk-btn--secondary:hover {
+  background: rgba(212, 175, 55, 0.12);
+}
+
+.mbk-btn--ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #cfcfcf;
+}
+
+.mbk-btn--ghost:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  color: #f5deb3;
+}
+
+.mbk-btn:focus-visible,
+.mbk-auth-later:focus-visible {
+  outline: 2px solid #d4af37;
+  outline-offset: 2px;
+}
+
+/* ── Account prompt ── */
+.booking-modal-container.mbk-auth-modal {
+  max-width: 430px;
+  text-align: center;
+  padding: 34px 30px 28px;
+}
+
+.mbk-auth-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 78px;
+  height: 78px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(245, 222, 179, 0.22), rgba(212, 175, 55, 0.08));
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  box-shadow: 0 0 26px rgba(212, 175, 55, 0.15);
+  font-size: 2.1rem;
+}
+
+.mbk-auth-modal h2 {
+  margin: 0 0 10px;
+  font-family: "Playfair Display", serif;
+  font-size: 1.55rem;
+  color: #f5deb3;
+}
+
+.mbk-auth-text {
+  margin: 0 auto 22px;
+  max-width: 340px;
+  color: #b8b8b8;
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.mbk-auth-modal .auth-prompt-buttons {
+  margin: 0 0 6px;
+}
+
+.mbk-auth-modal .btn-prompt {
+  width: 100%;
+  padding: 12px 18px;
+}
+
+.mbk-auth-later {
+  margin-top: 12px;
+  background: none;
+  border: none;
+  color: #8f8f8f;
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+.mbk-auth-later:hover {
+  color: #d4af37;
+}
+
+/* ── Responsive ── */
+@media (max-width: 560px) {
+  .booking-modal-container.my-bookings-modal {
+    padding: 26px 18px 0;
+    width: 94%;
+    max-height: 92vh;
+  }
+
+  .my-bookings-modal .modal-close-btn {
+    top: 12px;
+    right: 14px;
+  }
+
+  .mbk-header {
+    padding-right: 30px;
+  }
+
+  .mbk-header h2 {
+    font-size: 1.6rem;
+  }
+
+  .mbk-card {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .mbk-date-block {
+    width: 54px;
+  }
+
+  .mbk-date-day {
+    font-size: 1.4rem;
+  }
+
+  .mbk-status-badge {
+    margin-left: 0;
+  }
+
+  .mbk-next-tag {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+  }
+
+  .mbk-footer {
+    flex-direction: column-reverse;
+    padding-bottom: 22px;
+  }
+
+  .mbk-footer .mbk-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mbk-card,
+  .my-bookings-modal .modal-close-btn,
+  .mbk-btn {
+    transition: none;
+  }
+
+  .mbk-skeleton-block {
+    animation: none;
+  }
+}

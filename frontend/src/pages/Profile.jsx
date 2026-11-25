@@ -6,12 +6,17 @@ import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:3000');
 
 import "./Profile.css";
+import ConfirmDialog from "../components/ui/ConfirmDialog";
+import { useToast } from "../components/ui/useToast";
 
 const Profile = () => {
     const { user, updateProfile, logout } = useAuth();
     const navigate = useNavigate();
+    const toast = useToast();
     const [isEditing, setIsEditing] = useState(false);
     const [bookings, setBookings] = useState([]);
+    const [cancelTarget, setCancelTarget] = useState(null);
+    const [cancelLoading, setCancelLoading] = useState(false);
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
@@ -81,18 +86,31 @@ const Profile = () => {
         navigate("/");
     };
 
-    // Cancel booking handler
-    const handleCancelBooking = async (bookingId) => {
-        if (!window.confirm("Are you sure you want to cancel this booking?")) return;
+    // Cancel booking handler — confirmed through the branded dialog
+    const handleCancelBooking = async () => {
+        if (!cancelTarget) return;
+        setCancelLoading(true);
 
         try {
             const token = localStorage.getItem("token");
-            await axios.put(`${API_URL}/api/bookings/my-bookings/${bookingId}/cancel`, {}, {
+            await axios.put(`${API_URL}/api/bookings/my-bookings/${cancelTarget}/cancel`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
+            });
+            setCancelTarget(null);
+            toast.push({
+                type: "success",
+                title: "Booking cancelled",
+                message: "That slot is open again for someone else.",
             });
             fetchMyBookings(); // Refresh
         } catch (err) {
-            alert(err.response?.data?.message || "Failed to cancel booking");
+            toast.push({
+                type: "error",
+                title: "Couldn't cancel that booking",
+                message: err.response?.data?.message || "Something went wrong — try again in a moment.",
+            });
+        } finally {
+            setCancelLoading(false);
         }
     };
 
@@ -287,7 +305,7 @@ const Profile = () => {
                                                     </button>
                                                     <button
                                                         className="btn-cancel-booking"
-                                                        onClick={() => handleCancelBooking(booking._id)}
+                                                        onClick={() => setCancelTarget(booking._id)}
                                                     >
                                                         ✕ Cancel
                                                     </button>
@@ -358,6 +376,18 @@ const Profile = () => {
                     </button>
                 </div>
             </div>
+
+            <ConfirmDialog
+                open={Boolean(cancelTarget)}
+                title="Cancel this booking?"
+                message="The slot goes back to the schedule and can't be recovered. If you only need a different time, reschedule instead."
+                confirmLabel="Yes, cancel it"
+                cancelLabel="Keep my booking"
+                loading={cancelLoading}
+                onConfirm={handleCancelBooking}
+                onCancel={() => setCancelTarget(null)}
+                icon="✕"
+            />
         </div>
     );
 };

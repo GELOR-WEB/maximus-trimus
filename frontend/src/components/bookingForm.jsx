@@ -3,6 +3,7 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:3000');
 import { useAuth } from "../contexts/AuthContext";
+import { PiScissorsThin } from "react-icons/pi";
 import "./BookingForm.css"; // We will create a specific CSS file for this
 
 const BookingForm = ({ initialDate, initialTime }) => {
@@ -176,57 +177,110 @@ const BookingForm = ({ initialDate, initialTime }) => {
     });
   };
 
+  const closeResult = () => setResultModal({ ...resultModal, show: false });
+
   return (
     <div className="booking-form-wrapper">
 
       {!isAuthenticated && (
         <div className="info-message">
-          💡 <strong>Tip:</strong> <a href="/login" style={{ color: '#d4af37' }}>Login</a> or <a href="/register" style={{ color: '#d4af37' }}>create an account</a> to save your info for faster bookings!
+          <span className="info-message__label">Booking as a guest</span>
+          <a href="/login">Sign in</a> or <a href="/register">create an account</a> and your details
+          fill themselves in next time.
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="booking-form">
-        <label>Your Name (Nickname ok):</label>
-        <input
-          type="text"
-          name="clientName"
-          value={formData.clientName}
-          onChange={handleChange}
-          readOnly={isAuthenticated}
-          style={isAuthenticated ? { backgroundColor: 'rgba(212, 175, 55, 0.1)', cursor: 'not-allowed' } : {}}
-          required
-        />
-        {isAuthenticated && <small style={{ color: '#d4af37', fontSize: '0.85rem' }}>✓ Auto-filled from your profile</small>}
+        <div className="booking-form__row">
+          <div className="ui-field">
+            <div className="ui-field__top">
+              <label className="ui-field__label" htmlFor="bf-client-name">
+                Your name<span className="req" aria-hidden="true">*</span>
+              </label>
+              {isAuthenticated && <span className="ui-field__aside">From profile</span>}
+            </div>
+            <input
+              id="bf-client-name"
+              className="ui-input"
+              type="text"
+              name="clientName"
+              value={formData.clientName}
+              onChange={handleChange}
+              readOnly={isAuthenticated}
+              placeholder="Nickname is fine"
+              autoComplete="name"
+              required
+            />
+          </div>
 
-        <label>Email or Phone:</label>
-        <input
-          type="text"
-          name="contact"
-          value={formData.contact}
-          onChange={handleChange}
-          readOnly={isAuthenticated}
-          style={isAuthenticated ? { backgroundColor: 'rgba(212, 175, 55, 0.1)', cursor: 'not-allowed' } : {}}
-          placeholder="For history tracking"
-          required
-        />
-        {isAuthenticated && <small style={{ color: '#d4af37', fontSize: '0.85rem' }}>✓ Auto-filled from your profile</small>}
+          <div className="ui-field">
+            <div className="ui-field__top">
+              <label className="ui-field__label" htmlFor="bf-contact">
+                Email or phone<span className="req" aria-hidden="true">*</span>
+              </label>
+              {isAuthenticated && <span className="ui-field__aside">From profile</span>}
+            </div>
+            <input
+              id="bf-contact"
+              className="ui-input"
+              type="text"
+              name="contact"
+              value={formData.contact}
+              onChange={handleChange}
+              readOnly={isAuthenticated}
+              placeholder="For your history"
+              autoComplete="email"
+              required
+            />
+          </div>
+        </div>
 
-        <label>Service Type:</label>
-        <select
-          name="serviceType"
-          value={formData.serviceType}
-          onChange={handleChange}
-          className="dark-select"
-        >
-          <option value="Shop Service">Shop Service (Walk-in)</option>
-          <option value="Home Service">Home Service</option>
-        </select>
+        <fieldset className="ui-field booking-service">
+          <legend className="ui-field__label">Service type</legend>
+          <div className="ui-choice-cards">
+            <label className={`ui-choice-card ${formData.serviceType === "Shop Service" ? "is-selected" : ""}`}>
+              <input
+                type="radio"
+                name="serviceType"
+                value="Shop Service"
+                checked={formData.serviceType === "Shop Service"}
+                onChange={handleChange}
+              />
+              <span className="ui-choice-card__mark" aria-hidden="true">
+                <PiScissorsThin />
+              </span>
+              <span className="ui-choice-card__body">
+                <strong>Shop service</strong>
+                <span>Come to the chair.</span>
+              </span>
+            </label>
+
+            <label className={`ui-choice-card ${formData.serviceType === "Home Service" ? "is-selected" : ""}`}>
+              <input
+                type="radio"
+                name="serviceType"
+                value="Home Service"
+                checked={formData.serviceType === "Home Service"}
+                onChange={handleChange}
+              />
+              <span className="ui-choice-card__mark" aria-hidden="true">⌂</span>
+              <span className="ui-choice-card__body">
+                <strong>Home service</strong>
+                <span>I come to you.</span>
+              </span>
+            </label>
+          </div>
+        </fieldset>
 
         {/* CONDITIONAL LOCATION INPUT */}
         {formData.serviceType === "Home Service" && (
-          <div className="fade-in-input">
-            <label>Home Address / Landmark:</label>
+          <div className="ui-field fade-in-input">
+            <label className="ui-field__label" htmlFor="bf-location">
+              Home address or landmark<span className="req" aria-hidden="true">*</span>
+            </label>
             <textarea
+              id="bf-location"
+              className="ui-textarea"
               name="location"
               value={formData.location}
               onChange={handleChange}
@@ -236,67 +290,87 @@ const BookingForm = ({ initialDate, initialTime }) => {
           </div>
         )}
 
-        <label>Date:</label>
-        <input
-          type="date"
-          name="date"
-          value={formData.date}
-          onChange={handleChange}
-          min={getTodayDate()}
-          required
-        />
+        <div className="booking-form__row">
+          <div className="ui-field">
+            <label className="ui-field__label" htmlFor="bf-date">
+              Date<span className="req" aria-hidden="true">*</span>
+            </label>
+            <input
+              id="bf-date"
+              className="ui-input"
+              type="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              min={getTodayDate()}
+              required
+            />
+          </div>
 
-        <label>Time:</label>
-        <input
-          type="time"
-          name="time"
-          value={formData.time}
-          onChange={handleChange}
-          required
-          min={getMinTime()}
-          max={`${settings.endHour.toString().padStart(2, '0')}:00`}
-          className={isTimeBlocked(formData.time) ? "input-warning" : ""}
-        />
-        {isTimeBlocked(formData.time) && (
-          <small className="warning-text">⚠️ This time is too close to another booking.</small>
-        )}
+          <div className="ui-field">
+            <label className="ui-field__label" htmlFor="bf-time">
+              Time<span className="req" aria-hidden="true">*</span>
+            </label>
+            <input
+              id="bf-time"
+              className={`ui-input ${isTimeBlocked(formData.time) ? "input-warning" : ""}`}
+              type="time"
+              name="time"
+              value={formData.time}
+              onChange={handleChange}
+              required
+              min={getMinTime()}
+              max={`${settings.endHour.toString().padStart(2, '0')}:00`}
+            />
+            {isTimeBlocked(formData.time) && (
+              <p className="ui-field__error">That time is too close to another booking — pick a later slot.</p>
+            )}
+          </div>
+        </div>
 
-        <button type="submit" className="submit-button">Book Now</button>
+        <button type="submit" className="ui-btn ui-btn--primary ui-btn--block auth-submit">
+          Reserve this slot
+        </button>
       </form>
 
       {/* RESULT MODAL — shows after booking attempt */}
       {resultModal.show && (
-        <div className="result-overlay" onClick={() => setResultModal({ ...resultModal, show: false })}>
+        <div
+          className="result-overlay"
+          onClick={closeResult}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="booking-result-title"
+        >
           <div className="result-modal" onClick={(e) => e.stopPropagation()}>
-
-            {/* Icon */}
             <div className={`result-icon-circle ${resultModal.success ? "result-icon-circle--success" : "result-icon-circle--error"}`}>
               {resultModal.success ? (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18" />
                   <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               )}
             </div>
 
-            {/* Title */}
-            <h3 className={`result-title ${resultModal.success ? "result-title--success" : "result-title--error"}`}>
-              {resultModal.success ? "Booking Submitted!" : "Booking Failed"}
+            <h3
+              className={`result-title ${resultModal.success ? "result-title--success" : "result-title--error"}`}
+              id="booking-result-title"
+            >
+              {resultModal.success ? "You're on the books" : "That didn't go through"}
             </h3>
 
-            {/* Message */}
             <p className="result-message">{resultModal.message}</p>
 
-            {/* Dismiss */}
             <button
-              className={`result-dismiss-btn ${resultModal.success ? "result-dismiss-btn--success" : "result-dismiss-btn--error"}`}
-              onClick={() => setResultModal({ ...resultModal, show: false })}
+              type="button"
+              className={`ui-btn ui-btn--block ${resultModal.success ? "ui-btn--primary" : "ui-btn--outline"}`}
+              onClick={closeResult}
             >
-              {resultModal.success ? "Got It ✓" : "Try Again"}
+              {resultModal.success ? "Got it" : "Try again"}
             </button>
           </div>
         </div>

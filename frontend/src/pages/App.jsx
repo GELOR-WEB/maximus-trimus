@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "../contexts/AuthContext";
+import { ToastProvider } from "../components/ui/ToastProvider";
 
 // Import Page Components
 import MainPage from "./mainPage";
@@ -19,10 +20,11 @@ import "./App.css";
 function App() {
   return (
     <AuthProvider>
-      <div className="App">
-        <N8nChat />
-        <main className="container">
-          <Routes>
+      <ToastProvider>
+        <div className="App">
+          <N8nChat />
+          <main className="container">
+            <Routes>
             {/* CLIENT-FACING ROUTES */}
             {/* Main page is always accessible as guest mode */}
             <Route
@@ -57,8 +59,9 @@ function App() {
             {/* Fallback: redirect unknown routes to the main page (guest mode) */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </main>
-      </div>
+          </main>
+        </div>
+      </ToastProvider>
     </AuthProvider>
   );
 }

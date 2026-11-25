@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:3000');
@@ -10,6 +10,8 @@ import BarberPole from "../components/BarberPole";
 import { PiScissorsThin } from "react-icons/pi";
 import BookingForm from "../components/bookingForm";
 import AvailabilityCalendar from "../components/AvailabilityCalendar";
+import MyBookingsModal, { BookingsAuthPrompt } from "../components/MyBookingsModal";
+import Modal from "../components/ui/Modal";
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -71,6 +73,8 @@ const MainPage = () => {
 
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isAuthPromptOpen, setIsAuthPromptOpen] = useState(false);
+  const [isBookingsModalOpen, setIsBookingsModalOpen] = useState(false);
+  const [isBookingsAuthOpen, setIsBookingsAuthOpen] = useState(false);
   const [bookingDate, setBookingDate] = useState('');
   const [bookingTime, setBookingTime] = useState('');
 
@@ -418,64 +422,88 @@ const MainPage = () => {
   return (
     <>
       {/* 0. AUTH PROMPT MODAL */}
-      {isAuthPromptOpen && (
-        <div className="booking-modal-backdrop" onClick={() => setIsAuthPromptOpen(false)}>
-          <div className="booking-modal-container auth-prompt-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close-btn" onClick={() => setIsAuthPromptOpen(false)}>×</button>
-            <div className="booking-content">
-              <h2>Do you have an account?</h2>
-              <div className="auth-prompt-buttons">
-                <button
-                  className="btn-prompt login"
-                  onClick={() => navigate("/login")}
-                >
-                  Yes
-                </button>
-                <button
-                  className="btn-prompt register"
-                  onClick={() => navigate("/register")}
-                >
-                  No
-                </button>
-                <button
-                  className="btn-prompt guest"
-                  onClick={() => {
-                    setIsAuthPromptOpen(false);
-                    setIsBookingModalOpen(true);
-                  }}
-                >
-                  Continue as Guest
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 1. BOOKING MODAL RENDERING LOGIC */}
-      {isBookingModalOpen && (
-        // Render the modal backdrop and container
-        <div className="booking-modal-backdrop" onClick={closeBookingModal}>
-          <div
-            className="booking-modal-container"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button className="modal-close-btn" onClick={closeBookingModal}>
-              ×
+      <Modal
+        isOpen={isAuthPromptOpen}
+        onClose={() => setIsAuthPromptOpen(false)}
+        size="sm"
+        hideHeader
+        ariaLabel="Do you have an account?"
+      >
+        <div className="ui-confirm">
+          <span className="ui-confirm__icon ui-confirm__icon--gold" aria-hidden="true">
+            ✂
+          </span>
+          <h2 className="ui-confirm__title">Do you have an account?</h2>
+          <p className="ui-confirm__text">
+            Sign in and your details are already on file. New here? It takes a minute — or keep
+            going as a guest and fill the form out once.
+          </p>
+          <div className="ui-choice">
+            <button className="ui-btn ui-btn--primary" onClick={() => navigate("/login")}>
+              Yes — sign me in
             </button>
-
-            {/* The content of the modal: Title, description, and Form */}
-            <div className="booking-content">
-              <h2>Book Your Next Haircut</h2>
-              <p>
-                Fill out the details below to secure your spot with the barber.
-              </p>
-              {/* 👈 Render the BookingForm here */}
-              <BookingForm initialDate={bookingDate} initialTime={bookingTime} />
-            </div>
+            <button className="ui-btn ui-btn--outline" onClick={() => navigate("/register")}>
+              No — create an account
+            </button>
+            <button
+              className="ui-btn ui-btn--ghost"
+              onClick={() => {
+                setIsAuthPromptOpen(false);
+                setIsBookingModalOpen(true);
+              }}
+            >
+              Continue as guest
+            </button>
           </div>
         </div>
-      )}
+      </Modal>
+
+      {/* 0b. MY BOOKINGS MODAL (barber pole logo, logged in) */}
+      <MyBookingsModal
+        isOpen={isBookingsModalOpen}
+        onClose={() => setIsBookingsModalOpen(false)}
+        user={user}
+        onBookNew={() => {
+          setIsBookingsModalOpen(false);
+          setBookingDate('');
+          setBookingTime('');
+          setIsBookingModalOpen(true);
+        }}
+        onManage={() => {
+          setIsBookingsModalOpen(false);
+          navigate("/profile");
+        }}
+      />
+
+      {/* 0c. CREATE ACCOUNT PROMPT (barber pole logo, guest) */}
+      <BookingsAuthPrompt
+        isOpen={isBookingsAuthOpen}
+        onClose={() => setIsBookingsAuthOpen(false)}
+        onRegister={() => {
+          setIsBookingsAuthOpen(false);
+          navigate("/register");
+        }}
+        onLogin={() => {
+          setIsBookingsAuthOpen(false);
+          navigate("/login");
+        }}
+      />
+
+      {/* 1. BOOKING MODAL */}
+      <Modal
+        isOpen={isBookingModalOpen}
+        onClose={closeBookingModal}
+        size="lg"
+        eyebrow="Reserve the chair"
+        title={
+          <>
+            Book your next <em>haircut.</em>
+          </>
+        }
+        subtitle="Pick a service, a day and a time. Your slot is held as soon as you send it."
+      >
+        <BookingForm initialDate={bookingDate} initialTime={bookingTime} />
+      </Modal>
       {/* 2. RENDER THE MODAL AT THE TOP LEVEL */}
       {selectedImage && (
         <ImageModal imageUrl={selectedImage} onClose={closeModal} />
@@ -490,16 +518,16 @@ const MainPage = () => {
               className="logo"
               onClick={() => {
                 if (isAuthenticated) {
-                  // Clear notification count when navigating to profile
+                  // Clear notification count once the client views their bookings
                   setBookingNotifCount(0);
                   localStorage.setItem('bookingNotifCount', '0');
-                  navigate("/profile");
+                  setIsBookingsModalOpen(true);
                 } else {
-                  navigate("/");
+                  setIsBookingsAuthOpen(true);
                 }
               }}
               style={{ cursor: "pointer" }}
-              title={isAuthenticated ? `Go to Profile (${user?.fullName})` : "Home"}
+              title={isAuthenticated ? "View my bookings" : "Sign in to view your bookings"}
             >
               <BarberPole isActive={isShopOpen} size={50} notificationCount={isAuthenticated ? bookingNotifCount : 0} />
             </div>
@@ -955,73 +983,76 @@ const MainPage = () => {
       </div >
 
       {/* REVIEW MODAL */}
-      {isReviewModalOpen && (
-        <div className="review-modal-backdrop" onClick={() => { setIsReviewModalOpen(false); setReviewMessage({ text: '', type: '' }); }}>
-          <div className="review-modal-container" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close-btn" onClick={() => { setIsReviewModalOpen(false); setReviewMessage({ text: '', type: '' }); }}>
-              &times;
-            </button>
-            <h2>Leave a Review</h2>
-            <p className="review-modal-sub">Share your experience at Maximus Trimus</p>
-
-            <form onSubmit={handleSubmitReview} className="review-form">
-              <div className="star-rating-input">
-                {[1, 2, 3, 4, 5].map(star => (
-                  <span
-                    key={star}
-                    className={`star-select ${star <= (reviewHover || reviewRating) ? 'active' : ''}`}
-                    onClick={() => setReviewRating(star)}
-                    onMouseEnter={() => setReviewHover(star)}
-                    onMouseLeave={() => setReviewHover(0)}
-                  >
-                    ★
-                  </span>
-                ))}
-              </div>
-              <textarea
-                className="review-textarea"
-                placeholder="Write your review here..."
-                value={reviewComment}
-                onChange={(e) => setReviewComment(e.target.value)}
-                maxLength={500}
-                rows={4}
-              />
-              <span className="review-char-count">{reviewComment.length}/500</span>
-
-              {reviewMessage.text && (
-                <div className={`form-message ${reviewMessage.type}`}>
-                  {reviewMessage.text}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                className="submit-button"
-                disabled={reviewSubmitting}
+      <Modal
+        isOpen={isReviewModalOpen}
+        onClose={() => {
+          setIsReviewModalOpen(false);
+          setReviewMessage({ text: '', type: '' });
+        }}
+        size="sm"
+        eyebrow="Your word"
+        title={
+          <>
+            Leave a <em>review.</em>
+          </>
+        }
+        subtitle="Tell the next client what the chair felt like."
+      >
+        <form onSubmit={handleSubmitReview} className="review-form">
+          <div className="star-rating-input">
+            {[1, 2, 3, 4, 5].map(star => (
+              <span
+                key={star}
+                className={`star-select ${star <= (reviewHover || reviewRating) ? 'active' : ''}`}
+                onClick={() => setReviewRating(star)}
+                onMouseEnter={() => setReviewHover(star)}
+                onMouseLeave={() => setReviewHover(0)}
               >
-                {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
-              </button>
-            </form>
+                ★
+              </span>
+            ))}
           </div>
-        </div>
-      )}
+          <textarea
+            className="ui-textarea review-textarea"
+            placeholder="Write your review here..."
+            value={reviewComment}
+            onChange={(e) => setReviewComment(e.target.value)}
+            maxLength={500}
+            rows={4}
+          />
+          <span className="review-char-count">{reviewComment.length}/500</span>
 
-      {selectedImage && (
-        <ImageModal imageUrl={selectedImage} onClose={closeModal} />
-      )}
+          {reviewMessage.text && (
+            <div className={`ui-alert ${reviewMessage.type === 'success' ? 'ui-alert--success' : ''}`} role="alert">
+              <span className="ui-alert__icon" aria-hidden="true">
+                {reviewMessage.type === 'success' ? '✓' : '!'}
+              </span>
+              <p>{reviewMessage.text}</p>
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="ui-btn ui-btn--primary ui-btn--block"
+            disabled={reviewSubmitting}
+          >
+            {reviewSubmitting && <span className="ui-spinner" aria-hidden="true" />}
+            {reviewSubmitting ? 'Sending…' : 'Submit review'}
+          </button>
+        </form>
+      </Modal>
     </>
   );
 };
-const ImageModal = ({ imageUrl, onClose }) => {
-  return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close-btn" onClick={onClose}>
-          &times;
-        </button>
-        <img src={imageUrl} alt="Enlarged Haircut" className="modal-image" />
-      </div>
-    </div>
-  );
-};
+const ImageModal = ({ imageUrl, onClose }) => (
+  <Modal
+    isOpen={Boolean(imageUrl)}
+    onClose={onClose}
+    bare
+    hideHeader
+    ariaLabel="Haircut photo"
+  >
+    <img src={imageUrl} alt="Enlarged haircut" className="modal-image" />
+  </Modal>
+);
 export default MainPage;

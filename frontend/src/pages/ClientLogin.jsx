@@ -1,105 +1,110 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import "./login.css";
+import AuthLayout from "../components/AuthLayout";
+import { PasswordField, TextField } from "../components/ui/Fields";
 
 const ClientLogin = () => {
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const navigate = useNavigate();
-    const { login } = useAuth();
+    if (error) setError("");
+  };
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError("");
-        setLoading(true);
+    const result = await login(formData.email, formData.password);
 
-        const result = await login(formData.email, formData.password);
+    setLoading(false);
 
-        setLoading(false);
+    if (result.success) {
+      navigate("/"); // Redirect to home page
+    } else {
+      setError(result.message);
+    }
+  };
 
-        if (result.success) {
-            navigate("/"); // Redirect to home page
-        } else {
-            setError(result.message);
-        }
-    };
-
-    return (
-        <div className="login-container">
-            <div className="login-card">
-                <h2>Client Login</h2>
-                <p className="login-subtitle">Welcome back to Maximus Trimus</p>
-
-                {error && <div className="login-error">{error}</div>}
-
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="Enter your email"
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <div className="password-input-wrapper">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                id="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                placeholder="Enter password"
-                                required
-                            />
-                            <button
-                                type="button"
-                                className="password-toggle-btn"
-                                onClick={() => setShowPassword(!showPassword)}
-                                aria-label={showPassword ? "Hide password" : "Show password"}
-                            >
-                                {showPassword ? <FaEyeSlash /> : <FaEye />}
-                            </button>
-                        </div>
-                        <div className="forgot-password-link">
-                            <Link to="/forgot-password">Forgot password?</Link>
-                        </div>
-                    </div>
-
-                    <button type="submit" className="btn-login" disabled={loading}>
-                        {loading ? "Logging in..." : "Login"}
-                    </button>
-                </form>
-
-                <div className="login-footer">
-                    <p>
-                        Don't have an account? <Link to="/register">Sign up here</Link>
-                    </p>
-                </div>
-            </div>
+  return (
+    <AuthLayout
+      mode="login"
+      eyebrow="Client access"
+      title={
+        <>
+          Welcome back to the <em>chair.</em>
+        </>
+      }
+      subtitle="Sign in to book a cut, move a visit, or keep track of every appointment in one place."
+      footer={
+        <p>
+          New to the shop? <Link to="/register">Create an account</Link> — it takes a
+          minute.
+        </p>
+      }
+    >
+      {error && (
+        <div className="ui-alert" role="alert">
+          <span className="ui-alert__icon" aria-hidden="true">
+            !
+          </span>
+          <p>{error}</p>
         </div>
-    );
+      )}
+
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <TextField
+          id="email"
+          name="email"
+          type="email"
+          label="Email address"
+          placeholder="you@example.com"
+          value={formData.email}
+          onChange={handleChange}
+          autoComplete="email"
+          required
+        />
+
+        <PasswordField
+          id="password"
+          name="password"
+          label="Password"
+          placeholder="Enter your password"
+          value={formData.password}
+          onChange={handleChange}
+          autoComplete="current-password"
+          required
+        />
+
+        <div className="auth-forgot">
+          <Link to="/forgot-password" className="auth-link">
+            Forgot password?
+          </Link>
+        </div>
+
+        <button
+          type="submit"
+          className="ui-btn ui-btn--primary ui-btn--block auth-submit"
+          disabled={loading}
+        >
+          {loading && <span className="ui-spinner" aria-hidden="true" />}
+          {loading ? "Signing in…" : "Sign in"}
+        </button>
+      </form>
+    </AuthLayout>
+  );
 };
 
 export default ClientLogin;

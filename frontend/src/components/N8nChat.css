@@ -1,0 +1,300 @@
+/* =========================================================
+   Quick reply options injected into the @n8n/chat footer.
+   Scoped to #n8n-chat so nothing else on the site is affected.
+
+   Expanded: floats as a card just above the message input, so it
+   never squeezes the conversation area.
+   Collapsed: a single compact "Quick options" line in the footer.
+   ========================================================= */
+
+#n8n-chat .chat-footer {
+  position: relative;
+}
+
+/* Keep the widget header compact; global h1/p margins otherwise make it
+   dominate the window. */
+#n8n-chat .chat-header {
+  height: auto;
+  min-height: 0;
+  padding: 14px 16px;
+  gap: 2px;
+}
+
+#n8n-chat .chat-header h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.25;
+}
+
+#n8n-chat .chat-header p {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+#n8n-chat .mt-quick-replies {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 8px;
+  font-family: inherit;
+  color: #f3efe4;
+  text-align: left;
+}
+
+/* Floating card while expanded */
+#n8n-chat .mt-quick-replies:not(.mt-qr-collapsed) {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: calc(100% + 8px);
+  z-index: 20;
+  background: #14110c;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.45);
+  max-height: min(320px, 55vh);
+  overflow-y: auto;
+  animation: mt-qr-rise 0.18s ease-out;
+}
+
+@keyframes mt-qr-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#n8n-chat .chat-window {
+  background: #0b0b0a;
+  color: #f3efe4;
+}
+
+#n8n-chat .chat-layout,
+#n8n-chat .chat-wrapper,
+#n8n-chat .chat-body,
+#n8n-chat .chat-footer {
+  background: transparent;
+}
+
+#n8n-chat .chat-header {
+  background: transparent;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.22);
+}
+
+#n8n-chat .chat-header h1,
+#n8n-chat .chat-heading,
+#n8n-chat .chat-header p,
+#n8n-chat .chat-header h2 {
+  color: #f5deb3;
+}
+
+#n8n-chat .chat-body {
+  color: #f3efe4;
+}
+
+#n8n-chat .chat-message {
+  background: #1a1713;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 14px;
+  color: #f3efe4;
+}
+
+#n8n-chat .chat-message-from-user {
+  background: #d4af37;
+  border-color: #d4af37;
+  color: #17130a;
+}
+
+#n8n-chat .n8n-markdown,
+#n8n-chat .n8n-markdown p,
+#n8n-chat .n8n-markdown li,
+#n8n-chat .n8n-markdown strong,
+#n8n-chat .n8n-markdown h1,
+#n8n-chat .n8n-markdown h2,
+#n8n-chat .n8n-markdown h3 {
+  color: inherit;
+}
+
+#n8n-chat textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(245, 222, 179, 0.2);
+  border-radius: 12px;
+  color: #f3efe4;
+}
+
+#n8n-chat textarea::placeholder {
+  color: rgba(243, 239, 228, 0.35);
+}
+
+#n8n-chat .chat-input {
+  background: transparent;
+  border-top: 1px solid rgba(212, 175, 55, 0.22);
+}
+
+#n8n-chat .chat-input-send-button,
+#n8n-chat .chat-send-button,
+#n8n-chat button[aria-label*="send" i],
+#n8n-chat button[class*="send"] {
+  color: #d4af37;
+}
+
+/* Keep the chat widget typography in the house face */
+#n8n-chat .chat-header h1,
+#n8n-chat .chat-heading,
+#n8n-chat .chat-message,
+#n8n-chat textarea {
+  font-family: var(--mt-display, "Playfair Display", serif);
+}
+
+/* ── Header row ── */
+#n8n-chat .mt-qr-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+#n8n-chat .mt-qr-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mt-gold, #d4af37);
+}
+
+#n8n-chat .mt-qr-toggle {
+  flex: 0 0 auto;
+  border: none;
+  background: transparent;
+  padding: 0 2px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: rgba(243, 239, 228, 0.55);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+#n8n-chat .mt-qr-toggle:hover {
+  color: var(--mt-cream, #f5deb3);
+  text-decoration: underline;
+}
+
+#n8n-chat .mt-qr-toggle:focus-visible {
+  outline: 2px solid var(--mt-gold, #d4af37);
+  outline-offset: 2px;
+}
+
+/* ── Rows of chips ── */
+#n8n-chat .mt-qr-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#n8n-chat .mt-qr-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+#n8n-chat .mt-qr-row[data-group="faq"] {
+  padding-top: 8px;
+  border-top: 1px solid rgba(212, 175, 55, 0.22);
+}
+
+#n8n-chat .mt-qr-tag {
+  flex: 0 0 auto;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(212, 175, 55, 0.14);
+  color: var(--mt-cream, #f5deb3);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Chips ── */
+#n8n-chat .mt-qr-chip {
+  flex: 0 0 auto;
+  border: 1px solid rgba(245, 222, 179, 0.28);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f3efe4;
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+#n8n-chat .mt-qr-chip:hover {
+  background: #d4af37;
+  border-color: #d4af37;
+  color: #17130a;
+}
+
+#n8n-chat .mt-qr-chip:active {
+  transform: scale(0.97);
+}
+
+#n8n-chat .mt-qr-chip:focus-visible {
+  outline: 2px solid #d4af37;
+  outline-offset: 2px;
+}
+
+/* FAQs are secondary: lighter, neutral styling. */
+#n8n-chat .mt-qr-row[data-group="faq"] .mt-qr-tag {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(243, 239, 228, 0.6);
+}
+
+#n8n-chat .mt-qr-row[data-group="faq"] .mt-qr-chip {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(243, 239, 228, 0.75);
+}
+
+#n8n-chat .mt-qr-row[data-group="faq"] .mt-qr-chip:hover {
+  border-color: #d4af37;
+  background: rgba(212, 175, 55, 0.12);
+  color: #f5deb3;
+}
+
+/* ── Collapsed state ── */
+#n8n-chat .mt-quick-replies.mt-qr-collapsed {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+#n8n-chat .mt-quick-replies.mt-qr-collapsed .mt-qr-rows {
+  display: none;
+}
+
+#n8n-chat .mt-quick-replies.mt-qr-collapsed .mt-qr-head {
+  flex: 1;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  #n8n-chat .mt-quick-replies:not(.mt-qr-collapsed) {
+    animation: none;
+  }
+}
