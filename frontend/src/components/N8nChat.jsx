@@ -18,27 +18,27 @@ const QUICK_REPLY_GROUPS = [
     label: "Book",
     items: [
       {
-        label: "📅 Book a haircut",
+        label: "Book a haircut",
         prompt: "I'd like to book a haircut. Can you help me choose a date and time?",
       },
       {
-        label: "🕒 Open slots today",
+        label: "Today's slots",
         prompt: "What time slots are still available today?",
       },
       {
-        label: "🏠 Home service",
+        label: "Home service",
         prompt: "How does the home service work and how much does it cost?",
       },
       {
-        label: "🔁 Reschedule",
+        label: "Reschedule",
         prompt: "I want to reschedule my existing booking. What do I need to do?",
       },
       {
-        label: "❌ Cancel booking",
+        label: "Cancel booking",
         prompt: "I need to cancel my booking. Can you help me with that?",
       },
       {
-        label: "✅ Booking status",
+        label: "Booking status",
         prompt: "Can you check the status of my booking?",
       },
     ],
@@ -48,23 +48,23 @@ const QUICK_REPLY_GROUPS = [
     label: "FAQs",
     items: [
       {
-        label: "💰 Prices",
+        label: "Prices",
         prompt: "How much does a haircut cost?",
       },
       {
-        label: "📍 Location",
+        label: "Location",
         prompt: "Where is the shop located?",
       },
       {
-        label: "⏰ Hours",
+        label: "Hours",
         prompt: "What are your opening hours?",
       },
       {
-        label: "🚶 Walk-ins",
+        label: "Walk-ins",
         prompt: "Do you accept walk-ins?",
       },
       {
-        label: "✂️ Services",
+        label: "Services",
         prompt: "What services do you offer?",
       },
     ],
@@ -83,13 +83,13 @@ const initChatOnce = () => {
       createChat({
         webhookUrl: N8N_WEBHOOK_URL,
         initialMessages: [
-          "Salve! 👋 Welcome to Maximus Trimus.",
+          "Salve! Welcome to Maximus Trimus.",
           "Tap a quick option below or type your question — I can help with bookings, schedules, and home service.",
         ],
         i18n: {
           en: {
             title: "Maximus Trimus",
-            subtitle: "Booking help & FAQs — tap a quick option or type below",
+            subtitle: "Booking concierge · Angeles, Pampanga",
             footer: "",
             getStarted: "Start a new chat",
             inputPlaceholder: "Ask about booking, prices, or services…",
@@ -178,7 +178,7 @@ const createQuickReplyPanel = () => {
   panel.setAttribute("aria-label", "Quick booking questions");
 
   const head = createElement("div", "mt-qr-head");
-  head.appendChild(createElement("span", "mt-qr-title", "💡 Quick options"));
+  head.appendChild(createElement("span", "mt-qr-title", "Quick options"));
 
   const toggle = createElement("button", "mt-qr-toggle", "Hide");
   toggle.type = "button";
@@ -240,6 +240,122 @@ const mountQuickReplies = () => {
   return true;
 };
 
+const CLOSE_ICON =
+  '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+  '<path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" ' +
+  'stroke-width="1.8" stroke-linecap="round" /></svg>';
+
+/**
+ * The widget's header is plain; add the shop's barber-pole mark and a clear
+ * close control so the concierge reads as part of the site, not an embed.
+ */
+const ensureHeaderDecor = () => {
+  const root = document.getElementById(CHAT_ROOT_ID);
+  const heading = root?.querySelector(".chat-heading");
+  if (!heading) return;
+
+  if (!heading.querySelector(".mt-chat-emblem")) {
+    const emblem = createElement("span", "mt-chat-emblem");
+    emblem.setAttribute("aria-hidden", "true");
+    heading.insertBefore(emblem, heading.firstChild);
+  }
+
+  if (!heading.querySelector(".mt-chat-close")) {
+    const close = createElement("button", "mt-chat-close");
+    close.type = "button";
+    close.setAttribute("aria-label", "Close chat");
+    close.innerHTML = CLOSE_ICON;
+    close.addEventListener("click", () => {
+      root.querySelector(".chat-window-toggle")?.click();
+    });
+    heading.appendChild(close);
+  }
+};
+
+/**
+ * n8n renders the launcher as a plain div. Give it a button role, a name and
+ * keyboard support, and keep the open state announced.
+ */
+const ensureToggleA11y = () => {
+  const root = document.getElementById(CHAT_ROOT_ID);
+  const toggle = root?.querySelector(".chat-window-toggle");
+  if (!toggle) return;
+
+  toggle.setAttribute("role", "button");
+  toggle.setAttribute("tabindex", "0");
+  toggle.setAttribute("aria-controls", CHAT_ROOT_ID);
+
+  if (!toggle.dataset.mtKeyBound) {
+    toggle.dataset.mtKeyBound = "1";
+    toggle.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      toggle.click();
+    });
+  }
+};
+
+const syncChatState = () => {
+  const root = document.getElementById(CHAT_ROOT_ID);
+  const windowEl = root?.querySelector(".chat-window");
+  // The widget keeps the window in the DOM and hides it with display:none,
+  // so a mounted node is not the same thing as an open concierge.
+  const open = Boolean(windowEl && windowEl.getClientRects().length > 0);
+  const toggle = root?.querySelector(".chat-window-toggle");
+
+  root?.classList.toggle("mt-chat-expanded", open);
+
+  if (toggle) {
+    const label = open ? "Close booking chat" : "Open booking chat";
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", label);
+    toggle.setAttribute("title", label);
+  }
+
+  document.body.classList.toggle("mt-chat-open", open);
+};
+
+/** Collapse the tray once someone starts typing so the conversation leads. */
+const bindComposerFocus = () => {
+  const root = document.getElementById(CHAT_ROOT_ID);
+  const textarea = root?.querySelector(".chat-input textarea");
+  const panel = root?.querySelector(`[${PANEL_ATTR}]`);
+  const send = root?.querySelector(".chat-input-send-button");
+  const windowEl = root?.querySelector(".chat-window");
+
+  if (textarea && !textarea.dataset.mtFocusBound) {
+    textarea.dataset.mtFocusBound = "1";
+    textarea.setAttribute("aria-label", "Message the booking concierge");
+
+    if (panel) {
+      textarea.addEventListener("focus", () => {
+        if (!panel.classList.contains("mt-qr-collapsed")) setCollapsed(panel, true);
+      });
+    }
+  }
+
+  if (send && !send.dataset.mtLabelBound) {
+    send.dataset.mtLabelBound = "1";
+    send.setAttribute("aria-label", "Send message");
+    send.setAttribute("title", "Send message");
+  }
+
+  if (windowEl && !windowEl.dataset.mtDialogBound) {
+    windowEl.dataset.mtDialogBound = "1";
+    windowEl.setAttribute("role", "dialog");
+    windowEl.setAttribute("aria-label", "Booking concierge");
+  }
+};
+
+const decorateChat = () => {
+  const mounted = mountQuickReplies();
+  ensureHeaderDecor();
+  ensureToggleA11y();
+  bindComposerFocus();
+  syncChatState();
+  return mounted;
+};
+
 const N8nChat = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
@@ -265,23 +381,41 @@ const N8nChat = () => {
 
     let cancelled = false;
     let observer;
+    let frame = 0;
+
+    const scheduleDecorate = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        if (!cancelled) decorateChat();
+      });
+    };
+
+    const onResize = () => syncChatState();
+
+    const onKeyDown = (event) => {
+      if (event.key !== "Escape") return;
+      const root = document.getElementById(CHAT_ROOT_ID);
+      const windowEl = root?.querySelector(".chat-window");
+      if (windowEl && windowEl.getClientRects().length > 0) {
+        root.querySelector(".chat-window-toggle")?.click();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
 
     initChatOnce()
       .then(() => {
         if (cancelled) return;
 
         showChat();
+        decorateChat();
 
-        if (mountQuickReplies()) return;
-
-        // The widget mounts asynchronously; wait for its footer, then inject.
-        observer = new MutationObserver(() => {
-          if (mountQuickReplies()) {
-            observer.disconnect();
-            observer = undefined;
-          }
-        });
+        // The widget mounts and re-renders asynchronously (messages stream in),
+        // so keep its shell, launcher and quick replies in sync.
+        observer = new MutationObserver(scheduleDecorate);
         observer.observe(document.body, { childList: true, subtree: true });
+        window.addEventListener("resize", onResize);
       })
       .catch((err) => {
         console.error("Failed to initialize n8n chat widget:", err);
@@ -289,7 +423,11 @@ const N8nChat = () => {
 
     return () => {
       cancelled = true;
+      if (frame) window.cancelAnimationFrame(frame);
       observer?.disconnect();
+      window.removeEventListener("resize", onResize);
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.classList.remove("mt-chat-open");
     };
   }, [isAdmin]);
 

@@ -1,0 +1,237 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/AuthLayout.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6be55078"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import __vite__cjsImport1_react from "/node_modules/.vite/deps/react.js?v=6be55078"; const React = __vite__cjsImport1_react.__esModule ? __vite__cjsImport1_react.default : __vite__cjsImport1_react;
+import { Link } from "/node_modules/.vite/deps/react-router-dom.js?v=6be55078";
+const AuthLayout = ({
+  mode = "login",
+  showTabs = true,
+  eyebrow,
+  title,
+  subtitle,
+  children,
+  footer,
+  fineprint = "Maximus Trimus · Angeles, Pampanga"
+}) => /* @__PURE__ */ jsxDEV("div", { className: "auth-page", children: [
+  /* @__PURE__ */ jsxDEV("aside", { className: "auth-brand", "aria-label": "Maximus Trimus barbershop", children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "auth-brand__bg", "aria-hidden": "true" }, void 0, false, {
+      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+      lineNumber: 21,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(
+      "img",
+      {
+        className: "auth-brand__portrait",
+        src: "/images/ako.png",
+        alt: "",
+        "aria-hidden": "true"
+      },
+      void 0,
+      false,
+      {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+        lineNumber: 22,
+        columnNumber: 7
+      },
+      this
+    ),
+    /* @__PURE__ */ jsxDEV("div", { className: "auth-brand__content", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "auth-brand__brand", children: [
+        /* @__PURE__ */ jsxDEV("img", { className: "auth-brand__mark", src: "/images/weblogo.png", alt: "", "aria-hidden": "true" }, void 0, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+          lineNumber: 30,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("span", { children: "Maximus Trimus" }, void 0, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+          lineNumber: 31,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+        lineNumber: 29,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "auth-brand__statement", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "ui-eyebrow", children: "Est. 2021 · Angeles" }, void 0, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+          lineNumber: 35,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("h1", { className: "auth-brand__name", children: [
+          "Maximus",
+          /* @__PURE__ */ jsxDEV("br", {}, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+            lineNumber: 38,
+            columnNumber: 13
+          }, this),
+          "Trimus"
+        ] }, void 0, true, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+          lineNumber: 36,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { className: "auth-brand__motto", children: "Veni, vedi, praecidi." }, void 0, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+          lineNumber: 41,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { className: "auth-brand__line", children: "Homey comfort, Roman grit, and a cut measured for you." }, void 0, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+          lineNumber: 42,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+        lineNumber: 34,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "auth-brand__foot", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "ui-rule" }, void 0, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+          lineNumber: 48,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { children: [
+          "Solo barber · 5 years behind the chair",
+          /* @__PURE__ */ jsxDEV("br", {}, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+            lineNumber: 51,
+            columnNumber: 13
+          }, this),
+          "Shop cuts & home service"
+        ] }, void 0, true, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+          lineNumber: 49,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+        lineNumber: 47,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+      lineNumber: 28,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+    lineNumber: 20,
+    columnNumber: 5
+  }, this),
+  /* @__PURE__ */ jsxDEV("main", { className: "auth-panel", children: /* @__PURE__ */ jsxDEV("div", { className: "auth-card", children: [
+    showTabs && /* @__PURE__ */ jsxDEV("nav", { className: "auth-tabs", "aria-label": "Account access", children: [
+      /* @__PURE__ */ jsxDEV(
+        Link,
+        {
+          to: "/login",
+          className: mode === "login" ? "is-active" : "",
+          "aria-current": mode === "login" ? "page" : void 0,
+          children: "Sign in"
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+          lineNumber: 62,
+          columnNumber: 13
+        },
+        this
+      ),
+      /* @__PURE__ */ jsxDEV(
+        Link,
+        {
+          to: "/register",
+          className: mode === "register" ? "is-active" : "",
+          "aria-current": mode === "register" ? "page" : void 0,
+          children: "Create account"
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+          lineNumber: 69,
+          columnNumber: 13
+        },
+        this
+      )
+    ] }, void 0, true, {
+      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+      lineNumber: 61,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("header", { className: "auth-head", children: [
+      /* @__PURE__ */ jsxDEV("span", { className: "ui-eyebrow", children: eyebrow }, void 0, false, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+        lineNumber: 80,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("h2", { children: title }, void 0, false, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+        lineNumber: 81,
+        columnNumber: 11
+      }, this),
+      subtitle && /* @__PURE__ */ jsxDEV("p", { className: "auth-sub", children: subtitle }, void 0, false, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+        lineNumber: 82,
+        columnNumber: 24
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+      lineNumber: 79,
+      columnNumber: 9
+    }, this),
+    children,
+    footer && /* @__PURE__ */ jsxDEV("footer", { className: "auth-foot", children: footer }, void 0, false, {
+      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+      lineNumber: 87,
+      columnNumber: 20
+    }, this),
+    /* @__PURE__ */ jsxDEV("p", { className: "auth-fineprint", children: fineprint }, void 0, false, {
+      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+      lineNumber: 89,
+      columnNumber: 9
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+    lineNumber: 59,
+    columnNumber: 7
+  }, this) }, void 0, false, {
+    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+    lineNumber: 58,
+    columnNumber: 5
+  }, this)
+] }, void 0, true, {
+  fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx",
+  lineNumber: 19,
+  columnNumber: 1
+}, this);
+_c = AuthLayout;
+export default AuthLayout;
+var _c;
+$RefreshReg$(_c, "AuthLayout");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/AuthLayout.jsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUFBLFFBSHpEO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxNQU1BO0FBQUEsU0FkRjtBQUFBO0FBQUE7QUFBQTtBQUFBLFdBZUE7QUFBQSxJQUdGLHVCQUFDLFlBQU8sV0FBVSxhQUNoQjtBQUFBLDZCQUFDLFVBQUssV0FBVSxjQUFjTixxQkFBOUI7QUFBQTtBQUFBO0FBQUE7QUFBQSxhQUFzQztBQUFBLE1BQ3RDLHVCQUFDLFFBQUlDLG1CQUFMO0FBQUE7QUFBQTtBQUFBO0FBQUEsYUFBVztBQUFBLE1BQ1ZDLFlBQVksdUJBQUMsT0FBRSxXQUFVLFlBQVlBLHNCQUF6QjtBQUFBO0FBQUE7QUFBQTtBQUFBLGFBQWtDO0FBQUEsU0FIakQ7QUFBQTtBQUFBO0FBQUE7QUFBQSxXQUlBO0FBQUEsSUFFQ0M7QUFBQUEsSUFFQUMsVUFBVSx1QkFBQyxZQUFPLFdBQVUsYUFBYUEsb0JBQS9CO0FBQUE7QUFBQTtBQUFBO0FBQUEsV0FBc0M7QUFBQSxJQUVqRCx1QkFBQyxPQUFFLFdBQVUsa0JBQWtCQyx1QkFBL0I7QUFBQTtBQUFBO0FBQUE7QUFBQSxXQUF5QztBQUFBLE9BOUIzQztBQUFBO0FBQUE7QUFBQTtBQUFBLFNBK0JBLEtBaENGO0FBQUE7QUFBQTtBQUFBO0FBQUEsU0FpQ0E7QUFBQSxLQXhFRjtBQUFBO0FBQUE7QUFBQTtBQUFBLE9BeUVBO0FBQ0FFLEtBcEZJVjtBQXNGTixlQUFlQTtBQUFXLElBQUFVO0FBQUEsYUFBQUEsSUFBQSIsIm5hbWVzIjpbIlJlYWN0IiwiTGluayIsIkF1dGhMYXlvdXQiLCJtb2RlIiwic2hvd1RhYnMiLCJleWVicm93IiwidGl0bGUiLCJzdWJ0aXRsZSIsImNoaWxkcmVuIiwiZm9vdGVyIiwiZmluZXByaW50IiwidW5kZWZpbmVkIiwiX2MiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiQXV0aExheW91dC5qc3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0IGZyb20gXCJyZWFjdFwiO1xuaW1wb3J0IHsgTGluayB9IGZyb20gXCJyZWFjdC1yb3V0ZXItZG9tXCI7XG5cbi8qKlxuICogRWRpdG9yaWFsIHNwbGl0LXNjcmVlbiBzaGVsbCBzaGFyZWQgYnkgZXZlcnkgYXV0aGVudGljYXRpb24gc2NyZWVuLlxuICogTGVmdDogdGhlIHNob3AgKHdvb2QsIHRvb2xzLCB0aGUgYmFyYmVyKSB3aXRoIHRoZSBicmFuZCB2b2ljZS5cbiAqIFJpZ2h0OiB0aGUgZm9ybSwgb24gdGhlIHNhbWUgbmVhci1ibGFjayAvIGdvbGQgc3lzdGVtIGFzIHRoZSBob21lcGFnZS5cbiAqL1xuY29uc3QgQXV0aExheW91dCA9ICh7XG4gIG1vZGUgPSBcImxvZ2luXCIsXG4gIHNob3dUYWJzID0gdHJ1ZSxcbiAgZXllYnJvdyxcbiAgdGl0bGUsXG4gIHN1YnRpdGxlLFxuICBjaGlsZHJlbixcbiAgZm9vdGVyLFxuICBmaW5lcHJpbnQgPSBcIk1heGltdXMgVHJpbXVzIMK3IEFuZ2VsZXMsIFBhbXBhbmdhXCIsXG59KSA9PiAoXG4gIDxkaXYgY2xhc3NOYW1lPVwiYXV0aC1wYWdlXCI+XG4gICAgPGFzaWRlIGNsYXNzTmFtZT1cImF1dGgtYnJhbmRcIiBhcmlhLWxhYmVsPVwiTWF4aW11cyBUcmltdXMgYmFyYmVyc2hvcFwiPlxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJhdXRoLWJyYW5kX19iZ1wiIGFyaWEtaGlkZGVuPVwidHJ1ZVwiIC8+XG4gICAgICA8aW1nXG4gICAgICAgIGNsYXNzTmFtZT1cImF1dGgtYnJhbmRfX3BvcnRyYWl0XCJcbiAgICAgICAgc3JjPVwiL2ltYWdlcy9ha28ucG5nXCJcbiAgICAgICAgYWx0PVwiXCJcbiAgICAgICAgYXJpYS1oaWRkZW49XCJ0cnVlXCJcbiAgICAgIC8+XG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cImF1dGgtYnJhbmRfX2NvbnRlbnRcIj5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJhdXRoLWJyYW5kX19icmFuZFwiPlxuICAgICAgICAgIDxpbWcgY2xhc3NOYW1lPVwiYXV0aC1icmFuZF9fbWFya1wiIHNyYz1cIi9pbWFnZXMvd2VibG9nby5wbmdcIiBhbHQ9XCJcIiBhcmlhLWhpZGRlbj1cInRydWVcIiAvPlxuICAgICAgICAgIDxzcGFuPk1heGltdXMgVHJpbXVzPC9zcGFuPlxuICAgICAgICA8L2Rpdj5cblxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImF1dGgtYnJhbmRfX3N0YXRlbWVudFwiPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInVpLWV5ZWJyb3dcIj5Fc3QuIDIwMjEgwrcgQW5nZWxlczwvc3Bhbj5cbiAgICAgICAgICA8aDEgY2xhc3NOYW1lPVwiYXV0aC1icmFuZF9fbmFtZVwiPlxuICAgICAgICAgICAgTWF4aW11c1xuICAgICAgICAgICAgPGJyIC8+XG4gICAgICAgICAgICBUcmltdXNcbiAgICAgICAgICA8L2gxPlxuICAgICAgICAgIDxwIGNsYXNzTmFtZT1cImF1dGgtYnJhbmRfX21vdHRvXCI+VmVuaSwgdmVkaSwgcHJhZWNpZGkuPC9wPlxuICAgICAgICAgIDxwIGNsYXNzTmFtZT1cImF1dGgtYnJhbmRfX2xpbmVcIj5cbiAgICAgICAgICAgIEhvbWV5IGNvbWZvcnQsIFJvbWFuIGdyaXQsIGFuZCBhIGN1dCBtZWFzdXJlZCBmb3IgeW91LlxuICAgICAgICAgIDwvcD5cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJhdXRoLWJyYW5kX19mb290XCI+XG4gICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwidWktcnVsZVwiIC8+XG4gICAgICAgICAgPHA+XG4gICAgICAgICAgICBTb2xvIGJhcmJlciDCtyA1IHllYXJzIGJlaGluZCB0aGUgY2hhaXJcbiAgICAgICAgICAgIDxiciAvPlxuICAgICAgICAgICAgU2hvcCBjdXRzICZhbXA7IGhvbWUgc2VydmljZVxuICAgICAgICAgIDwvcD5cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L2Rpdj5cbiAgICA8L2FzaWRlPlxuXG4gICAgPG1haW4gY2xhc3NOYW1lPVwiYXV0aC1wYW5lbFwiPlxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJhdXRoLWNhcmRcIj5cbiAgICAgICAge3Nob3dUYWJzICYmIChcbiAgICAgICAgICA8bmF2IGNsYXNzTmFtZT1cImF1dGgtdGFic1wiIGFyaWEtbGFiZWw9XCJBY2NvdW50IGFjY2Vzc1wiPlxuICAgICAgICAgICAgPExpbmtcbiAgICAgICAgICAgICAgdG89XCIvbG9naW5cIlxuICAgICAgICAgICAgICBjbGFzc05hbWU9e21vZGUgPT09IFwibG9naW5cIiA/IFwiaXMtYWN0aXZlXCIgOiBcIlwifVxuICAgICAgICAgICAgICBhcmlhLWN1cnJlbnQ9e21vZGUgPT09IFwibG9naW5cIiA/IFwicGFnZVwiIDogdW5kZWZpbmVkfVxuICAgICAgICAgICAgPlxuICAgICAgICAgICAgICBTaWduIGluXG4gICAgICAgICAgICA8L0xpbms+XG4gICAgICAgICAgICA8TGlua1xuICAgICAgICAgICAgICB0bz1cIi9yZWdpc3RlclwiXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT17bW9kZSA9PT0gXCJyZWdpc3RlclwiID8gXCJpcy1hY3RpdmVcIiA6IFwiXCJ9XG4gICAgICAgICAgICAgIGFyaWEtY3VycmVudD17bW9kZSA9PT0gXCJyZWdpc3RlclwiID8gXCJwYWdlXCIgOiB1bmRlZmluZWR9XG4gICAgICAgICAgICA+XG4gICAgICAgICAgICAgIENyZWF0ZSBhY2NvdW50XG4gICAgICAgICAgICA8L0xpbms+XG4gICAgICAgICAgPC9uYXY+XG4gICAgICAgICl9XG5cbiAgICAgICAgPGhlYWRlciBjbGFzc05hbWU9XCJhdXRoLWhlYWRcIj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ1aS1leWVicm93XCI+e2V5ZWJyb3d9PC9zcGFuPlxuICAgICAgICAgIDxoMj57dGl0bGV9PC9oMj5cbiAgICAgICAgICB7c3VidGl0bGUgJiYgPHAgY2xhc3NOYW1lPVwiYXV0aC1zdWJcIj57c3VidGl0bGV9PC9wPn1cbiAgICAgICAgPC9oZWFkZXI+XG5cbiAgICAgICAge2NoaWxkcmVufVxuXG4gICAgICAgIHtmb290ZXIgJiYgPGZvb3RlciBjbGFzc05hbWU9XCJhdXRoLWZvb3RcIj57Zm9vdGVyfTwvZm9vdGVyPn1cblxuICAgICAgICA8cCBjbGFzc05hbWU9XCJhdXRoLWZpbmVwcmludFwiPntmaW5lcHJpbnR9PC9wPlxuICAgICAgPC9kaXY+XG4gICAgPC9tYWluPlxuICA8L2Rpdj5cbik7XG5cbmV4cG9ydCBkZWZhdWx0IEF1dGhMYXlvdXQ7XG4iXSwiZmlsZSI6IkM6L1VzZXJzL0dlbG9yL0Rvd25sb2Fkcy9NYXhpbXVzLVRyaW11cy9mcm9udGVuZC9zcmMvY29tcG9uZW50cy9BdXRoTGF5b3V0LmpzeCJ9

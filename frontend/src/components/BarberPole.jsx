@@ -71,6 +71,14 @@ const BarberPole = ({ isActive = false, size = 50, onClick, title, style, notifi
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+
+          {/* Subtle inner shadow on the pole cylinder */}
+          <linearGradient id="cylinderShade" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(0,0,0,0.25)" />
+            <stop offset="30%" stopColor="rgba(0,0,0,0)" />
+            <stop offset="70%" stopColor="rgba(0,0,0,0)" />
+            <stop offset="100%" stopColor="rgba(0,0,0,0.2)" />
+          </linearGradient>
         </defs>
 
         <g transform={`translate(${(size - poleWidth) / 2}, ${(size - poleHeight) / 2})`}
@@ -142,7 +150,7 @@ const BarberPole = ({ isActive = false, size = 50, onClick, title, style, notifi
             width={poleWidth}
             height={poleHeight - capHeight * 2}
             rx={1}
-            fill="#191919"
+            fill="url(#cylinderShade)"
             clipPath="url(#poleClip)"
           />
 

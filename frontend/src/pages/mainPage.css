@@ -2,20 +2,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600;1,700&family=Playfair+Display:wght@700&family=Roboto+Slab:wght@400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500&display=swap");
 
-@font-face {
-  font-family: 'Blackcherry';
-  src: url('./fonts/BLKCHCRY.TTF') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Lato';
-  src: url('./fonts/Lato-BoldItalic.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
 html {
   scroll-behavior: smooth;
 }
@@ -172,13 +158,13 @@ section {
   align-items: center;
 }
 
-/* Text side */
+/* Text side — the classic serif wordmark (the shop's original hero face) */
 .front h1 {
-  font-family: 'Blackcherry', serif;
+  font-family: "Times New Roman", Times, "Bodoni Moda", serif;
   font-size: clamp(2.5rem, 8vw, 6rem);
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: 20;
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
   color: white;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
   text-align: right;
@@ -187,12 +173,22 @@ section {
 }
 
 .front p {
-  font-family: 'Lato', serif;
+  font-family: "Times New Roman", Times, "Bodoni Moda", serif;
   font-size: 1.2rem;
   color: #f5deb3;
   text-align: right;
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
   margin: 2%;
+}
+
+.front p:first-of-type {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.front p:last-of-type {
+  font-size: 1rem;
+  letter-spacing: 0.04em;
 }
 
 /* Logo side */

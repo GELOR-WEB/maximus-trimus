@@ -1,0 +1,114 @@
+{
+ "url": "http://localhost:5174/",
+ "views": {
+  "desktop": {
+   "width": 1440,
+   "height": 900,
+   "navH": 0,
+   "scrollHeight": 7183,
+   "screens": 7.98,
+   "sections": [
+    {
+     "n": 1,
+     "tag": "div",
+     "id": "",
+     "cls": "main-container",
+     "top": 0,
+     "h": 7183,
+     "hScreens": 7.98,
+     "offGrid": 883,
+     "tiles": [
+      {
+       "file": "desktop-sec-01-a.jpg",
+       "scrollY": 0
+      },
+      {
+       "file": "desktop-sec-01-b.jpg",
+       "scrollY": 900
+      },
+      {
+       "file": "desktop-sec-01-c.jpg",
+       "scrollY": 1800
+      },
+      {
+       "file": "desktop-sec-01-d.jpg",
+       "scrollY": 2700
+      },
+      {
+       "file": "desktop-sec-01-e.jpg",
+       "scrollY": 3600
+      },
+      {
+       "file": "desktop-sec-01-f.jpg",
+       "scrollY": 4500
+      },
+      {
+       "file": "desktop-sec-01-g.jpg",
+       "scrollY": 5400
+      },
+      {
+       "file": "desktop-sec-01-h.jpg",
+       "scrollY": 6283
+      }
+     ]
+    }
+   ],
+   "consoleErrors": []
+  },
+  "mobile": {
+   "width": 390,
+   "height": 844,
+   "navH": 0,
+   "scrollHeight": 6991,
+   "screens": 8.28,
+   "sections": [
+    {
+     "n": 1,
+     "tag": "div",
+     "id": "",
+     "cls": "main-container",
+     "top": 0,
+     "h": 6991,
+     "hScreens": 8.28,
+     "offGrid": 239,
+     "tiles": [
+      {
+       "file": "mobile-sec-01-a.jpg",
+       "scrollY": 0
+      },
+      {
+       "file": "mobile-sec-01-b.jpg",
+       "scrollY": 844
+      },
+      {
+       "file": "mobile-sec-01-c.jpg",
+       "scrollY": 1688
+      },
+      {
+       "file": "mobile-sec-01-d.jpg",
+       "scrollY": 2532
+      },
+      {
+       "file": "mobile-sec-01-e.jpg",
+       "scrollY": 3376
+      },
+      {
+       "file": "mobile-sec-01-f.jpg",
+       "scrollY": 4220
+      },
+      {
+       "file": "mobile-sec-01-g.jpg",
+       "scrollY": 5064
+      },
+      {
+       "file": "mobile-sec-01-h.jpg",
+       "scrollY": 5908
+      }
+     ]
+    }
+   ],
+   "consoleErrors": []
+  }
+ },
+ "at": "2026-11-26T10:27:31.289Z"
+}

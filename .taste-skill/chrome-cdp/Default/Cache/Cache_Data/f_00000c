@@ -1,0 +1,210 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/pages/ClientLogin.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6be55078"; const Fragment = __vite__cjsImport0_react_jsxDevRuntime["Fragment"]; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+var _s = $RefreshSig$();
+import __vite__cjsImport1_react from "/node_modules/.vite/deps/react.js?v=6be55078"; const React = __vite__cjsImport1_react.__esModule ? __vite__cjsImport1_react.default : __vite__cjsImport1_react; const useState = __vite__cjsImport1_react["useState"];
+import { useNavigate, Link } from "/node_modules/.vite/deps/react-router-dom.js?v=6be55078";
+import { useAuth } from "/src/contexts/AuthContext.jsx";
+import AuthLayout from "/src/components/AuthLayout.jsx";
+import { PasswordField, TextField } from "/src/components/ui/Fields.jsx";
+const ClientLogin = () => {
+  _s();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    if (error) setError("");
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    const result = await login(formData.email, formData.password);
+    setLoading(false);
+    if (result.success) {
+      navigate("/");
+    } else {
+      setError(result.message);
+    }
+  };
+  return /* @__PURE__ */ jsxDEV(
+    AuthLayout,
+    {
+      mode: "login",
+      eyebrow: "Client access",
+      title: /* @__PURE__ */ jsxDEV(Fragment, { children: [
+        "Welcome back to the ",
+        /* @__PURE__ */ jsxDEV("em", { children: "chair." }, void 0, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+          lineNumber: 47,
+          columnNumber: 31
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+        lineNumber: 46,
+        columnNumber: 7
+      }, this),
+      subtitle: "Sign in to book a cut, move a visit, or keep track of every appointment in one place.",
+      footer: /* @__PURE__ */ jsxDEV("p", { children: [
+        "New to the shop? ",
+        /* @__PURE__ */ jsxDEV(Link, { to: "/register", children: "Create an account" }, void 0, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+          lineNumber: 53,
+          columnNumber: 28
+        }, this),
+        " — it takes a minute."
+      ] }, void 0, true, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+        lineNumber: 52,
+        columnNumber: 7
+      }, this),
+      children: [
+        error && /* @__PURE__ */ jsxDEV("div", { className: "ui-alert", role: "alert", children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "ui-alert__icon", "aria-hidden": "true", children: "!" }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+            lineNumber: 60,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { children: error }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+            lineNumber: 63,
+            columnNumber: 11
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+          lineNumber: 59,
+          columnNumber: 7
+        }, this),
+        /* @__PURE__ */ jsxDEV("form", { className: "auth-form", onSubmit: handleSubmit, children: [
+          /* @__PURE__ */ jsxDEV(
+            TextField,
+            {
+              id: "email",
+              name: "email",
+              type: "email",
+              label: "Email address",
+              placeholder: "you@example.com",
+              value: formData.email,
+              onChange: handleChange,
+              autoComplete: "email",
+              required: true
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+              lineNumber: 68,
+              columnNumber: 9
+            },
+            this
+          ),
+          /* @__PURE__ */ jsxDEV(
+            PasswordField,
+            {
+              id: "password",
+              name: "password",
+              label: "Password",
+              placeholder: "Enter your password",
+              value: formData.password,
+              onChange: handleChange,
+              autoComplete: "current-password",
+              required: true
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+              lineNumber: 80,
+              columnNumber: 9
+            },
+            this
+          ),
+          /* @__PURE__ */ jsxDEV("div", { className: "auth-forgot", children: /* @__PURE__ */ jsxDEV(Link, { to: "/forgot-password", className: "auth-link", children: "Forgot password?" }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+            lineNumber: 92,
+            columnNumber: 11
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+            lineNumber: 91,
+            columnNumber: 9
+          }, this),
+          /* @__PURE__ */ jsxDEV(
+            "button",
+            {
+              type: "submit",
+              className: "ui-btn ui-btn--primary ui-btn--block auth-submit",
+              disabled: loading,
+              children: [
+                loading && /* @__PURE__ */ jsxDEV("span", { className: "ui-spinner", "aria-hidden": "true" }, void 0, false, {
+                  fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+                  lineNumber: 102,
+                  columnNumber: 23
+                }, this),
+                loading ? "Signing in…" : "Sign in"
+              ]
+            },
+            void 0,
+            true,
+            {
+              fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+              lineNumber: 97,
+              columnNumber: 9
+            },
+            this
+          )
+        ] }, void 0, true, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+          lineNumber: 67,
+          columnNumber: 7
+        }, this)
+      ]
+    },
+    void 0,
+    true,
+    {
+      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx",
+      lineNumber: 42,
+      columnNumber: 5
+    },
+    this
+  );
+};
+_s(ClientLogin, "nYHErODMdqB5FjxvNJo362HH1zA=", false, function() {
+  return [useNavigate, useAuth];
+});
+_c = ClientLogin;
+export default ClientLogin;
+var _c;
+$RefreshReg$(_c, "ClientLogin");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ClientLogin.jsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUFBLFlBUlY7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBLFVBUVU7QUFBQSxVQUdWLHVCQUFDLFNBQUksV0FBVSxlQUNiLGlDQUFDLFFBQUssSUFBRyxvQkFBbUIsV0FBVSxhQUFXLGdDQUFqRDtBQUFBO0FBQUE7QUFBQTtBQUFBLGlCQUVBLEtBSEY7QUFBQTtBQUFBO0FBQUE7QUFBQSxpQkFJQTtBQUFBLFVBRUE7QUFBQSxZQUFDO0FBQUE7QUFBQSxjQUNDLE1BQUs7QUFBQSxjQUNMLFdBQVU7QUFBQSxjQUNWLFVBQVVKO0FBQUFBLGNBRVRBO0FBQUFBLDJCQUFXLHVCQUFDLFVBQUssV0FBVSxjQUFhLGVBQVksVUFBekM7QUFBQTtBQUFBO0FBQUE7QUFBQSx1QkFBK0M7QUFBQSxnQkFDMURBLFVBQVUsZ0JBQWdCO0FBQUE7QUFBQTtBQUFBLFlBTjdCO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxVQU9BO0FBQUEsYUFyQ0Y7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQXNDQTtBQUFBO0FBQUE7QUFBQSxJQS9ERjtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsRUFnRUE7QUFFSjtBQUFFUCxHQXJHSUQsYUFBVztBQUFBLFVBT0VOLGFBQ0NFLE9BQU87QUFBQTtBQUFBLEtBUnJCSTtBQXVHTixlQUFlQTtBQUFZLElBQUFzQjtBQUFBLGFBQUFBLElBQUEiLCJuYW1lcyI6WyJSZWFjdCIsInVzZVN0YXRlIiwidXNlTmF2aWdhdGUiLCJMaW5rIiwidXNlQXV0aCIsIkF1dGhMYXlvdXQiLCJQYXNzd29yZEZpZWxkIiwiVGV4dEZpZWxkIiwiQ2xpZW50TG9naW4iLCJfcyIsImZvcm1EYXRhIiwic2V0Rm9ybURhdGEiLCJlbWFpbCIsInBhc3N3b3JkIiwiZXJyb3IiLCJzZXRFcnJvciIsImxvYWRpbmciLCJzZXRMb2FkaW5nIiwibmF2aWdhdGUiLCJsb2dpbiIsImhhbmRsZUNoYW5nZSIsImUiLCJ0YXJnZXQiLCJuYW1lIiwidmFsdWUiLCJoYW5kbGVTdWJtaXQiLCJwcmV2ZW50RGVmYXVsdCIsInJlc3VsdCIsInN1Y2Nlc3MiLCJtZXNzYWdlIiwiX2MiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiQ2xpZW50TG9naW4uanN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCwgeyB1c2VTdGF0ZSB9IGZyb20gXCJyZWFjdFwiO1xuaW1wb3J0IHsgdXNlTmF2aWdhdGUsIExpbmsgfSBmcm9tIFwicmVhY3Qtcm91dGVyLWRvbVwiO1xuaW1wb3J0IHsgdXNlQXV0aCB9IGZyb20gXCIuLi9jb250ZXh0cy9BdXRoQ29udGV4dFwiO1xuaW1wb3J0IEF1dGhMYXlvdXQgZnJvbSBcIi4uL2NvbXBvbmVudHMvQXV0aExheW91dFwiO1xuaW1wb3J0IHsgUGFzc3dvcmRGaWVsZCwgVGV4dEZpZWxkIH0gZnJvbSBcIi4uL2NvbXBvbmVudHMvdWkvRmllbGRzXCI7XG5cbmNvbnN0IENsaWVudExvZ2luID0gKCkgPT4ge1xuICBjb25zdCBbZm9ybURhdGEsIHNldEZvcm1EYXRhXSA9IHVzZVN0YXRlKHtcbiAgICBlbWFpbDogXCJcIixcbiAgICBwYXNzd29yZDogXCJcIixcbiAgfSk7XG4gIGNvbnN0IFtlcnJvciwgc2V0RXJyb3JdID0gdXNlU3RhdGUoXCJcIik7XG4gIGNvbnN0IFtsb2FkaW5nLCBzZXRMb2FkaW5nXSA9IHVzZVN0YXRlKGZhbHNlKTtcbiAgY29uc3QgbmF2aWdhdGUgPSB1c2VOYXZpZ2F0ZSgpO1xuICBjb25zdCB7IGxvZ2luIH0gPSB1c2VBdXRoKCk7XG5cbiAgY29uc3QgaGFuZGxlQ2hhbmdlID0gKGUpID0+IHtcbiAgICBzZXRGb3JtRGF0YSh7XG4gICAgICAuLi5mb3JtRGF0YSxcbiAgICAgIFtlLnRhcmdldC5uYW1lXTogZS50YXJnZXQudmFsdWUsXG4gICAgfSk7XG4gICAgaWYgKGVycm9yKSBzZXRFcnJvcihcIlwiKTtcbiAgfTtcblxuICBjb25zdCBoYW5kbGVTdWJtaXQgPSBhc3luYyAoZSkgPT4ge1xuICAgIGUucHJldmVudERlZmF1bHQoKTtcbiAgICBzZXRFcnJvcihcIlwiKTtcbiAgICBzZXRMb2FkaW5nKHRydWUpO1xuXG4gICAgY29uc3QgcmVzdWx0ID0gYXdhaXQgbG9naW4oZm9ybURhdGEuZW1haWwsIGZvcm1EYXRhLnBhc3N3b3JkKTtcblxuICAgIHNldExvYWRpbmcoZmFsc2UpO1xuXG4gICAgaWYgKHJlc3VsdC5zdWNjZXNzKSB7XG4gICAgICBuYXZpZ2F0ZShcIi9cIik7IC8vIFJlZGlyZWN0IHRvIGhvbWUgcGFnZVxuICAgIH0gZWxzZSB7XG4gICAgICBzZXRFcnJvcihyZXN1bHQubWVzc2FnZSk7XG4gICAgfVxuICB9O1xuXG4gIHJldHVybiAoXG4gICAgPEF1dGhMYXlvdXRcbiAgICAgIG1vZGU9XCJsb2dpblwiXG4gICAgICBleWVicm93PVwiQ2xpZW50IGFjY2Vzc1wiXG4gICAgICB0aXRsZT17XG4gICAgICAgIDw+XG4gICAgICAgICAgV2VsY29tZSBiYWNrIHRvIHRoZSA8ZW0+Y2hhaXIuPC9lbT5cbiAgICAgICAgPC8+XG4gICAgICB9XG4gICAgICBzdWJ0aXRsZT1cIlNpZ24gaW4gdG8gYm9vayBhIGN1dCwgbW92ZSBhIHZpc2l0LCBvciBrZWVwIHRyYWNrIG9mIGV2ZXJ5IGFwcG9pbnRtZW50IGluIG9uZSBwbGFjZS5cIlxuICAgICAgZm9vdGVyPXtcbiAgICAgICAgPHA+XG4gICAgICAgICAgTmV3IHRvIHRoZSBzaG9wPyA8TGluayB0bz1cIi9yZWdpc3RlclwiPkNyZWF0ZSBhbiBhY2NvdW50PC9MaW5rPiDigJQgaXQgdGFrZXMgYVxuICAgICAgICAgIG1pbnV0ZS5cbiAgICAgICAgPC9wPlxuICAgICAgfVxuICAgID5cbiAgICAgIHtlcnJvciAmJiAoXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwidWktYWxlcnRcIiByb2xlPVwiYWxlcnRcIj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ1aS1hbGVydF9faWNvblwiIGFyaWEtaGlkZGVuPVwidHJ1ZVwiPlxuICAgICAgICAgICAgIVxuICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICA8cD57ZXJyb3J9PC9wPlxuICAgICAgICA8L2Rpdj5cbiAgICAgICl9XG5cbiAgICAgIDxmb3JtIGNsYXNzTmFtZT1cImF1dGgtZm9ybVwiIG9uU3VibWl0PXtoYW5kbGVTdWJtaXR9PlxuICAgICAgICA8VGV4dEZpZWxkXG4gICAgICAgICAgaWQ9XCJlbWFpbFwiXG4gICAgICAgICAgbmFtZT1cImVtYWlsXCJcbiAgICAgICAgICB0eXBlPVwiZW1haWxcIlxuICAgICAgICAgIGxhYmVsPVwiRW1haWwgYWRkcmVzc1wiXG4gICAgICAgICAgcGxhY2Vob2xkZXI9XCJ5b3VAZXhhbXBsZS5jb21cIlxuICAgICAgICAgIHZhbHVlPXtmb3JtRGF0YS5lbWFpbH1cbiAgICAgICAgICBvbkNoYW5nZT17aGFuZGxlQ2hhbmdlfVxuICAgICAgICAgIGF1dG9Db21wbGV0ZT1cImVtYWlsXCJcbiAgICAgICAgICByZXF1aXJlZFxuICAgICAgICAvPlxuXG4gICAgICAgIDxQYXNzd29yZEZpZWxkXG4gICAgICAgICAgaWQ9XCJwYXNzd29yZFwiXG4gICAgICAgICAgbmFtZT1cInBhc3N3b3JkXCJcbiAgICAgICAgICBsYWJlbD1cIlBhc3N3b3JkXCJcbiAgICAgICAgICBwbGFjZWhvbGRlcj1cIkVudGVyIHlvdXIgcGFzc3dvcmRcIlxuICAgICAgICAgIHZhbHVlPXtmb3JtRGF0YS5wYXNzd29yZH1cbiAgICAgICAgICBvbkNoYW5nZT17aGFuZGxlQ2hhbmdlfVxuICAgICAgICAgIGF1dG9Db21wbGV0ZT1cImN1cnJlbnQtcGFzc3dvcmRcIlxuICAgICAgICAgIHJlcXVpcmVkXG4gICAgICAgIC8+XG5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJhdXRoLWZvcmdvdFwiPlxuICAgICAgICAgIDxMaW5rIHRvPVwiL2ZvcmdvdC1wYXNzd29yZFwiIGNsYXNzTmFtZT1cImF1dGgtbGlua1wiPlxuICAgICAgICAgICAgRm9yZ290IHBhc3N3b3JkP1xuICAgICAgICAgIDwvTGluaz5cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgPGJ1dHRvblxuICAgICAgICAgIHR5cGU9XCJzdWJtaXRcIlxuICAgICAgICAgIGNsYXNzTmFtZT1cInVpLWJ0biB1aS1idG4tLXByaW1hcnkgdWktYnRuLS1ibG9jayBhdXRoLXN1Ym1pdFwiXG4gICAgICAgICAgZGlzYWJsZWQ9e2xvYWRpbmd9XG4gICAgICAgID5cbiAgICAgICAgICB7bG9hZGluZyAmJiA8c3BhbiBjbGFzc05hbWU9XCJ1aS1zcGlubmVyXCIgYXJpYS1oaWRkZW49XCJ0cnVlXCIgLz59XG4gICAgICAgICAge2xvYWRpbmcgPyBcIlNpZ25pbmcgaW7igKZcIiA6IFwiU2lnbiBpblwifVxuICAgICAgICA8L2J1dHRvbj5cbiAgICAgIDwvZm9ybT5cbiAgICA8L0F1dGhMYXlvdXQ+XG4gICk7XG59O1xuXG5leHBvcnQgZGVmYXVsdCBDbGllbnRMb2dpbjtcbiJdLCJmaWxlIjoiQzovVXNlcnMvR2Vsb3IvRG93bmxvYWRzL01heGltdXMtVHJpbXVzL2Zyb250ZW5kL3NyYy9wYWdlcy9DbGllbnRMb2dpbi5qc3gifQ==
