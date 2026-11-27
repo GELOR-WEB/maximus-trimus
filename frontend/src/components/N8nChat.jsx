@@ -82,6 +82,10 @@ const initChatOnce = () => {
       );
       createChat({
         webhookUrl: N8N_WEBHOOK_URL,
+        // The workflow has no history endpoint; if this call fails the widget
+        // never starts a session and never renders the message input.
+        loadPreviousSession: false,
+        showWelcomeScreen: false,
         initialMessages: [
           "Salve! Welcome to Maximus Trimus.",
           "Tap a quick option below or type your question — I can help with bookings, schedules, and home service.",
