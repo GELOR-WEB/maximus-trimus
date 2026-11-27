@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/n8n-chat",
+      "destination": "https://webh00k-3ger.app.n8n.cloud/webhook/bffe7d8b-045f-45bd-80d8-d91139b108da/chat"
+    },
+    {
       "source": "/api/:path*",
       "destination": "https://maximus-trimus-backend.vercel.app/api/:path*"
     },

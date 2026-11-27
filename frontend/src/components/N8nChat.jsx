@@ -2,7 +2,11 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "./N8nChat.css";
 
-const N8N_WEBHOOK_URL = "https://webh00k-3ger.app.n8n.cloud/webhook/bffe7d8b-045f-45bd-80d8-d91139b108da/chat";
+// In prod, go through a same-origin Vercel rewrite (see vercel.json): the n8n
+// webhook only allows http://localhost:5173 via CORS, so direct calls fail.
+const N8N_WEBHOOK_URL = import.meta.env.DEV
+  ? "https://webh00k-3ger.app.n8n.cloud/webhook/bffe7d8b-045f-45bd-80d8-d91139b108da/chat"
+  : `${window.location.origin}/n8n-chat`;
 
 const CHAT_ROOT_ID = "n8n-chat";
 const PANEL_ATTR = "data-mt-quick-replies";
