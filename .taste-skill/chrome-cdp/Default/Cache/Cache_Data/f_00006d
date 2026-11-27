@@ -1,0 +1,491 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/BarberPole.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6be55078"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import __vite__cjsImport1_react from "/node_modules/.vite/deps/react.js?v=6be55078"; const React = __vite__cjsImport1_react.__esModule ? __vite__cjsImport1_react.default : __vite__cjsImport1_react;
+import "/src/components/BarberPole.css";
+const BarberPole = ({ isActive = false, size = 50, onClick, title, style, notificationCount = 0 }) => {
+  const poleHeight = size * 0.85;
+  const poleWidth = size * 0.28;
+  const capWidth = poleWidth + 6;
+  const capHeight = 7;
+  const knobRadius = 5;
+  return /* @__PURE__ */ jsxDEV(
+    "div",
+    {
+      className: `barber-pole-wrapper ${isActive ? "barber-pole--active" : "barber-pole--inactive"}`,
+      onClick,
+      style: { width: size, height: size, cursor: onClick ? "pointer" : "default", ...style },
+      title,
+      children: [
+        /* @__PURE__ */ jsxDEV(
+          "svg",
+          {
+            viewBox: `0 0 ${size} ${size}`,
+            width: size,
+            height: size,
+            xmlns: "http://www.w3.org/2000/svg",
+            className: "barber-pole-svg",
+            children: [
+              /* @__PURE__ */ jsxDEV("defs", { children: [
+                /* @__PURE__ */ jsxDEV("pattern", { id: "greekKey", x: "0", y: "0", width: "8", height: "4", patternUnits: "userSpaceOnUse", children: [
+                  /* @__PURE__ */ jsxDEV("rect", { width: "8", height: "4", fill: "#b8860b" }, void 0, false, {
+                    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                    lineNumber: 34,
+                    columnNumber: 13
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("path", { d: "M0 0h2v2h2v-2h2v4h-2v-2h-2v2h-2z", fill: "#d4af37", opacity: "0.6" }, void 0, false, {
+                    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                    lineNumber: 35,
+                    columnNumber: 13
+                  }, this)
+                ] }, void 0, true, {
+                  fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                  lineNumber: 33,
+                  columnNumber: 11
+                }, this),
+                /* @__PURE__ */ jsxDEV(
+                  "pattern",
+                  {
+                    id: "barberStripes",
+                    x: "0",
+                    y: "0",
+                    width: "14",
+                    height: "20",
+                    patternUnits: "userSpaceOnUse",
+                    patternTransform: "rotate(-25)",
+                    children: [
+                      /* @__PURE__ */ jsxDEV("rect", { width: "14", height: "20", fill: "#f5f5f5" }, void 0, false, {
+                        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                        lineNumber: 48,
+                        columnNumber: 13
+                      }, this),
+                      /* @__PURE__ */ jsxDEV("rect", { x: "0", y: "0", width: "14", height: "5", fill: "#1a6fb5" }, void 0, false, {
+                        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                        lineNumber: 49,
+                        columnNumber: 13
+                      }, this),
+                      /* @__PURE__ */ jsxDEV("rect", { x: "0", y: "10", width: "14", height: "5", fill: "#c0392b" }, void 0, false, {
+                        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                        lineNumber: 50,
+                        columnNumber: 13
+                      }, this),
+                      isActive && /* @__PURE__ */ jsxDEV(
+                        "animateTransform",
+                        {
+                          attributeName: "patternTransform",
+                          type: "translate",
+                          from: "0 0",
+                          to: "0 20",
+                          dur: "0.8s",
+                          repeatCount: "indefinite",
+                          additive: "sum"
+                        },
+                        void 0,
+                        false,
+                        {
+                          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                          lineNumber: 52,
+                          columnNumber: 13
+                        },
+                        this
+                      )
+                    ]
+                  },
+                  void 0,
+                  true,
+                  {
+                    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                    lineNumber: 39,
+                    columnNumber: 11
+                  },
+                  this
+                ),
+                /* @__PURE__ */ jsxDEV("filter", { id: "poleGlow", x: "-50%", y: "-50%", width: "200%", height: "200%", children: [
+                  /* @__PURE__ */ jsxDEV("feGaussianBlur", { stdDeviation: "3", result: "blur" }, void 0, false, {
+                    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                    lineNumber: 66,
+                    columnNumber: 13
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("feFlood", { floodColor: "#d4af37", floodOpacity: "0.6", result: "color" }, void 0, false, {
+                    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                    lineNumber: 67,
+                    columnNumber: 13
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("feComposite", { in: "color", in2: "blur", operator: "in", result: "glow" }, void 0, false, {
+                    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                    lineNumber: 68,
+                    columnNumber: 13
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("feMerge", { children: [
+                    /* @__PURE__ */ jsxDEV("feMergeNode", { in: "glow" }, void 0, false, {
+                      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                      lineNumber: 70,
+                      columnNumber: 15
+                    }, this),
+                    /* @__PURE__ */ jsxDEV("feMergeNode", { in: "SourceGraphic" }, void 0, false, {
+                      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                      lineNumber: 71,
+                      columnNumber: 15
+                    }, this)
+                  ] }, void 0, true, {
+                    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                    lineNumber: 69,
+                    columnNumber: 13
+                  }, this)
+                ] }, void 0, true, {
+                  fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                  lineNumber: 65,
+                  columnNumber: 11
+                }, this),
+                /* @__PURE__ */ jsxDEV("linearGradient", { id: "cylinderShade", x1: "0", y1: "0", x2: "1", y2: "0", children: [
+                  /* @__PURE__ */ jsxDEV("stop", { offset: "0%", stopColor: "rgba(0,0,0,0.25)" }, void 0, false, {
+                    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                    lineNumber: 77,
+                    columnNumber: 13
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("stop", { offset: "30%", stopColor: "rgba(0,0,0,0)" }, void 0, false, {
+                    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                    lineNumber: 78,
+                    columnNumber: 13
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("stop", { offset: "70%", stopColor: "rgba(0,0,0,0)" }, void 0, false, {
+                    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                    lineNumber: 79,
+                    columnNumber: 13
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("stop", { offset: "100%", stopColor: "rgba(0,0,0,0.2)" }, void 0, false, {
+                    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                    lineNumber: 80,
+                    columnNumber: 13
+                  }, this)
+                ] }, void 0, true, {
+                  fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                  lineNumber: 76,
+                  columnNumber: 11
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                lineNumber: 31,
+                columnNumber: 9
+              }, this),
+              /* @__PURE__ */ jsxDEV(
+                "g",
+                {
+                  transform: `translate(${(size - poleWidth) / 2}, ${(size - poleHeight) / 2})`,
+                  filter: isActive ? "url(#poleGlow)" : "none",
+                  className: "barber-pole-group",
+                  children: [
+                    /* @__PURE__ */ jsxDEV(
+                      "circle",
+                      {
+                        cx: poleWidth / 2,
+                        cy: -knobRadius + 1,
+                        r: knobRadius,
+                        fill: isActive ? "#d4af37" : "#555",
+                        className: "pole-knob pole-knob--top"
+                      },
+                      void 0,
+                      false,
+                      {
+                        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                        lineNumber: 89,
+                        columnNumber: 11
+                      },
+                      this
+                    ),
+                    /* @__PURE__ */ jsxDEV(
+                      "path",
+                      {
+                        d: `M${poleWidth / 2 - 7} ${-knobRadius + 1} Q${poleWidth / 2 - 3} ${-knobRadius - 5} ${poleWidth / 2} ${-knobRadius - 2}`,
+                        fill: "none",
+                        stroke: isActive ? "#d4af37" : "#555",
+                        strokeWidth: "1.2",
+                        className: "laurel laurel-left"
+                      },
+                      void 0,
+                      false,
+                      {
+                        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                        lineNumber: 97,
+                        columnNumber: 11
+                      },
+                      this
+                    ),
+                    /* @__PURE__ */ jsxDEV(
+                      "path",
+                      {
+                        d: `M${poleWidth / 2 + 7} ${-knobRadius + 1} Q${poleWidth / 2 + 3} ${-knobRadius - 5} ${poleWidth / 2} ${-knobRadius - 2}`,
+                        fill: "none",
+                        stroke: isActive ? "#d4af37" : "#555",
+                        strokeWidth: "1.2",
+                        className: "laurel laurel-right"
+                      },
+                      void 0,
+                      false,
+                      {
+                        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                        lineNumber: 104,
+                        columnNumber: 11
+                      },
+                      this
+                    ),
+                    /* @__PURE__ */ jsxDEV(
+                      "rect",
+                      {
+                        x: -(capWidth - poleWidth) / 2,
+                        y: 0,
+                        width: capWidth,
+                        height: capHeight,
+                        rx: 2,
+                        fill: isActive ? "#b8860b" : "#444",
+                        className: "pole-cap pole-cap--top"
+                      },
+                      void 0,
+                      false,
+                      {
+                        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                        lineNumber: 113,
+                        columnNumber: 11
+                      },
+                      this
+                    ),
+                    /* @__PURE__ */ jsxDEV(
+                      "rect",
+                      {
+                        x: -(capWidth - poleWidth) / 2 + 1,
+                        y: capHeight - 2,
+                        width: capWidth - 2,
+                        height: 1.5,
+                        fill: isActive ? "#d4af37" : "#666",
+                        opacity: "0.7"
+                      },
+                      void 0,
+                      false,
+                      {
+                        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                        lineNumber: 123,
+                        columnNumber: 11
+                      },
+                      this
+                    ),
+                    /* @__PURE__ */ jsxDEV("clipPath", { id: "poleClip", children: /* @__PURE__ */ jsxDEV("rect", { x: 0, y: capHeight, width: poleWidth, height: poleHeight - capHeight * 2, rx: 1 }, void 0, false, {
+                      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                      lineNumber: 134,
+                      columnNumber: 13
+                    }, this) }, void 0, false, {
+                      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                      lineNumber: 133,
+                      columnNumber: 11
+                    }, this),
+                    /* @__PURE__ */ jsxDEV(
+                      "rect",
+                      {
+                        x: 0,
+                        y: capHeight,
+                        width: poleWidth,
+                        height: poleHeight - capHeight * 2,
+                        rx: 1,
+                        fill: "url(#barberStripes)",
+                        clipPath: "url(#poleClip)",
+                        className: "pole-body"
+                      },
+                      void 0,
+                      false,
+                      {
+                        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                        lineNumber: 136,
+                        columnNumber: 11
+                      },
+                      this
+                    ),
+                    /* @__PURE__ */ jsxDEV(
+                      "rect",
+                      {
+                        x: 0,
+                        y: capHeight,
+                        width: poleWidth,
+                        height: poleHeight - capHeight * 2,
+                        rx: 1,
+                        fill: "url(#cylinderShade)",
+                        clipPath: "url(#poleClip)"
+                      },
+                      void 0,
+                      false,
+                      {
+                        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                        lineNumber: 147,
+                        columnNumber: 11
+                      },
+                      this
+                    ),
+                    [0.25, 0.5, 0.75].map(
+                      (pct, i) => /* @__PURE__ */ jsxDEV(
+                        "line",
+                        {
+                          x1: poleWidth * pct,
+                          y1: capHeight + 2,
+                          x2: poleWidth * pct,
+                          y2: poleHeight - capHeight - 2,
+                          stroke: "rgba(255,255,255,0.08)",
+                          strokeWidth: "0.5"
+                        },
+                        i,
+                        false,
+                        {
+                          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                          lineNumber: 159,
+                          columnNumber: 11
+                        },
+                        this
+                      )
+                    ),
+                    /* @__PURE__ */ jsxDEV(
+                      "rect",
+                      {
+                        x: -(capWidth - poleWidth) / 2,
+                        y: poleHeight - capHeight,
+                        width: capWidth,
+                        height: capHeight,
+                        rx: 2,
+                        fill: isActive ? "#b8860b" : "#444",
+                        className: "pole-cap pole-cap--bottom"
+                      },
+                      void 0,
+                      false,
+                      {
+                        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                        lineNumber: 171,
+                        columnNumber: 11
+                      },
+                      this
+                    ),
+                    /* @__PURE__ */ jsxDEV(
+                      "rect",
+                      {
+                        x: -(capWidth - poleWidth) / 2 + 1,
+                        y: poleHeight - capHeight,
+                        width: capWidth - 2,
+                        height: 1.5,
+                        fill: isActive ? "#d4af37" : "#666",
+                        opacity: "0.7"
+                      },
+                      void 0,
+                      false,
+                      {
+                        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                        lineNumber: 181,
+                        columnNumber: 11
+                      },
+                      this
+                    ),
+                    /* @__PURE__ */ jsxDEV(
+                      "circle",
+                      {
+                        cx: poleWidth / 2,
+                        cy: poleHeight + knobRadius - 1,
+                        r: knobRadius,
+                        fill: isActive ? "#d4af37" : "#555",
+                        className: "pole-knob pole-knob--bottom"
+                      },
+                      void 0,
+                      false,
+                      {
+                        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                        lineNumber: 191,
+                        columnNumber: 11
+                      },
+                      this
+                    )
+                  ]
+                },
+                void 0,
+                true,
+                {
+                  fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                  lineNumber: 84,
+                  columnNumber: 9
+                },
+                this
+              ),
+              isActive && /* @__PURE__ */ jsxDEV(
+                "circle",
+                {
+                  cx: size / 2,
+                  cy: size / 2,
+                  r: size / 2 - 2,
+                  fill: "none",
+                  stroke: "#d4af37",
+                  strokeWidth: "1",
+                  strokeDasharray: "3 2",
+                  opacity: "0.4",
+                  className: "meander-ring"
+                },
+                void 0,
+                false,
+                {
+                  fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+                  lineNumber: 202,
+                  columnNumber: 9
+                },
+                this
+              )
+            ]
+          },
+          void 0,
+          true,
+          {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+            lineNumber: 24,
+            columnNumber: 7
+          },
+          this
+        ),
+        /* @__PURE__ */ jsxDEV("span", { className: `pole-status-dot ${isActive ? "pole-status-dot--on" : "pole-status-dot--off"}` }, void 0, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+          lineNumber: 217,
+          columnNumber: 7
+        }, this),
+        notificationCount > 0 && /* @__PURE__ */ jsxDEV("span", { className: "pole-notification-badge", children: notificationCount }, void 0, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+          lineNumber: 221,
+          columnNumber: 7
+        }, this)
+      ]
+    },
+    void 0,
+    true,
+    {
+      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx",
+      lineNumber: 18,
+      columnNumber: 5
+    },
+    this
+  );
+};
+_c = BarberPole;
+export default BarberPole;
+var _c;
+$RefreshReg$(_c, "BarberPole");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/BarberPole.jsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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ZSIsInN0eWxlIiwibm90aWZpY2F0aW9uQ291bnQiLCJwb2xlSGVpZ2h0IiwicG9sZVdpZHRoIiwiY2FwV2lkdGgiLCJjYXBIZWlnaHQiLCJrbm9iUmFkaXVzIiwid2lkdGgiLCJoZWlnaHQiLCJjdXJzb3IiLCJtYXAiLCJwY3QiLCJpIiwiX2MiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiQmFyYmVyUG9sZS5qc3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0IGZyb20gXCJyZWFjdFwiO1xuaW1wb3J0IFwiLi9CYXJiZXJQb2xlLmNzc1wiO1xuXG4vKipcbiAqIEdyZWVrLXRoZW1lZCBCYXJiZXIgUG9sZSBpbmRpY2F0b3IuXG4gKiBXaGVuIGBpc0FjdGl2ZWAgaXMgdHJ1ZSAg4oaSIHRoZSBwb2xlIGdsb3dzLCB0aGUgc3RyaXBlcyBzcGluLCBhbmQgdGhlIGxhdXJlbCB3cmVhdGggaWxsdW1pbmF0ZXMuXG4gKiBXaGVuIGBpc0FjdGl2ZWAgaXMgZmFsc2Ug4oaSIGV2ZXJ5dGhpbmcgaXMgc3RpbGwgYW5kIGRpbW1lZC5cbiAqIGBub3RpZmljYXRpb25Db3VudGAgc2hvd3MgYSByZWQgYmFkZ2Ugd2hlbiA+IDAuXG4gKi9cbmNvbnN0IEJhcmJlclBvbGUgPSAoeyBpc0FjdGl2ZSA9IGZhbHNlLCBzaXplID0gNTAsIG9uQ2xpY2ssIHRpdGxlLCBzdHlsZSwgbm90aWZpY2F0aW9uQ291bnQgPSAwIH0pID0+IHtcbiAgY29uc3QgcG9sZUhlaWdodCA9IHNpemUgKiAwLjg1O1xuICBjb25zdCBwb2xlV2lkdGggPSBzaXplICogMC4yODtcbiAgY29uc3QgY2FwV2lkdGggPSBwb2xlV2lkdGggKyA2O1xuICBjb25zdCBjYXBIZWlnaHQgPSA3O1xuICBjb25zdCBrbm9iUmFkaXVzID0gNTtcblxuICByZXR1cm4gKFxuICAgIDxkaXZcbiAgICAgIGNsYXNzTmFtZT17YGJhcmJlci1wb2xlLXdyYXBwZXIgJHtpc0FjdGl2ZSA/IFwiYmFyYmVyLXBvbGUtLWFjdGl2ZVwiIDogXCJiYXJiZXItcG9sZS0taW5hY3RpdmVcIn1gfVxuICAgICAgb25DbGljaz17b25DbGlja31cbiAgICAgIHN0eWxlPXt7IHdpZHRoOiBzaXplLCBoZWlnaHQ6IHNpemUsIGN1cnNvcjogb25DbGljayA/IFwicG9pbnRlclwiIDogXCJkZWZhdWx0XCIsIC4uLnN0eWxlIH19XG4gICAgICB0aXRsZT17dGl0bGV9XG4gICAgPlxuICAgICAgPHN2Z1xuICAgICAgICB2aWV3Qm94PXtgMCAwICR7c2l6ZX0gJHtzaXplfWB9XG4gICAgICAgIHdpZHRoPXtzaXplfVxuICAgICAgICBoZWlnaHQ9e3NpemV9XG4gICAgICAgIHhtbG5zPVwiaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmdcIlxuICAgICAgICBjbGFzc05hbWU9XCJiYXJiZXItcG9sZS1zdmdcIlxuICAgICAgPlxuICAgICAgICA8ZGVmcz5cbiAgICAgICAgICB7LyogR3JlZWsga2V5IC8gbWVhbmRlciBwYXR0ZXJuIGZvciB0aGUgY2FwcyAqL31cbiAgICAgICAgICA8cGF0dGVybiBpZD1cImdyZWVrS2V5XCIgeD1cIjBcIiB5PVwiMFwiIHdpZHRoPVwiOFwiIGhlaWdodD1cIjRcIiBwYXR0ZXJuVW5pdHM9XCJ1c2VyU3BhY2VPblVzZVwiPlxuICAgICAgICAgICAgPHJlY3Qgd2lkdGg9XCI4XCIgaGVpZ2h0PVwiNFwiIGZpbGw9XCIjYjg4NjBiXCIgLz5cbiAgICAgICAgICAgIDxwYXRoIGQ9XCJNMCAwaDJ2Mmgydi0yaDJ2NGgtMnYtMmgtMnYyaC0yelwiIGZpbGw9XCIjZDRhZjM3XCIgb3BhY2l0eT1cIjAuNlwiIC8+XG4gICAgICAgICAgPC9wYXR0ZXJuPlxuXG4gICAgICAgICAgey8qIEJhcmJlciBzdHJpcGUgcGF0dGVybiDigJMgYW5pbWF0ZWQgd2hlbiBhY3RpdmUgKi99XG4gICAgICAgICAgPHBhdHRlcm5cbiAgICAgICAgICAgIGlkPVwiYmFyYmVyU3RyaXBlc1wiXG4gICAgICAgICAgICB4PVwiMFwiXG4gICAgICAgICAgICB5PVwiMFwiXG4gICAgICAgICAgICB3aWR0aD1cIjE0XCJcbiAgICAgICAgICAgIGhlaWdodD1cIjIwXCJcbiAgICAgICAgICAgIHBhdHRlcm5Vbml0cz1cInVzZXJTcGFjZU9uVXNlXCJcbiAgICAgICAgICAgIHBhdHRlcm5UcmFuc2Zvcm09XCJyb3RhdGUoLTI1KVwiXG4gICAgICAgICAgPlxuICAgICAgICAgICAgPHJlY3Qgd2lkdGg9XCIxNFwiIGhlaWdodD1cIjIwXCIgZmlsbD1cIiNmNWY1ZjVcIiAvPlxuICAgICAgICAgICAgPHJlY3QgeD1cIjBcIiB5PVwiMFwiIHdpZHRoPVwiMTRcIiBoZWlnaHQ9XCI1XCIgZmlsbD1cIiMxYTZmYjVcIiAvPlxuICAgICAgICAgICAgPHJlY3QgeD1cIjBcIiB5PVwiMTBcIiB3aWR0aD1cIjE0XCIgaGVpZ2h0PVwiNVwiIGZpbGw9XCIjYzAzOTJiXCIgLz5cbiAgICAgICAgICAgIHtpc0FjdGl2ZSAmJiAoXG4gICAgICAgICAgICAgIDxhbmltYXRlVHJhbnNmb3JtXG4gICAgICAgICAgICAgICAgYXR0cmlidXRlTmFtZT1cInBhdHRlcm5UcmFuc2Zvcm1cIlxuICAgICAgICAgICAgICAgIHR5cGU9XCJ0cmFuc2xhdGVcIlxuICAgICAgICAgICAgICAgIGZyb209XCIwIDBcIlxuICAgICAgICAgICAgICAgIHRvPVwiMCAyMFwiXG4gICAgICAgICAgICAgICAgZHVyPVwiMC44c1wiXG4gICAgICAgICAgICAgICAgcmVwZWF0Q291bnQ9XCJpbmRlZmluaXRlXCJcbiAgICAgICAgICAgICAgICBhZGRpdGl2ZT1cInN1bVwiXG4gICAgICAgICAgICAgIC8+XG4gICAgICAgICAgICApfVxuICAgICAgICAgIDwvcGF0dGVybj5cblxuICAgICAgICAgIHsvKiBHbG93IGZpbHRlciBmb3IgYWN0aXZlIHN0YXRlICovfVxuICAgICAgICAgIDxmaWx0ZXIgaWQ9XCJwb2xlR2xvd1wiIHg9XCItNTAlXCIgeT1cIi01MCVcIiB3aWR0aD1cIjIwMCVcIiBoZWlnaHQ9XCIyMDAlXCI+XG4gICAgICAgICAgICA8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPVwiM1wiIHJlc3VsdD1cImJsdXJcIiAvPlxuICAgICAgICAgICAgPGZlRmxvb2QgZmxvb2RDb2xvcj1cIiNkNGFmMzdcIiBmbG9vZE9wYWNpdHk9XCIwLjZcIiByZXN1bHQ9XCJjb2xvclwiIC8+XG4gICAgICAgICAgICA8ZmVDb21wb3NpdGUgaW49XCJjb2xvclwiIGluMj1cImJsdXJcIiBvcGVyYXRvcj1cImluXCIgcmVzdWx0PVwiZ2xvd1wiIC8+XG4gICAgICAgICAgICA8ZmVNZXJnZT5cbiAgICAgICAgICAgICAgPGZlTWVyZ2VOb2RlIGluPVwiZ2xvd1wiIC8+XG4gICAgICAgICAgICAgIDxmZU1lcmdlTm9kZSBpbj1cIlNvdXJjZUdyYXBoaWNcIiAvPlxuICAgICAgICAgICAgPC9mZU1lcmdlPlxuICAgICAgICAgIDwvZmlsdGVyPlxuXG4gICAgICAgICAgey8qIFN1YnRsZSBpbm5lciBzaGFkb3cgb24gdGhlIHBvbGUgY3lsaW5kZXIgKi99XG4gICAgICAgICAgPGxpbmVhckdyYWRpZW50IGlkPVwiY3lsaW5kZXJTaGFkZVwiIHgxPVwiMFwiIHkxPVwiMFwiIHgyPVwiMVwiIHkyPVwiMFwiPlxuICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PVwiMCVcIiBzdG9wQ29sb3I9XCJyZ2JhKDAsMCwwLDAuMjUpXCIgLz5cbiAgICAgICAgICAgIDxzdG9wIG9mZnNldD1cIjMwJVwiIHN0b3BDb2xvcj1cInJnYmEoMCwwLDAsMClcIiAvPlxuICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PVwiNzAlXCIgc3RvcENvbG9yPVwicmdiYSgwLDAsMCwwKVwiIC8+XG4gICAgICAgICAgICA8c3RvcCBvZmZzZXQ9XCIxMDAlXCIgc3RvcENvbG9yPVwicmdiYSgwLDAsMCwwLjIpXCIgLz5cbiAgICAgICAgICA8L2xpbmVhckdyYWRpZW50PlxuICAgICAgICA8L2RlZnM+XG5cbiAgICAgICAgPGcgdHJhbnNmb3JtPXtgdHJhbnNsYXRlKCR7KHNpemUgLSBwb2xlV2lkdGgpIC8gMn0sICR7KHNpemUgLSBwb2xlSGVpZ2h0KSAvIDJ9KWB9XG4gICAgICAgICAgZmlsdGVyPXtpc0FjdGl2ZSA/IFwidXJsKCNwb2xlR2xvdylcIiA6IFwibm9uZVwifVxuICAgICAgICAgIGNsYXNzTmFtZT1cImJhcmJlci1wb2xlLWdyb3VwXCJcbiAgICAgICAgPlxuICAgICAgICAgIHsvKiDilIDilIDilIDilIDilIAgVG9wIG9ybmFtZW50YWwgZmluaWFsIChHcmVlayBzcGhlcmUgKyBsYXVyZWwpIOKUgOKUgOKUgOKUgOKUgCAqL31cbiAgICAgICAgICA8Y2lyY2xlXG4gICAgICAgICAgICBjeD17cG9sZVdpZHRoIC8gMn1cbiAgICAgICAgICAgIGN5PXsta25vYlJhZGl1cyArIDF9XG4gICAgICAgICAgICByPXtrbm9iUmFkaXVzfVxuICAgICAgICAgICAgZmlsbD17aXNBY3RpdmUgPyBcIiNkNGFmMzdcIiA6IFwiIzU1NVwifVxuICAgICAgICAgICAgY2xhc3NOYW1lPVwicG9sZS1rbm9iIHBvbGUta25vYi0tdG9wXCJcbiAgICAgICAgICAvPlxuICAgICAgICAgIHsvKiBUaW55IGxhdXJlbCBsZWF2ZXMgb24gdGhlIHRvcCBrbm9iICovfVxuICAgICAgICAgIDxwYXRoXG4gICAgICAgICAgICBkPXtgTSR7cG9sZVdpZHRoIC8gMiAtIDd9ICR7LWtub2JSYWRpdXMgKyAxfSBRJHtwb2xlV2lkdGggLyAyIC0gM30gJHsta25vYlJhZGl1cyAtIDV9ICR7cG9sZVdpZHRoIC8gMn0gJHsta25vYlJhZGl1cyAtIDJ9YH1cbiAgICAgICAgICAgIGZpbGw9XCJub25lXCJcbiAgICAgICAgICAgIHN0cm9rZT17aXNBY3RpdmUgPyBcIiNkNGFmMzdcIiA6IFwiIzU1NVwifVxuICAgICAgICAgICAgc3Ryb2tlV2lkdGg9XCIxLjJcIlxuICAgICAgICAgICAgY2xhc3NOYW1lPVwibGF1cmVsIGxhdXJlbC1sZWZ0XCJcbiAgICAgICAgICAvPlxuICAgICAgICAgIDxwYXRoXG4gICAgICAgICAgICBkPXtgTSR7cG9sZVdpZHRoIC8gMiArIDd9ICR7LWtub2JSYWRpdXMgKyAxfSBRJHtwb2xlV2lkdGggLyAyICsgM30gJHsta25vYlJhZGl1cyAtIDV9ICR7cG9sZVdpZHRoIC8gMn0gJHsta25vYlJhZGl1cyAtIDJ9YH1cbiAgICAgICAgICAgIGZpbGw9XCJub25lXCJcbiAgICAgICAgICAgIHN0cm9rZT17aXNBY3RpdmUgPyBcIiNkNGFmMzdcIiA6IFwiIzU1NVwifVxuICAgICAgICAgICAgc3Ryb2tlV2lkdGg9XCIxLjJcIlxuICAgICAgICAgICAgY2xhc3NOYW1lPVwibGF1cmVsIGxhdXJlbC1yaWdodFwiXG4gICAgICAgICAgLz5cblxuICAgICAgICAgIHsvKiDilIDilIDilIDilIDilIAgVG9wIGNhcCB3aXRoIEdyZWVrIGtleSBib3JkZXIg4pSA4pSA4pSA4pSA4pSAICovfVxuICAgICAgICAgIDxyZWN0XG4gICAgICAgICAgICB4PXstKGNhcFdpZHRoIC0gcG9sZVdpZHRoKSAvIDJ9XG4gICAgICAgICAgICB5PXswfVxuICAgICAgICAgICAgd2lkdGg9e2NhcFdpZHRofVxuICAgICAgICAgICAgaGVpZ2h0PXtjYXBIZWlnaHR9XG4gICAgICAgICAgICByeD17Mn1cbiAgICAgICAgICAgIGZpbGw9e2lzQWN0aXZlID8gXCIjYjg4NjBiXCIgOiBcIiM0NDRcIn1cbiAgICAgICAgICAgIGNsYXNzTmFtZT1cInBvbGUtY2FwIHBvbGUtY2FwLS10b3BcIlxuICAgICAgICAgIC8+XG4gICAgICAgICAgey8qIEdyZWVrIGtleSBkZWNvcmF0aXZlIGxpbmUgb24gdG9wIGNhcCAqL31cbiAgICAgICAgICA8cmVjdFxuICAgICAgICAgICAgeD17LShjYXBXaWR0aCAtIHBvbGVXaWR0aCkgLyAyICsgMX1cbiAgICAgICAgICAgIHk9e2NhcEhlaWdodCAtIDJ9XG4gICAgICAgICAgICB3aWR0aD17Y2FwV2lkdGggLSAyfVxuICAgICAgICAgICAgaGVpZ2h0PXsxLjV9XG4gICAgICAgICAgICBmaWxsPXtpc0FjdGl2ZSA/IFwiI2Q0YWYzN1wiIDogXCIjNjY2XCJ9XG4gICAgICAgICAgICBvcGFjaXR5PVwiMC43XCJcbiAgICAgICAgICAvPlxuXG4gICAgICAgICAgey8qIOKUgOKUgOKUgOKUgOKUgCBNYWluIHBvbGUgYm9keSAodGhlIHNwaW5uaW5nIHN0cmlwZXMpIOKUgOKUgOKUgOKUgOKUgCAqL31cbiAgICAgICAgICA8Y2xpcFBhdGggaWQ9XCJwb2xlQ2xpcFwiPlxuICAgICAgICAgICAgPHJlY3QgeD17MH0geT17Y2FwSGVpZ2h0fSB3aWR0aD17cG9sZVdpZHRofSBoZWlnaHQ9e3BvbGVIZWlnaHQgLSBjYXBIZWlnaHQgKiAyfSByeD17MX0gLz5cbiAgICAgICAgICA8L2NsaXBQYXRoPlxuICAgICAgICAgIDxyZWN0XG4gICAgICAgICAgICB4PXswfVxuICAgICAgICAgICAgeT17Y2FwSGVpZ2h0fVxuICAgICAgICAgICAgd2lkdGg9e3BvbGVXaWR0aH1cbiAgICAgICAgICAgIGhlaWdodD17cG9sZUhlaWdodCAtIGNhcEhlaWdodCAqIDJ9XG4gICAgICAgICAgICByeD17MX1cbiAgICAgICAgICAgIGZpbGw9XCJ1cmwoI2JhcmJlclN0cmlwZXMpXCJcbiAgICAgICAgICAgIGNsaXBQYXRoPVwidXJsKCNwb2xlQ2xpcClcIlxuICAgICAgICAgICAgY2xhc3NOYW1lPVwicG9sZS1ib2R5XCJcbiAgICAgICAgICAvPlxuICAgICAgICAgIHsvKiBDeWxpbmRlciBzaGFkaW5nIG92ZXJsYXkgKi99XG4gICAgICAgICAgPHJlY3RcbiAgICAgICAgICAgIHg9ezB9XG4gICAgICAgICAgICB5PXtjYXBIZWlnaHR9XG4gICAgICAgICAgICB3aWR0aD17cG9sZVdpZHRofVxuICAgICAgICAgICAgaGVpZ2h0PXtwb2xlSGVpZ2h0IC0gY2FwSGVpZ2h0ICogMn1cbiAgICAgICAgICAgIHJ4PXsxfVxuICAgICAgICAgICAgZmlsbD1cInVybCgjY3lsaW5kZXJTaGFkZSlcIlxuICAgICAgICAgICAgY2xpcFBhdGg9XCJ1cmwoI3BvbGVDbGlwKVwiXG4gICAgICAgICAgLz5cblxuICAgICAgICAgIHsvKiDilIDilIDilIDilIDilIAgQ29sdW1uIGZsdXRpbmcgbGluZXMgKEdyZWVrIGNvbHVtbiBkZXRhaWwpIOKUgOKUgOKUgOKUgOKUgCAqL31cbiAgICAgICAgICB7WzAuMjUsIDAuNSwgMC43NV0ubWFwKChwY3QsIGkpID0+IChcbiAgICAgICAgICAgIDxsaW5lXG4gICAgICAgICAgICAgIGtleT17aX1cbiAgICAgICAgICAgICAgeDE9e3BvbGVXaWR0aCAqIHBjdH1cbiAgICAgICAgICAgICAgeTE9e2NhcEhlaWdodCArIDJ9XG4gICAgICAgICAgICAgIHgyPXtwb2xlV2lkdGggKiBwY3R9XG4gICAgICAgICAgICAgIHkyPXtwb2xlSGVpZ2h0IC0gY2FwSGVpZ2h0IC0gMn1cbiAgICAgICAgICAgICAgc3Ryb2tlPVwicmdiYSgyNTUsMjU1LDI1NSwwLjA4KVwiXG4gICAgICAgICAgICAgIHN0cm9rZVdpZHRoPVwiMC41XCJcbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgKSl9XG5cbiAgICAgICAgICB7Lyog4pSA4pSA4pSA4pSA4pSAIEJvdHRvbSBjYXAgd2l0aCBHcmVlayBrZXkgYm9yZGVyIOKUgOKUgOKUgOKUgOKUgCAqL31cbiAgICAgICAgICA8cmVjdFxuICAgICAgICAgICAgeD17LShjYXBXaWR0aCAtIHBvbGVXaWR0aCkgLyAyfVxuICAgICAgICAgICAgeT17cG9sZUhlaWdodCAtIGNhcEhlaWdodH1cbiAgICAgICAgICAgIHdpZHRoPXtjYXBXaWR0aH1cbiAgICAgICAgICAgIGhlaWdodD17Y2FwSGVpZ2h0fVxuICAgICAgICAgICAgcng9ezJ9XG4gICAgICAgICAgICBmaWxsPXtpc0FjdGl2ZSA/IFwiI2I4ODYwYlwiIDogXCIjNDQ0XCJ9XG4gICAgICAgICAgICBjbGFzc05hbWU9XCJwb2xlLWNhcCBwb2xlLWNhcC0tYm90dG9tXCJcbiAgICAgICAgICAvPlxuICAgICAgICAgIHsvKiBHcmVlayBrZXkgZGVjb3JhdGl2ZSBsaW5lIG9uIGJvdHRvbSBjYXAgKi99XG4gICAgICAgICAgPHJlY3RcbiAgICAgICAgICAgIHg9ey0oY2FwV2lkdGggLSBwb2xlV2lkdGgpIC8gMiArIDF9XG4gICAgICAgICAgICB5PXtwb2xlSGVpZ2h0IC0gY2FwSGVpZ2h0fVxuICAgICAgICAgICAgd2lkdGg9e2NhcFdpZHRoIC0gMn1cbiAgICAgICAgICAgIGhlaWdodD17MS41fVxuICAgICAgICAgICAgZmlsbD17aXNBY3RpdmUgPyBcIiNkNGFmMzdcIiA6IFwiIzY2NlwifVxuICAgICAgICAgICAgb3BhY2l0eT1cIjAuN1wiXG4gICAgICAgICAgLz5cblxuICAgICAgICAgIHsvKiDilIDilIDilIDilIDilIAgQm90dG9tIG9ybmFtZW50YWwgZmluaWFsIOKUgOKUgOKUgOKUgOKUgCAqL31cbiAgICAgICAgICA8Y2lyY2xlXG4gICAgICAgICAgICBjeD17cG9sZVdpZHRoIC8gMn1cbiAgICAgICAgICAgIGN5PXtwb2xlSGVpZ2h0ICsga25vYlJhZGl1cyAtIDF9XG4gICAgICAgICAgICByPXtrbm9iUmFkaXVzfVxuICAgICAgICAgICAgZmlsbD17aXNBY3RpdmUgPyBcIiNkNGFmMzdcIiA6IFwiIzU1NVwifVxuICAgICAgICAgICAgY2xhc3NOYW1lPVwicG9sZS1rbm9iIHBvbGUta25vYi0tYm90dG9tXCJcbiAgICAgICAgICAvPlxuICAgICAgICA8L2c+XG5cbiAgICAgICAgey8qIOKUgOKUgOKUgOKUgOKUgCBHcmVlayBNZWFuZGVyIC8gYm9yZGVyIHJpbmcgYXJvdW5kIHRoZSBwb2xlIOKUgOKUgOKUgOKUgOKUgCAqL31cbiAgICAgICAge2lzQWN0aXZlICYmIChcbiAgICAgICAgICA8Y2lyY2xlXG4gICAgICAgICAgICBjeD17c2l6ZSAvIDJ9XG4gICAgICAgICAgICBjeT17c2l6ZSAvIDJ9XG4gICAgICAgICAgICByPXtzaXplIC8gMiAtIDJ9XG4gICAgICAgICAgICBmaWxsPVwibm9uZVwiXG4gICAgICAgICAgICBzdHJva2U9XCIjZDRhZjM3XCJcbiAgICAgICAgICAgIHN0cm9rZVdpZHRoPVwiMVwiXG4gICAgICAgICAgICBzdHJva2VEYXNoYXJyYXk9XCIzIDJcIlxuICAgICAgICAgICAgb3BhY2l0eT1cIjAuNFwiXG4gICAgICAgICAgICBjbGFzc05hbWU9XCJtZWFuZGVyLXJpbmdcIlxuICAgICAgICAgIC8+XG4gICAgICAgICl9XG4gICAgICA8L3N2Zz5cblxuICAgICAgey8qIFN0YXR1cyBkb3QgaW5kaWNhdG9yICovfVxuICAgICAgPHNwYW4gY2xhc3NOYW1lPXtgcG9sZS1zdGF0dXMtZG90ICR7aXNBY3RpdmUgPyBcInBvbGUtc3RhdHVzLWRvdC0tb25cIiA6IFwicG9sZS1zdGF0dXMtZG90LS1vZmZcIn1gfSAvPlxuXG4gICAgICB7LyogTm90aWZpY2F0aW9uIGJhZGdlICovfVxuICAgICAge25vdGlmaWNhdGlvbkNvdW50ID4gMCAmJiAoXG4gICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInBvbGUtbm90aWZpY2F0aW9uLWJhZGdlXCI+XG4gICAgICAgICAge25vdGlmaWNhdGlvbkNvdW50fVxuICAgICAgICA8L3NwYW4+XG4gICAgICApfVxuICAgIDwvZGl2PlxuICApO1xufTtcblxuZXhwb3J0IGRlZmF1bHQgQmFyYmVyUG9sZTtcbiJdLCJmaWxlIjoiQzovVXNlcnMvR2Vsb3IvRG93bmxvYWRzL01heGltdXMtVHJpbXVzL2Zyb250ZW5kL3NyYy9jb21wb25lbnRzL0JhcmJlclBvbGUuanN4In0=

@@ -1,0 +1,353 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/pages/ResetPassword.jsx");import.meta.env = {"BASE_URL": "/", "DEV": true, "MODE": "development", "PROD": false, "SSR": false, "VITE_API_URL": "http://localhost:3000"};import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6be55078"; const Fragment = __vite__cjsImport0_react_jsxDevRuntime["Fragment"]; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+var _s = $RefreshSig$();
+import __vite__cjsImport1_react from "/node_modules/.vite/deps/react.js?v=6be55078"; const React = __vite__cjsImport1_react.__esModule ? __vite__cjsImport1_react.default : __vite__cjsImport1_react; const useState = __vite__cjsImport1_react["useState"];
+import { useNavigate, useSearchParams, Link } from "/node_modules/.vite/deps/react-router-dom.js?v=6be55078";
+import axios from "/node_modules/.vite/deps/axios.js?v=6be55078";
+import AuthLayout from "/src/components/AuthLayout.jsx?t=1795696992170";
+import { PasswordField } from "/src/components/ui/Fields.jsx?t=1795696992245";
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "" : "http://localhost:3000");
+const ResetPassword = () => {
+  _s();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    newPassword: "",
+    confirmPassword: ""
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [success, setSuccess] = useState("");
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+    if (fieldErrors[name]) {
+      setFieldErrors((current) => ({ ...current, [name]: "" }));
+    }
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    const errors = {};
+    if (formData.newPassword.length < 6) {
+      errors.newPassword = "Use at least 6 characters.";
+    }
+    if (formData.newPassword !== formData.confirmPassword) {
+      errors.confirmPassword = "The two passwords don't match yet.";
+    }
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setError("A couple of details need another look.");
+      return;
+    }
+    setFieldErrors({});
+    setLoading(true);
+    try {
+      const res = await axios.post(`${API_URL}/api/auth/reset-password`, {
+        token,
+        newPassword: formData.newPassword
+      });
+      setSuccess(res.data.message);
+      setTimeout(() => {
+        navigate("/login");
+      }, 3e3);
+    } catch (err) {
+      setError(err.response?.data?.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  if (!token) {
+    return /* @__PURE__ */ jsxDEV(
+      AuthLayout,
+      {
+        mode: "reset",
+        showTabs: false,
+        eyebrow: "Invalid link",
+        title: /* @__PURE__ */ jsxDEV(Fragment, { children: [
+          "This link has ",
+          /* @__PURE__ */ jsxDEV("em", { children: "expired." }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 83,
+            columnNumber: 27
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+          lineNumber: 82,
+          columnNumber: 9
+        }, this),
+        subtitle: "Password reset links are single-use and time-limited. Request a fresh one and we'll email it right over.",
+        footer: /* @__PURE__ */ jsxDEV("p", { children: /* @__PURE__ */ jsxDEV(Link, { to: "/login", children: "Back to sign in" }, void 0, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+          lineNumber: 89,
+          columnNumber: 13
+        }, this) }, void 0, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+          lineNumber: 88,
+          columnNumber: 9
+        }, this),
+        children: /* @__PURE__ */ jsxDEV("div", { className: "auth-success", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "auth-success__icon", "aria-hidden": "true", children: /* @__PURE__ */ jsxDEV("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.7", strokeLinecap: "round", strokeLinejoin: "round", children: [
+            /* @__PURE__ */ jsxDEV("path", { d: "M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" }, void 0, false, {
+              fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+              lineNumber: 96,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("line", { x1: "12", y1: "9", x2: "12", y2: "13" }, void 0, false, {
+              fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+              lineNumber: 97,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("line", { x1: "12", y1: "17", x2: "12.01", y2: "17" }, void 0, false, {
+              fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+              lineNumber: 98,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 95,
+            columnNumber: 13
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 94,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("h3", { children: "Request a new link" }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 101,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { children: "Enter your email on the reset page and we'll send you a link that works." }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 102,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV(Link, { to: "/forgot-password", className: "ui-btn ui-btn--primary ui-btn--block", children: "Request new link" }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 103,
+            columnNumber: 11
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+          lineNumber: 93,
+          columnNumber: 9
+        }, this)
+      },
+      void 0,
+      false,
+      {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+        lineNumber: 77,
+        columnNumber: 7
+      },
+      this
+    );
+  }
+  return /* @__PURE__ */ jsxDEV(
+    AuthLayout,
+    {
+      mode: "reset",
+      showTabs: false,
+      eyebrow: "New password",
+      title: /* @__PURE__ */ jsxDEV(Fragment, { children: [
+        "Choose a new ",
+        /* @__PURE__ */ jsxDEV("em", { children: "password." }, void 0, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+          lineNumber: 118,
+          columnNumber: 24
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+        lineNumber: 117,
+        columnNumber: 7
+      }, this),
+      subtitle: "Make it something you'll remember. Six characters is the minimum; a mix of letters and numbers is better.",
+      footer: /* @__PURE__ */ jsxDEV("p", { children: /* @__PURE__ */ jsxDEV(Link, { to: "/login", children: "Back to sign in" }, void 0, false, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+        lineNumber: 124,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+        lineNumber: 123,
+        columnNumber: 7
+      }, this),
+      children: [
+        error && /* @__PURE__ */ jsxDEV("div", { className: "ui-alert", role: "alert", children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "ui-alert__icon", "aria-hidden": "true", children: "!" }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 130,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { children: error }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 133,
+            columnNumber: 11
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+          lineNumber: 129,
+          columnNumber: 7
+        }, this),
+        success ? /* @__PURE__ */ jsxDEV("div", { className: "auth-success", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "auth-success__icon", "aria-hidden": "true", children: /* @__PURE__ */ jsxDEV("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: /* @__PURE__ */ jsxDEV("polyline", { points: "20 6 9 17 4 12" }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 141,
+            columnNumber: 15
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 140,
+            columnNumber: 13
+          }, this) }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 139,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("h3", { children: "Password updated" }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 144,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { children: success }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 145,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "auth-sub", style: { margin: "-6px auto 18px" }, children: "Taking you back to sign in…" }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 146,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV(Link, { to: "/login", className: "ui-btn ui-btn--primary ui-btn--block", children: "Sign in now" }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+            lineNumber: 149,
+            columnNumber: 11
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+          lineNumber: 138,
+          columnNumber: 7
+        }, this) : /* @__PURE__ */ jsxDEV("form", { className: "auth-form", onSubmit: handleSubmit, children: [
+          /* @__PURE__ */ jsxDEV(
+            PasswordField,
+            {
+              id: "newPassword",
+              name: "newPassword",
+              label: "New password",
+              placeholder: "At least 6 characters",
+              value: formData.newPassword,
+              onChange: handleChange,
+              autoComplete: "new-password",
+              error: fieldErrors.newPassword,
+              showStrength: true,
+              required: true,
+              autoFocus: true
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+              lineNumber: 155,
+              columnNumber: 11
+            },
+            this
+          ),
+          /* @__PURE__ */ jsxDEV(
+            PasswordField,
+            {
+              id: "confirmPassword",
+              name: "confirmPassword",
+              label: "Confirm new password",
+              placeholder: "Re-enter your password",
+              value: formData.confirmPassword,
+              onChange: handleChange,
+              autoComplete: "new-password",
+              error: fieldErrors.confirmPassword,
+              required: true
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+              lineNumber: 169,
+              columnNumber: 11
+            },
+            this
+          ),
+          /* @__PURE__ */ jsxDEV(
+            "button",
+            {
+              type: "submit",
+              className: "ui-btn ui-btn--primary ui-btn--block auth-submit",
+              disabled: loading,
+              children: [
+                loading && /* @__PURE__ */ jsxDEV("span", { className: "ui-spinner", "aria-hidden": "true" }, void 0, false, {
+                  fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+                  lineNumber: 186,
+                  columnNumber: 25
+                }, this),
+                loading ? "Resetting…" : "Reset password"
+              ]
+            },
+            void 0,
+            true,
+            {
+              fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+              lineNumber: 181,
+              columnNumber: 11
+            },
+            this
+          )
+        ] }, void 0, true, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+          lineNumber: 154,
+          columnNumber: 7
+        }, this)
+      ]
+    },
+    void 0,
+    true,
+    {
+      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx",
+      lineNumber: 112,
+      columnNumber: 5
+    },
+    this
+  );
+};
+_s(ResetPassword, "sizSL02ybi7nW1Hs1sZB8Ufwla4=", false, function() {
+  return [useSearchParams, useNavigate];
+});
+_c = ResetPassword;
+export default ResetPassword;
+var _c;
+$RefreshReg$(_c, "ResetPassword");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/pages/ResetPassword.jsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsVUFPQTtBQUFBLGFBbENGO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFtQ0E7QUFBQTtBQUFBO0FBQUEsSUE3RUo7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBLEVBK0VBO0FBRUo7QUFBRVQsR0F4TElELGVBQWE7QUFBQSxVQUNNVixpQkFFTkQsV0FBVztBQUFBO0FBQUEsS0FIeEJXO0FBMExOLGVBQWVBO0FBQWMsSUFBQXNDO0FBQUEsYUFBQUEsSUFBQSIsIm5hbWVzIjpbIlJlYWN0IiwidXNlU3RhdGUiLCJ1c2VOYXZpZ2F0ZSIsInVzZVNlYXJjaFBhcmFtcyIsIkxpbmsiLCJheGlvcyIsIkF1dGhMYXlvdXQiLCJQYXNzd29yZEZpZWxkIiwiQVBJX1VSTCIsImltcG9ydCIsImVudiIsIlZJVEVfQVBJX1VSTCIsIlBST0QiLCJSZXNldFBhc3N3b3JkIiwiX3MiLCJzZWFyY2hQYXJhbXMiLCJ0b2tlbiIsImdldCIsIm5hdmlnYXRlIiwiZm9ybURhdGEiLCJzZXRGb3JtRGF0YSIsIm5ld1Bhc3N3b3JkIiwiY29uZmlybVBhc3N3b3JkIiwibG9hZGluZyIsInNldExvYWRpbmciLCJlcnJvciIsInNldEVycm9yIiwiZmllbGRFcnJvcnMiLCJzZXRGaWVsZEVycm9ycyIsInN1Y2Nlc3MiLCJzZXRTdWNjZXNzIiwiaGFuZGxlQ2hhbmdlIiwiZSIsIm5hbWUiLCJ2YWx1ZSIsInRhcmdldCIsImN1cnJlbnQiLCJoYW5kbGVTdWJtaXQiLCJwcmV2ZW50RGVmYXVsdCIsImVycm9ycyIsImxlbmd0aCIsIk9iamVjdCIsImtleXMiLCJyZXMiLCJwb3N0IiwiZGF0YSIsIm1lc3NhZ2UiLCJzZXRUaW1lb3V0IiwiZXJyIiwicmVzcG9uc2UiLCJtYXJnaW4iLCJfYyJdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJSZXNldFBhc3N3b3JkLmpzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QsIHsgdXNlU3RhdGUgfSBmcm9tIFwicmVhY3RcIjtcclxuaW1wb3J0IHsgdXNlTmF2aWdhdGUsIHVzZVNlYXJjaFBhcmFtcywgTGluayB9IGZyb20gXCJyZWFjdC1yb3V0ZXItZG9tXCI7XHJcbmltcG9ydCBheGlvcyBmcm9tIFwiYXhpb3NcIjtcclxuaW1wb3J0IEF1dGhMYXlvdXQgZnJvbSBcIi4uL2NvbXBvbmVudHMvQXV0aExheW91dFwiO1xyXG5pbXBvcnQgeyBQYXNzd29yZEZpZWxkIH0gZnJvbSBcIi4uL2NvbXBvbmVudHMvdWkvRmllbGRzXCI7XHJcblxyXG5jb25zdCBBUElfVVJMID0gaW1wb3J0Lm1ldGEuZW52LlZJVEVfQVBJX1VSTCB8fCAoaW1wb3J0Lm1ldGEuZW52LlBST0QgPyAnJyA6ICdodHRwOi8vbG9jYWxob3N0OjMwMDAnKTtcclxuXHJcbmNvbnN0IFJlc2V0UGFzc3dvcmQgPSAoKSA9PiB7XHJcbiAgY29uc3QgW3NlYXJjaFBhcmFtc10gPSB1c2VTZWFyY2hQYXJhbXMoKTtcclxuICBjb25zdCB0b2tlbiA9IHNlYXJjaFBhcmFtcy5nZXQoXCJ0b2tlblwiKTtcclxuICBjb25zdCBuYXZpZ2F0ZSA9IHVzZU5hdmlnYXRlKCk7XHJcblxyXG4gIGNvbnN0IFtmb3JtRGF0YSwgc2V0Rm9ybURhdGFdID0gdXNlU3RhdGUoe1xyXG4gICAgbmV3UGFzc3dvcmQ6IFwiXCIsXHJcbiAgICBjb25maXJtUGFzc3dvcmQ6IFwiXCIsXHJcbiAgfSk7XHJcbiAgY29uc3QgW2xvYWRpbmcsIHNldExvYWRpbmddID0gdXNlU3RhdGUoZmFsc2UpO1xyXG4gIGNvbnN0IFtlcnJvciwgc2V0RXJyb3JdID0gdXNlU3RhdGUoXCJcIik7XHJcbiAgY29uc3QgW2ZpZWxkRXJyb3JzLCBzZXRGaWVsZEVycm9yc10gPSB1c2VTdGF0ZSh7fSk7XHJcbiAgY29uc3QgW3N1Y2Nlc3MsIHNldFN1Y2Nlc3NdID0gdXNlU3RhdGUoXCJcIik7XHJcblxyXG4gIGNvbnN0IGhhbmRsZUNoYW5nZSA9IChlKSA9PiB7XHJcbiAgICBjb25zdCB7IG5hbWUsIHZhbHVlIH0gPSBlLnRhcmdldDtcclxuICAgIHNldEZvcm1EYXRhKHtcclxuICAgICAgLi4uZm9ybURhdGEsXHJcbiAgICAgIFtuYW1lXTogdmFsdWUsXHJcbiAgICB9KTtcclxuICAgIGlmIChmaWVsZEVycm9yc1tuYW1lXSkge1xyXG4gICAgICBzZXRGaWVsZEVycm9ycygoY3VycmVudCkgPT4gKHsgLi4uY3VycmVudCwgW25hbWVdOiBcIlwiIH0pKTtcclxuICAgIH1cclxuICB9O1xyXG5cclxuICBjb25zdCBoYW5kbGVTdWJtaXQgPSBhc3luYyAoZSkgPT4ge1xyXG4gICAgZS5wcmV2ZW50RGVmYXVsdCgpO1xyXG4gICAgc2V0RXJyb3IoXCJcIik7XHJcbiAgICBzZXRTdWNjZXNzKFwiXCIpO1xyXG5cclxuICAgIGNvbnN0IGVycm9ycyA9IHt9O1xyXG4gICAgaWYgKGZvcm1EYXRhLm5ld1Bhc3N3b3JkLmxlbmd0aCA8IDYpIHtcclxuICAgICAgZXJyb3JzLm5ld1Bhc3N3b3JkID0gXCJVc2UgYXQgbGVhc3QgNiBjaGFyYWN0ZXJzLlwiO1xyXG4gICAgfVxyXG4gICAgaWYgKGZvcm1EYXRhLm5ld1Bhc3N3b3JkICE9PSBmb3JtRGF0YS5jb25maXJtUGFzc3dvcmQpIHtcclxuICAgICAgZXJyb3JzLmNvbmZpcm1QYXNzd29yZCA9IFwiVGhlIHR3byBwYXNzd29yZHMgZG9uJ3QgbWF0Y2ggeWV0LlwiO1xyXG4gICAgfVxyXG5cclxuICAgIGlmIChPYmplY3Qua2V5cyhlcnJvcnMpLmxlbmd0aCA+IDApIHtcclxuICAgICAgc2V0RmllbGRFcnJvcnMoZXJyb3JzKTtcclxuICAgICAgc2V0RXJyb3IoXCJBIGNvdXBsZSBvZiBkZXRhaWxzIG5lZWQgYW5vdGhlciBsb29rLlwiKTtcclxuICAgICAgcmV0dXJuO1xyXG4gICAgfVxyXG5cclxuICAgIHNldEZpZWxkRXJyb3JzKHt9KTtcclxuICAgIHNldExvYWRpbmcodHJ1ZSk7XHJcblxyXG4gICAgdHJ5IHtcclxuICAgICAgY29uc3QgcmVzID0gYXdhaXQgYXhpb3MucG9zdChgJHtBUElfVVJMfS9hcGkvYXV0aC9yZXNldC1wYXNzd29yZGAsIHtcclxuICAgICAgICB0b2tlbixcclxuICAgICAgICBuZXdQYXNzd29yZDogZm9ybURhdGEubmV3UGFzc3dvcmQsXHJcbiAgICAgIH0pO1xyXG4gICAgICBzZXRTdWNjZXNzKHJlcy5kYXRhLm1lc3NhZ2UpO1xyXG5cclxuICAgICAgLy8gUmVkaXJlY3QgdG8gbG9naW4gYWZ0ZXIgMyBzZWNvbmRzXHJcbiAgICAgIHNldFRpbWVvdXQoKCkgPT4ge1xyXG4gICAgICAgIG5hdmlnYXRlKFwiL2xvZ2luXCIpO1xyXG4gICAgICB9LCAzMDAwKTtcclxuICAgIH0gY2F0Y2ggKGVycikge1xyXG4gICAgICBzZXRFcnJvcihlcnIucmVzcG9uc2U/LmRhdGE/Lm1lc3NhZ2UgfHwgXCJTb21ldGhpbmcgd2VudCB3cm9uZy4gUGxlYXNlIHRyeSBhZ2Fpbi5cIik7XHJcbiAgICB9IGZpbmFsbHkge1xyXG4gICAgICBzZXRMb2FkaW5nKGZhbHNlKTtcclxuICAgIH1cclxuICB9O1xyXG5cclxuICAvLyBJZiBubyB0b2tlbiBpbiB0aGUgVVJMXHJcbiAgaWYgKCF0b2tlbikge1xyXG4gICAgcmV0dXJuIChcclxuICAgICAgPEF1dGhMYXlvdXRcclxuICAgICAgICBtb2RlPVwicmVzZXRcIlxyXG4gICAgICAgIHNob3dUYWJzPXtmYWxzZX1cclxuICAgICAgICBleWVicm93PVwiSW52YWxpZCBsaW5rXCJcclxuICAgICAgICB0aXRsZT17XHJcbiAgICAgICAgICA8PlxyXG4gICAgICAgICAgICBUaGlzIGxpbmsgaGFzIDxlbT5leHBpcmVkLjwvZW0+XHJcbiAgICAgICAgICA8Lz5cclxuICAgICAgICB9XHJcbiAgICAgICAgc3VidGl0bGU9XCJQYXNzd29yZCByZXNldCBsaW5rcyBhcmUgc2luZ2xlLXVzZSBhbmQgdGltZS1saW1pdGVkLiBSZXF1ZXN0IGEgZnJlc2ggb25lIGFuZCB3ZSdsbCBlbWFpbCBpdCByaWdodCBvdmVyLlwiXHJcbiAgICAgICAgZm9vdGVyPXtcclxuICAgICAgICAgIDxwPlxyXG4gICAgICAgICAgICA8TGluayB0bz1cIi9sb2dpblwiPkJhY2sgdG8gc2lnbiBpbjwvTGluaz5cclxuICAgICAgICAgIDwvcD5cclxuICAgICAgICB9XHJcbiAgICAgID5cclxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImF1dGgtc3VjY2Vzc1wiPlxyXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJhdXRoLXN1Y2Nlc3NfX2ljb25cIiBhcmlhLWhpZGRlbj1cInRydWVcIj5cclxuICAgICAgICAgICAgPHN2ZyB2aWV3Qm94PVwiMCAwIDI0IDI0XCIgZmlsbD1cIm5vbmVcIiBzdHJva2U9XCJjdXJyZW50Q29sb3JcIiBzdHJva2VXaWR0aD1cIjEuN1wiIHN0cm9rZUxpbmVjYXA9XCJyb3VuZFwiIHN0cm9rZUxpbmVqb2luPVwicm91bmRcIj5cclxuICAgICAgICAgICAgICA8cGF0aCBkPVwiTTEwLjMgMy45IDEuOCAxOGEyIDIgMCAwIDAgMS43IDNoMTdhMiAyIDAgMCAwIDEuNy0zTDEzLjcgMy45YTIgMiAwIDAgMC0zLjQgMFpcIiAvPlxyXG4gICAgICAgICAgICAgIDxsaW5lIHgxPVwiMTJcIiB5MT1cIjlcIiB4Mj1cIjEyXCIgeTI9XCIxM1wiIC8+XHJcbiAgICAgICAgICAgICAgPGxpbmUgeDE9XCIxMlwiIHkxPVwiMTdcIiB4Mj1cIjEyLjAxXCIgeTI9XCIxN1wiIC8+XHJcbiAgICAgICAgICAgIDwvc3ZnPlxyXG4gICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICA8aDM+UmVxdWVzdCBhIG5ldyBsaW5rPC9oMz5cclxuICAgICAgICAgIDxwPkVudGVyIHlvdXIgZW1haWwgb24gdGhlIHJlc2V0IHBhZ2UgYW5kIHdlJ2xsIHNlbmQgeW91IGEgbGluayB0aGF0IHdvcmtzLjwvcD5cclxuICAgICAgICAgIDxMaW5rIHRvPVwiL2ZvcmdvdC1wYXNzd29yZFwiIGNsYXNzTmFtZT1cInVpLWJ0biB1aS1idG4tLXByaW1hcnkgdWktYnRuLS1ibG9ja1wiPlxyXG4gICAgICAgICAgICBSZXF1ZXN0IG5ldyBsaW5rXHJcbiAgICAgICAgICA8L0xpbms+XHJcbiAgICAgICAgPC9kaXY+XHJcbiAgICAgIDwvQXV0aExheW91dD5cclxuICAgICk7XHJcbiAgfVxyXG5cclxuICByZXR1cm4gKFxyXG4gICAgPEF1dGhMYXlvdXRcclxuICAgICAgbW9kZT1cInJlc2V0XCJcclxuICAgICAgc2hvd1RhYnM9e2ZhbHNlfVxyXG4gICAgICBleWVicm93PVwiTmV3IHBhc3N3b3JkXCJcclxuICAgICAgdGl0bGU9e1xyXG4gICAgICAgIDw+XHJcbiAgICAgICAgICBDaG9vc2UgYSBuZXcgPGVtPnBhc3N3b3JkLjwvZW0+XHJcbiAgICAgICAgPC8+XHJcbiAgICAgIH1cclxuICAgICAgc3VidGl0bGU9XCJNYWtlIGl0IHNvbWV0aGluZyB5b3UnbGwgcmVtZW1iZXIuIFNpeCBjaGFyYWN0ZXJzIGlzIHRoZSBtaW5pbXVtOyBhIG1peCBvZiBsZXR0ZXJzIGFuZCBudW1iZXJzIGlzIGJldHRlci5cIlxyXG4gICAgICBmb290ZXI9e1xyXG4gICAgICAgIDxwPlxyXG4gICAgICAgICAgPExpbmsgdG89XCIvbG9naW5cIj5CYWNrIHRvIHNpZ24gaW48L0xpbms+XHJcbiAgICAgICAgPC9wPlxyXG4gICAgICB9XHJcbiAgICA+XHJcbiAgICAgIHtlcnJvciAmJiAoXHJcbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ1aS1hbGVydFwiIHJvbGU9XCJhbGVydFwiPlxyXG4gICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwidWktYWxlcnRfX2ljb25cIiBhcmlhLWhpZGRlbj1cInRydWVcIj5cclxuICAgICAgICAgICAgIVxyXG4gICAgICAgICAgPC9zcGFuPlxyXG4gICAgICAgICAgPHA+e2Vycm9yfTwvcD5cclxuICAgICAgICA8L2Rpdj5cclxuICAgICAgKX1cclxuXHJcbiAgICAgIHtzdWNjZXNzID8gKFxyXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYXV0aC1zdWNjZXNzXCI+XHJcbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImF1dGgtc3VjY2Vzc19faWNvblwiIGFyaWEtaGlkZGVuPVwidHJ1ZVwiPlxyXG4gICAgICAgICAgICA8c3ZnIHZpZXdCb3g9XCIwIDAgMjQgMjRcIiBmaWxsPVwibm9uZVwiIHN0cm9rZT1cImN1cnJlbnRDb2xvclwiIHN0cm9rZVdpZHRoPVwiMlwiIHN0cm9rZUxpbmVjYXA9XCJyb3VuZFwiIHN0cm9rZUxpbmVqb2luPVwicm91bmRcIj5cclxuICAgICAgICAgICAgICA8cG9seWxpbmUgcG9pbnRzPVwiMjAgNiA5IDE3IDQgMTJcIiAvPlxyXG4gICAgICAgICAgICA8L3N2Zz5cclxuICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgPGgzPlBhc3N3b3JkIHVwZGF0ZWQ8L2gzPlxyXG4gICAgICAgICAgPHA+e3N1Y2Nlc3N9PC9wPlxyXG4gICAgICAgICAgPHAgY2xhc3NOYW1lPVwiYXV0aC1zdWJcIiBzdHlsZT17eyBtYXJnaW46IFwiLTZweCBhdXRvIDE4cHhcIiB9fT5cclxuICAgICAgICAgICAgVGFraW5nIHlvdSBiYWNrIHRvIHNpZ24gaW7igKZcclxuICAgICAgICAgIDwvcD5cclxuICAgICAgICAgIDxMaW5rIHRvPVwiL2xvZ2luXCIgY2xhc3NOYW1lPVwidWktYnRuIHVpLWJ0bi0tcHJpbWFyeSB1aS1idG4tLWJsb2NrXCI+XHJcbiAgICAgICAgICAgIFNpZ24gaW4gbm93XHJcbiAgICAgICAgICA8L0xpbms+XHJcbiAgICAgICAgPC9kaXY+XHJcbiAgICAgICkgOiAoXHJcbiAgICAgICAgPGZvcm0gY2xhc3NOYW1lPVwiYXV0aC1mb3JtXCIgb25TdWJtaXQ9e2hhbmRsZVN1Ym1pdH0+XHJcbiAgICAgICAgICA8UGFzc3dvcmRGaWVsZFxyXG4gICAgICAgICAgICBpZD1cIm5ld1Bhc3N3b3JkXCJcclxuICAgICAgICAgICAgbmFtZT1cIm5ld1Bhc3N3b3JkXCJcclxuICAgICAgICAgICAgbGFiZWw9XCJOZXcgcGFzc3dvcmRcIlxyXG4gICAgICAgICAgICBwbGFjZWhvbGRlcj1cIkF0IGxlYXN0IDYgY2hhcmFjdGVyc1wiXHJcbiAgICAgICAgICAgIHZhbHVlPXtmb3JtRGF0YS5uZXdQYXNzd29yZH1cclxuICAgICAgICAgICAgb25DaGFuZ2U9e2hhbmRsZUNoYW5nZX1cclxuICAgICAgICAgICAgYXV0b0NvbXBsZXRlPVwibmV3LXBhc3N3b3JkXCJcclxuICAgICAgICAgICAgZXJyb3I9e2ZpZWxkRXJyb3JzLm5ld1Bhc3N3b3JkfVxyXG4gICAgICAgICAgICBzaG93U3RyZW5ndGhcclxuICAgICAgICAgICAgcmVxdWlyZWRcclxuICAgICAgICAgICAgYXV0b0ZvY3VzXHJcbiAgICAgICAgICAvPlxyXG5cclxuICAgICAgICAgIDxQYXNzd29yZEZpZWxkXHJcbiAgICAgICAgICAgIGlkPVwiY29uZmlybVBhc3N3b3JkXCJcclxuICAgICAgICAgICAgbmFtZT1cImNvbmZpcm1QYXNzd29yZFwiXHJcbiAgICAgICAgICAgIGxhYmVsPVwiQ29uZmlybSBuZXcgcGFzc3dvcmRcIlxyXG4gICAgICAgICAgICBwbGFjZWhvbGRlcj1cIlJlLWVudGVyIHlvdXIgcGFzc3dvcmRcIlxyXG4gICAgICAgICAgICB2YWx1ZT17Zm9ybURhdGEuY29uZmlybVBhc3N3b3JkfVxyXG4gICAgICAgICAgICBvbkNoYW5nZT17aGFuZGxlQ2hhbmdlfVxyXG4gICAgICAgICAgICBhdXRvQ29tcGxldGU9XCJuZXctcGFzc3dvcmRcIlxyXG4gICAgICAgICAgICBlcnJvcj17ZmllbGRFcnJvcnMuY29uZmlybVBhc3N3b3JkfVxyXG4gICAgICAgICAgICByZXF1aXJlZFxyXG4gICAgICAgICAgLz5cclxuXHJcbiAgICAgICAgICA8YnV0dG9uXHJcbiAgICAgICAgICAgIHR5cGU9XCJzdWJtaXRcIlxyXG4gICAgICAgICAgICBjbGFzc05hbWU9XCJ1aS1idG4gdWktYnRuLS1wcmltYXJ5IHVpLWJ0bi0tYmxvY2sgYXV0aC1zdWJtaXRcIlxyXG4gICAgICAgICAgICBkaXNhYmxlZD17bG9hZGluZ31cclxuICAgICAgICAgID5cclxuICAgICAgICAgICAge2xvYWRpbmcgJiYgPHNwYW4gY2xhc3NOYW1lPVwidWktc3Bpbm5lclwiIGFyaWEtaGlkZGVuPVwidHJ1ZVwiIC8+fVxyXG4gICAgICAgICAgICB7bG9hZGluZyA/IFwiUmVzZXR0aW5n4oCmXCIgOiBcIlJlc2V0IHBhc3N3b3JkXCJ9XHJcbiAgICAgICAgICA8L2J1dHRvbj5cclxuICAgICAgICA8L2Zvcm0+XHJcbiAgICAgICl9XHJcbiAgICA8L0F1dGhMYXlvdXQ+XHJcbiAgKTtcclxufTtcclxuXHJcbmV4cG9ydCBkZWZhdWx0IFJlc2V0UGFzc3dvcmQ7XHJcbiJdLCJmaWxlIjoiQzovVXNlcnMvR2Vsb3IvRG93bmxvYWRzL01heGltdXMtVHJpbXVzL2Zyb250ZW5kL3NyYy9wYWdlcy9SZXNldFBhc3N3b3JkLmpzeCJ9

@@ -1,0 +1,258 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/ui/Fields.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6be55078"; const Fragment = __vite__cjsImport0_react_jsxDevRuntime["Fragment"]; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+var _s = $RefreshSig$();
+import __vite__cjsImport1_react from "/node_modules/.vite/deps/react.js?v=6be55078"; const React = __vite__cjsImport1_react.__esModule ? __vite__cjsImport1_react.default : __vite__cjsImport1_react; const useId = __vite__cjsImport1_react["useId"]; const useState = __vite__cjsImport1_react["useState"];
+import { FaEye, FaEyeSlash } from "/node_modules/.vite/deps/react-icons_fa.js?t=1795696992505&v=6be55078";
+const Field = ({ id, label, hint, error, aside, required, children, className = "" }) => {
+  const hintId = hint ? `${id}-hint` : void 0;
+  const errorId = error ? `${id}-error` : void 0;
+  return /* @__PURE__ */ jsxDEV("div", { className: `ui-field ${error ? "has-error" : ""} ${className}`.trim(), children: [
+    label && /* @__PURE__ */ jsxDEV("div", { className: "ui-field__top", children: [
+      /* @__PURE__ */ jsxDEV("label", { className: "ui-field__label", htmlFor: id, children: [
+        label,
+        required && /* @__PURE__ */ jsxDEV("span", { className: "req", "aria-hidden": "true", children: "*" }, void 0, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+          lineNumber: 15,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+        lineNumber: 12,
+        columnNumber: 11
+      }, this),
+      aside && /* @__PURE__ */ jsxDEV("span", { className: "ui-field__aside", children: aside }, void 0, false, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+        lineNumber: 20,
+        columnNumber: 21
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+      lineNumber: 11,
+      columnNumber: 7
+    }, this),
+    children({ describedBy: [hintId, errorId].filter(Boolean).join(" ") || void 0 }),
+    error ? /* @__PURE__ */ jsxDEV("p", { className: "ui-field__error", id: errorId, role: "alert", children: error }, void 0, false, {
+      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+      lineNumber: 25,
+      columnNumber: 7
+    }, this) : hint && /* @__PURE__ */ jsxDEV("p", { className: "ui-field__hint", id: hintId, children: hint }, void 0, false, {
+      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+      lineNumber: 30,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+    lineNumber: 9,
+    columnNumber: 5
+  }, this);
+};
+_c = Field;
+export const TextField = ({
+  id,
+  label,
+  hint,
+  error,
+  aside,
+  required,
+  inputClassName = "",
+  ...inputProps
+}) => /* @__PURE__ */ jsxDEV(Field, { id, label, hint, error, aside, required, children: ({ describedBy }) => /* @__PURE__ */ jsxDEV(
+  "input",
+  {
+    id,
+    className: `ui-input ${inputClassName}`.trim(),
+    required,
+    "aria-invalid": error ? "true" : void 0,
+    "aria-describedby": describedBy,
+    ...inputProps
+  },
+  void 0,
+  false,
+  {
+    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+    lineNumber: 51,
+    columnNumber: 3
+  },
+  this
+) }, void 0, false, {
+  fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+  lineNumber: 49,
+  columnNumber: 1
+}, this);
+_c2 = TextField;
+export const PasswordField = ({
+  id,
+  label,
+  hint,
+  error,
+  required,
+  showStrength = false,
+  value = "",
+  ...inputProps
+}) => {
+  _s();
+  const [visible, setVisible] = useState(false);
+  const strengthId = useId();
+  const getStrength = (password) => {
+    if (!password) return null;
+    let score = 0;
+    if (password.length >= 6) score += 1;
+    if (password.length >= 10) score += 1;
+    if (/[^A-Za-z0-9]/.test(password) || /[A-Z]/.test(password) && /[a-z]/.test(password)) score += 1;
+    const levels = ["Weak", "Fair", "Strong"];
+    return { score, label: levels[Math.max(0, score - 1)] || "Weak" };
+  };
+  const strength = showStrength ? getStrength(value) : null;
+  return /* @__PURE__ */ jsxDEV(Field, { id, label, hint, error, required, children: ({ describedBy }) => /* @__PURE__ */ jsxDEV(Fragment, { children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "ui-password", children: [
+      /* @__PURE__ */ jsxDEV(
+        "input",
+        {
+          id,
+          className: "ui-input",
+          type: visible ? "text" : "password",
+          value,
+          required,
+          "aria-invalid": error ? "true" : void 0,
+          "aria-describedby": [describedBy, strengthId].filter(Boolean).join(" ") || void 0,
+          ...inputProps
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+          lineNumber: 93,
+          columnNumber: 13
+        },
+        this
+      ),
+      /* @__PURE__ */ jsxDEV(
+        "button",
+        {
+          type: "button",
+          className: "ui-eye",
+          onClick: () => setVisible((current) => !current),
+          "aria-label": visible ? "Hide password" : "Show password",
+          "aria-pressed": visible,
+          tabIndex: 0,
+          children: visible ? /* @__PURE__ */ jsxDEV(FaEyeSlash, { "aria-hidden": "true" }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+            lineNumber: 111,
+            columnNumber: 26
+          }, this) : /* @__PURE__ */ jsxDEV(FaEye, { "aria-hidden": "true" }, void 0, false, {
+            fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+            lineNumber: 111,
+            columnNumber: 62
+          }, this)
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+          lineNumber: 103,
+          columnNumber: 13
+        },
+        this
+      )
+    ] }, void 0, true, {
+      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+      lineNumber: 92,
+      columnNumber: 11
+    }, this),
+    strength && /* @__PURE__ */ jsxDEV("span", { className: `ui-strength ${strength.score >= 3 ? "is-strong" : ""}`, "aria-hidden": "true", children: [
+      /* @__PURE__ */ jsxDEV("span", { className: "ui-strength__bars", children: [1, 2, 3].map(
+        (bar) => /* @__PURE__ */ jsxDEV("span", { className: `ui-strength__bar ${strength.score >= bar ? "is-filled" : ""}` }, bar, false, {
+          fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+          lineNumber: 118,
+          columnNumber: 13
+        }, this)
+      ) }, void 0, false, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+        lineNumber: 116,
+        columnNumber: 15
+      }, this),
+      /* @__PURE__ */ jsxDEV("span", { className: "ui-strength__label", children: strength.label }, void 0, false, {
+        fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+        lineNumber: 121,
+        columnNumber: 15
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+      lineNumber: 115,
+      columnNumber: 9
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+    lineNumber: 91,
+    columnNumber: 7
+  }, this) }, void 0, false, {
+    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+    lineNumber: 89,
+    columnNumber: 5
+  }, this);
+};
+_s(PasswordField, "c7zAojN/I5y8UcC7IW3GUK7gRVg=");
+_c3 = PasswordField;
+export const TextAreaField = ({
+  id,
+  label,
+  hint,
+  error,
+  aside,
+  required,
+  textareaClassName = "",
+  ...textareaProps
+}) => /* @__PURE__ */ jsxDEV(Field, { id, label, hint, error, aside, required, children: ({ describedBy }) => /* @__PURE__ */ jsxDEV(
+  "textarea",
+  {
+    id,
+    className: `ui-textarea ${textareaClassName}`.trim(),
+    required,
+    "aria-invalid": error ? "true" : void 0,
+    "aria-describedby": describedBy,
+    ...textareaProps
+  },
+  void 0,
+  false,
+  {
+    fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+    lineNumber: 142,
+    columnNumber: 3
+  },
+  this
+) }, void 0, false, {
+  fileName: "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx",
+  lineNumber: 140,
+  columnNumber: 1
+}, this);
+_c4 = TextAreaField;
+export default Field;
+var _c, _c2, _c3, _c4;
+$RefreshReg$(_c, "Field");
+$RefreshReg$(_c2, "TextField");
+$RefreshReg$(_c3, "PasswordField");
+$RefreshReg$(_c4, "TextAreaField");
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+function $RefreshReg$(type, id) {
+  return RefreshRuntime.register(type, "C:/Users/Gelor/Downloads/Maximus-Trimus/frontend/src/components/ui/Fields.jsx " + id);
+}
+function $RefreshSig$() {
+  return RefreshRuntime.createSignatureFunctionForTransform();
+}
+
+//# sourceMappingURL=data:application/json;base64,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U0FBU007QUFBQUEsSUFDL0Isb0JBQWtCRztBQUFBQSxJQUNsQixHQUFJOEI7QUFBQUE7QUFBQUEsRUFOTjtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBTW9CLEtBUnhCO0FBQUE7QUFBQTtBQUFBO0FBQUEsT0FXQTtBQUNBQyxNQXRCV0g7QUF3QmIsZUFBZXpDO0FBQU0sSUFBQWlCLElBQUFJLEtBQUF3QixLQUFBRDtBQUFBLGFBQUEzQixJQUFBO0FBQUEsYUFBQUksS0FBQTtBQUFBLGFBQUF3QixLQUFBO0FBQUEsYUFBQUQsS0FBQSIsIm5hbWVzIjpbIlJlYWN0IiwidXNlSWQiLCJ1c2VTdGF0ZSIsIkZhRXllIiwiRmFFeWVTbGFzaCIsIkZpZWxkIiwiaWQiLCJsYWJlbCIsImhpbnQiLCJlcnJvciIsImFzaWRlIiwicmVxdWlyZWQiLCJjaGlsZHJlbiIsImNsYXNzTmFtZSIsImhpbnRJZCIsInVuZGVmaW5lZCIsImVycm9ySWQiLCJ0cmltIiwiZGVzY3JpYmVkQnkiLCJmaWx0ZXIiLCJCb29sZWFuIiwiam9pbiIsIl9jIiwiVGV4dEZpZWxkIiwiaW5wdXRDbGFzc05hbWUiLCJpbnB1dFByb3BzIiwiX2MyIiwiUGFzc3dvcmRGaWVsZCIsInNob3dTdHJlbmd0aCIsInZhbHVlIiwiX3MiLCJ2aXNpYmxlIiwic2V0VmlzaWJsZSIsInN0cmVuZ3RoSWQiLCJnZXRTdHJlbmd0aCIsInBhc3N3b3JkIiwic2NvcmUiLCJsZW5ndGgiLCJ0ZXN0IiwibGV2ZWxzIiwiTWF0aCIsIm1heCIsInN0cmVuZ3RoIiwiY3VycmVudCIsIm1hcCIsImJhciIsIlRleHRBcmVhRmllbGQiLCJ0ZXh0YXJlYUNsYXNzTmFtZSIsInRleHRhcmVhUHJvcHMiLCJfYzQiLCJfYzMiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiRmllbGRzLmpzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QsIHsgdXNlSWQsIHVzZVN0YXRlIH0gZnJvbSBcInJlYWN0XCI7XHJcbmltcG9ydCB7IEZhRXllLCBGYUV5ZVNsYXNoIH0gZnJvbSBcInJlYWN0LWljb25zL2ZhXCI7XHJcblxyXG5jb25zdCBGaWVsZCA9ICh7IGlkLCBsYWJlbCwgaGludCwgZXJyb3IsIGFzaWRlLCByZXF1aXJlZCwgY2hpbGRyZW4sIGNsYXNzTmFtZSA9IFwiXCIgfSkgPT4ge1xyXG4gIGNvbnN0IGhpbnRJZCA9IGhpbnQgPyBgJHtpZH0taGludGAgOiB1bmRlZmluZWQ7XHJcbiAgY29uc3QgZXJyb3JJZCA9IGVycm9yID8gYCR7aWR9LWVycm9yYCA6IHVuZGVmaW5lZDtcclxuXHJcbiAgcmV0dXJuIChcclxuICAgIDxkaXYgY2xhc3NOYW1lPXtgdWktZmllbGQgJHtlcnJvciA/IFwiaGFzLWVycm9yXCIgOiBcIlwifSAke2NsYXNzTmFtZX1gLnRyaW0oKX0+XHJcbiAgICAgIHtsYWJlbCAmJiAoXHJcbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ1aS1maWVsZF9fdG9wXCI+XHJcbiAgICAgICAgICA8bGFiZWwgY2xhc3NOYW1lPVwidWktZmllbGRfX2xhYmVsXCIgaHRtbEZvcj17aWR9PlxyXG4gICAgICAgICAgICB7bGFiZWx9XHJcbiAgICAgICAgICAgIHtyZXF1aXJlZCAmJiAoXHJcbiAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwicmVxXCIgYXJpYS1oaWRkZW49XCJ0cnVlXCI+XHJcbiAgICAgICAgICAgICAgICAqXHJcbiAgICAgICAgICAgICAgPC9zcGFuPlxyXG4gICAgICAgICAgICApfVxyXG4gICAgICAgICAgPC9sYWJlbD5cclxuICAgICAgICAgIHthc2lkZSAmJiA8c3BhbiBjbGFzc05hbWU9XCJ1aS1maWVsZF9fYXNpZGVcIj57YXNpZGV9PC9zcGFuPn1cclxuICAgICAgICA8L2Rpdj5cclxuICAgICAgKX1cclxuICAgICAge2NoaWxkcmVuKHsgZGVzY3JpYmVkQnk6IFtoaW50SWQsIGVycm9ySWRdLmZpbHRlcihCb29sZWFuKS5qb2luKFwiIFwiKSB8fCB1bmRlZmluZWQgfSl9XHJcbiAgICAgIHtlcnJvciA/IChcclxuICAgICAgICA8cCBjbGFzc05hbWU9XCJ1aS1maWVsZF9fZXJyb3JcIiBpZD17ZXJyb3JJZH0gcm9sZT1cImFsZXJ0XCI+XHJcbiAgICAgICAgICB7ZXJyb3J9XHJcbiAgICAgICAgPC9wPlxyXG4gICAgICApIDogKFxyXG4gICAgICAgIGhpbnQgJiYgKFxyXG4gICAgICAgICAgPHAgY2xhc3NOYW1lPVwidWktZmllbGRfX2hpbnRcIiBpZD17aGludElkfT5cclxuICAgICAgICAgICAge2hpbnR9XHJcbiAgICAgICAgICA8L3A+XHJcbiAgICAgICAgKVxyXG4gICAgICApfVxyXG4gICAgPC9kaXY+XHJcbiAgKTtcclxufTtcclxuXHJcbmV4cG9ydCBjb25zdCBUZXh0RmllbGQgPSAoe1xyXG4gIGlkLFxyXG4gIGxhYmVsLFxyXG4gIGhpbnQsXHJcbiAgZXJyb3IsXHJcbiAgYXNpZGUsXHJcbiAgcmVxdWlyZWQsXHJcbiAgaW5wdXRDbGFzc05hbWUgPSBcIlwiLFxyXG4gIC4uLmlucHV0UHJvcHNcclxufSkgPT4gKFxyXG4gIDxGaWVsZCBpZD17aWR9IGxhYmVsPXtsYWJlbH0gaGludD17aGludH0gZXJyb3I9e2Vycm9yfSBhc2lkZT17YXNpZGV9IHJlcXVpcmVkPXtyZXF1aXJlZH0+XHJcbiAgICB7KHsgZGVzY3JpYmVkQnkgfSkgPT4gKFxyXG4gICAgICA8aW5wdXRcclxuICAgICAgICBpZD17aWR9XHJcbiAgICAgICAgY2xhc3NOYW1lPXtgdWktaW5wdXQgJHtpbnB1dENsYXNzTmFtZX1gLnRyaW0oKX1cclxuICAgICAgICByZXF1aXJlZD17cmVxdWlyZWR9XHJcbiAgICAgICAgYXJpYS1pbnZhbGlkPXtlcnJvciA/IFwidHJ1ZVwiIDogdW5kZWZpbmVkfVxyXG4gICAgICAgIGFyaWEtZGVzY3JpYmVkYnk9e2Rlc2NyaWJlZEJ5fVxyXG4gICAgICAgIHsuLi5pbnB1dFByb3BzfVxyXG4gICAgICAvPlxyXG4gICAgKX1cclxuICA8L0ZpZWxkPlxyXG4pO1xyXG5cclxuZXhwb3J0IGNvbnN0IFBhc3N3b3JkRmllbGQgPSAoe1xyXG4gIGlkLFxyXG4gIGxhYmVsLFxyXG4gIGhpbnQsXHJcbiAgZXJyb3IsXHJcbiAgcmVxdWlyZWQsXHJcbiAgc2hvd1N0cmVuZ3RoID0gZmFsc2UsXHJcbiAgdmFsdWUgPSBcIlwiLFxyXG4gIC4uLmlucHV0UHJvcHNcclxufSkgPT4ge1xyXG4gIGNvbnN0IFt2aXNpYmxlLCBzZXRWaXNpYmxlXSA9IHVzZVN0YXRlKGZhbHNlKTtcclxuICBjb25zdCBzdHJlbmd0aElkID0gdXNlSWQoKTtcclxuXHJcbiAgY29uc3QgZ2V0U3RyZW5ndGggPSAocGFzc3dvcmQpID0+IHtcclxuICAgIGlmICghcGFzc3dvcmQpIHJldHVybiBudWxsO1xyXG4gICAgbGV0IHNjb3JlID0gMDtcclxuICAgIGlmIChwYXNzd29yZC5sZW5ndGggPj0gNikgc2NvcmUgKz0gMTtcclxuICAgIGlmIChwYXNzd29yZC5sZW5ndGggPj0gMTApIHNjb3JlICs9IDE7XHJcbiAgICBpZiAoL1teQS1aYS16MC05XS8udGVzdChwYXNzd29yZCkgfHwgKC9bQS1aXS8udGVzdChwYXNzd29yZCkgJiYgL1thLXpdLy50ZXN0KHBhc3N3b3JkKSkpIHNjb3JlICs9IDE7XHJcbiAgICBjb25zdCBsZXZlbHMgPSBbXCJXZWFrXCIsIFwiRmFpclwiLCBcIlN0cm9uZ1wiXTtcclxuICAgIHJldHVybiB7IHNjb3JlLCBsYWJlbDogbGV2ZWxzW01hdGgubWF4KDAsIHNjb3JlIC0gMSldIHx8IFwiV2Vha1wiIH07XHJcbiAgfTtcclxuXHJcbiAgY29uc3Qgc3RyZW5ndGggPSBzaG93U3RyZW5ndGggPyBnZXRTdHJlbmd0aCh2YWx1ZSkgOiBudWxsO1xyXG5cclxuICByZXR1cm4gKFxyXG4gICAgPEZpZWxkIGlkPXtpZH0gbGFiZWw9e2xhYmVsfSBoaW50PXtoaW50fSBlcnJvcj17ZXJyb3J9IHJlcXVpcmVkPXtyZXF1aXJlZH0+XHJcbiAgICAgIHsoeyBkZXNjcmliZWRCeSB9KSA9PiAoXHJcbiAgICAgICAgPD5cclxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwidWktcGFzc3dvcmRcIj5cclxuICAgICAgICAgICAgPGlucHV0XHJcbiAgICAgICAgICAgICAgaWQ9e2lkfVxyXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cInVpLWlucHV0XCJcclxuICAgICAgICAgICAgICB0eXBlPXt2aXNpYmxlID8gXCJ0ZXh0XCIgOiBcInBhc3N3b3JkXCJ9XHJcbiAgICAgICAgICAgICAgdmFsdWU9e3ZhbHVlfVxyXG4gICAgICAgICAgICAgIHJlcXVpcmVkPXtyZXF1aXJlZH1cclxuICAgICAgICAgICAgICBhcmlhLWludmFsaWQ9e2Vycm9yID8gXCJ0cnVlXCIgOiB1bmRlZmluZWR9XHJcbiAgICAgICAgICAgICAgYXJpYS1kZXNjcmliZWRieT17W2Rlc2NyaWJlZEJ5LCBzdHJlbmd0aElkXS5maWx0ZXIoQm9vbGVhbikuam9pbihcIiBcIikgfHwgdW5kZWZpbmVkfVxyXG4gICAgICAgICAgICAgIHsuLi5pbnB1dFByb3BzfVxyXG4gICAgICAgICAgICAvPlxyXG4gICAgICAgICAgICA8YnV0dG9uXHJcbiAgICAgICAgICAgICAgdHlwZT1cImJ1dHRvblwiXHJcbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwidWktZXllXCJcclxuICAgICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiBzZXRWaXNpYmxlKChjdXJyZW50KSA9PiAhY3VycmVudCl9XHJcbiAgICAgICAgICAgICAgYXJpYS1sYWJlbD17dmlzaWJsZSA/IFwiSGlkZSBwYXNzd29yZFwiIDogXCJTaG93IHBhc3N3b3JkXCJ9XHJcbiAgICAgICAgICAgICAgYXJpYS1wcmVzc2VkPXt2aXNpYmxlfVxyXG4gICAgICAgICAgICAgIHRhYkluZGV4PXswfVxyXG4gICAgICAgICAgICA+XHJcbiAgICAgICAgICAgICAge3Zpc2libGUgPyA8RmFFeWVTbGFzaCBhcmlhLWhpZGRlbj1cInRydWVcIiAvPiA6IDxGYUV5ZSBhcmlhLWhpZGRlbj1cInRydWVcIiAvPn1cclxuICAgICAgICAgICAgPC9idXR0b24+XHJcbiAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgIHtzdHJlbmd0aCAmJiAoXHJcbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT17YHVpLXN0cmVuZ3RoICR7c3RyZW5ndGguc2NvcmUgPj0gMyA/IFwiaXMtc3Ryb25nXCIgOiBcIlwifWB9IGFyaWEtaGlkZGVuPVwidHJ1ZVwiPlxyXG4gICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInVpLXN0cmVuZ3RoX19iYXJzXCI+XHJcbiAgICAgICAgICAgICAgICB7WzEsIDIsIDNdLm1hcCgoYmFyKSA9PiAoXHJcbiAgICAgICAgICAgICAgICAgIDxzcGFuIGtleT17YmFyfSBjbGFzc05hbWU9e2B1aS1zdHJlbmd0aF9fYmFyICR7c3RyZW5ndGguc2NvcmUgPj0gYmFyID8gXCJpcy1maWxsZWRcIiA6IFwiXCJ9YH0gLz5cclxuICAgICAgICAgICAgICAgICkpfVxyXG4gICAgICAgICAgICAgIDwvc3Bhbj5cclxuICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ1aS1zdHJlbmd0aF9fbGFiZWxcIj57c3RyZW5ndGgubGFiZWx9PC9zcGFuPlxyXG4gICAgICAgICAgICA8L3NwYW4+XHJcbiAgICAgICAgICApfVxyXG4gICAgICAgIDwvPlxyXG4gICAgICApfVxyXG4gICAgPC9GaWVsZD5cclxuICApO1xyXG59O1xyXG5cclxuZXhwb3J0IGNvbnN0IFRleHRBcmVhRmllbGQgPSAoe1xyXG4gIGlkLFxyXG4gIGxhYmVsLFxyXG4gIGhpbnQsXHJcbiAgZXJyb3IsXHJcbiAgYXNpZGUsXHJcbiAgcmVxdWlyZWQsXHJcbiAgdGV4dGFyZWFDbGFzc05hbWUgPSBcIlwiLFxyXG4gIC4uLnRleHRhcmVhUHJvcHNcclxufSkgPT4gKFxyXG4gIDxGaWVsZCBpZD17aWR9IGxhYmVsPXtsYWJlbH0gaGludD17aGludH0gZXJyb3I9e2Vycm9yfSBhc2lkZT17YXNpZGV9IHJlcXVpcmVkPXtyZXF1aXJlZH0+XHJcbiAgICB7KHsgZGVzY3JpYmVkQnkgfSkgPT4gKFxyXG4gICAgICA8dGV4dGFyZWFcclxuICAgICAgICBpZD17aWR9XHJcbiAgICAgICAgY2xhc3NOYW1lPXtgdWktdGV4dGFyZWEgJHt0ZXh0YXJlYUNsYXNzTmFtZX1gLnRyaW0oKX1cclxuICAgICAgICByZXF1aXJlZD17cmVxdWlyZWR9XHJcbiAgICAgICAgYXJpYS1pbnZhbGlkPXtlcnJvciA/IFwidHJ1ZVwiIDogdW5kZWZpbmVkfVxyXG4gICAgICAgIGFyaWEtZGVzY3JpYmVkYnk9e2Rlc2NyaWJlZEJ5fVxyXG4gICAgICAgIHsuLi50ZXh0YXJlYVByb3BzfVxyXG4gICAgICAvPlxyXG4gICAgKX1cclxuICA8L0ZpZWxkPlxyXG4pO1xyXG5cclxuZXhwb3J0IGRlZmF1bHQgRmllbGQ7XHJcbiJdLCJmaWxlIjoiQzovVXNlcnMvR2Vsb3IvRG93bmxvYWRzL01heGltdXMtVHJpbXVzL2Zyb250ZW5kL3NyYy9jb21wb25lbnRzL3VpL0ZpZWxkcy5qc3gifQ==
